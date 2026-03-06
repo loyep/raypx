@@ -5,7 +5,7 @@ export const adminWebPlugin: AdminWebPluginContribution = {
   navItems: [
     {
       key: "admin-user-management",
-      label: "User Management",
+      label: "Users",
       to: "/admin/users",
       icon: "users",
       adminOnly: true,

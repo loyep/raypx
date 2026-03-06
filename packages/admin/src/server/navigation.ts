@@ -46,7 +46,7 @@ export function getDashboardNavigationItems(
   if (role === "admin" || role === "superadmin") {
     items.push({
       key: "admin-user-management",
-      label: "User Management",
+      label: "Users",
       to: "/admin/users",
       icon: "users",
     });

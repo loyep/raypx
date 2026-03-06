@@ -2,6 +2,7 @@ import { ConversationPanel } from "@/features/chat/components/conversation";
 import { ChatHeader } from "@/features/chat/components/header";
 import { ProviderMissingCard } from "@/features/chat/components/provider-missing";
 import { useChatController } from "@/features/chat/hooks/use-chat-controller";
+import { useEffect } from "react";
 
 type ChatPageProps = {
   routeConversationId: string | null;
@@ -27,6 +28,14 @@ export function ChatPage({ routeConversationId, onRouteConversationChange }: Cha
     startNewConversation,
     timing,
   } = useChatController({ onRouteConversationChange, routeConversationId });
+
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    document.title =
+      activeTitle && activeTitle !== "Conversation" && activeTitle !== "New conversation"
+        ? `${activeTitle} - Raypx`
+        : "AI Chat - Raypx";
+  }, [activeTitle]);
 
   return (
     <div className="space-y-6">
