@@ -47,6 +47,10 @@
           }
         }
       },
+      "a11y": {
+        "useValidAnchor": "info",
+        "useAnchorContent": "off"
+      },
       "suspicious": {
         "noDocumentCookie": "off",
         "noExplicitAny": "off",
@@ -100,6 +104,18 @@
   },
   "overrides": [
     {
+      "includes": ["**/routeTree.gen.ts"],
+      "formatter": {
+        "enabled": false
+      },
+      "linter": {
+        "enabled": false
+      },
+      "assist": {
+        "enabled": false
+      }
+    },
+    {
       "includes": ["**/*.css"],
       "linter": {
         "enabled": false
@@ -115,7 +131,7 @@
       }
     },
     {
-      "includes": ["packages/ui/src/components/**/*.tsx"],
+      "includes": ["packages/design-system/components/ui/*.tsx"],
       "linter": {
         "rules": {
           "a11y": "off"

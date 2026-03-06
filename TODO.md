@@ -1,214 +1,61 @@
-# Project TODO Board
+# Raypx TODO
 
-> **Last Updated:** 2026-02-20
-> **Total Items:** 8
-> **Critical Issues:** 0
+Last Updated: 2026-03-04
 
----
+## Current Focus (Q2 2026)
 
-## 📊 Statistics
+- [ ] M1 基线稳定（包边界 + 规范收敛）
+- [ ] M2 AI Chat MVP（持久化 + 稳定流式 + 可恢复）
+- [ ] M3 可观测与成本治理（最小可运营）
 
-### By Status
-| Status | Count |
-|--------|-------|
-| ✅ Completed | 6 |
-| 🚧 In Progress | 0 |
-| 📋 Planned | 8 |
-| **Total** | **8** (Active) |
+See also: `ROADMAP.md`, `docs/ARCHITECTURE.md`, `docs/TODO_AI_CHAT.md`.
 
----
+## P1 - High Priority
 
-## 🏗️ Architecture Overview
+- [ ] M1.1 包边界收敛
+  - [ ] 清理 `@raypx/rpc` 内遗留领域逻辑（保持 transport-only）
+  - [ ] 补齐 `@raypx/ai/server` 入口文档和使用示例
+  - [ ] 审核 `@raypx/shared` 仅保留纯类型/常量（无运行时依赖）
+- [ ] M1.2 错误与日志标准化
+  - [x] 统一 AI 错误归一化（`toAIServiceError`）
+  - [x] 统一 RPC 错误映射入口（`toORPCError`）
+  - [x] 统一 chatStream telemetry 字段
+  - [x] 在 `apps/app`/`apps/web` 增加统一错误提示映射
+- [ ] M1.3 工程质量门槛
+  - [x] `@raypx/ai` 增加单元测试（错误映射、事件顺序）
+  - [x] `@raypx/rpc` 增加 AI 集成测试（chat/chatStream/会话接口）
+  - [x] 给 `packages/rpc` 测试补默认 env（避免 `AUTH_URL` 阻塞）
 
-### Project Structure
-This is a modern **monorepo** built with:
-- **Build System**: Turborepo (16 parallel tasks, remote caching enabled)
-- **Package Manager**: pnpm workspace with catalog for dependency management
-- **Version Management**: Changesets for semantic versioning
-- **Tech Stack**: React 19 + TanStack Start (SSR/SSG) + Vite 8
+## P2 - Medium Priority
 
-### Applications (`apps/`)
-1. **web** - Main web application (React 19 + TanStack Router + Shadcn UI)
-2. **app** - Secondary application
-3. **docs** - Documentation site (Fumadocs + MDX)
-4. **email** - Email template builder (React Email)
+- [ ] M2.1 AI Chat MVP 能力补齐
+  - [x] `ai.createConversation/list/get/append/regenerate/delete` 端到端回归
+  - [x] `chatStream` 失败场景（timeout/rate-limit/provider-down）落库校验
+  - [x] 前端 `idle/sending/streaming/done/error` 状态机统一
+- [ ] M2.2 数据一致性与恢复
+  - [ ] conversation/message/call_log 三表一致性检查脚本
+  - [ ] 中断、超时、重试路径的一致性策略
+- [ ] M2.3 文档补齐
+  - [ ] 更新 AI 环境变量与 provider 配置文档
+  - [ ] 增加 “如何切换模型/供应商” 指南
+  - [ ] 增加 chatStream 协议文档（`eventVersion=1`）
 
-### Core Packages (`packages/`)
-- **@raypx/ui** - UI component library (Base UI + business components)
-- **@raypx/database** - Database layer (Drizzle ORM + PostgreSQL + Vector search)
-- **@raypx/seo** - SEO utilities (meta tags, Open Graph, etc.)
-- **@raypx/auth** - Authentication system (Better Auth)
-- **@raypx/analytics** - User analytics (PostHog)
-- **@raypx/storage** - File storage (AWS S3 + Sharp)
-- **@raypx/email** & **@raypx/email-templates** - Email services
-- **@raypx/payments** - Payment processing (Stripe)
-- **@raypx/config** - Unified configuration management
-- **@raypx/shared** - Shared utilities and types
-- **@raypx/api** - API layer (ORPC)
-- **@raypx/observability** - Logging and monitoring
+## P3 - Low Priority
 
-### Recent Changes (2025-2026)
-- ✅ Migrated from Prisma ORM to Drizzle ORM
-- ✅ Added `@raypx/seo` package for SEO utilities
-- ✅ Added PWA manifest support
-- ✅ Migrated forms from react-hook-form to @tanstack/react-form
-- ✅ Added `rr` command for quick dev server startup
-- ✅ Integrated React Compiler for performance optimization
-- ✅ Removed Playwright E2E tests (using Vitest + jsdom)
-- ✅ Upgraded to Tailwind CSS v4
+- [ ] M3.1 可观测最小看板
+  - [ ] P50/P95 TTFT 与 latency 统计
+  - [ ] provider/model 维度错误率
+  - [ ] token/cost 日报
+- [ ] M3.2 策略化治理
+  - [ ] provider 路由策略配置（默认 qwen，zhipu 兜底）
+  - [ ] maxOutputTokens/temperature/timeout 限制
+  - [ ] 高成本请求告警阈值
+- [ ] M3.3 社区工程化
+  - [ ] RFC 首批样例（AI stream 扩展 / provider 策略）
+  - [ ] 二开模板文档与最佳实践清单
 
----
+## Done Recently
 
-## 🎯 Recommended Action Plan
-
-### ✅ Completed
-- ✅ Sentry error tracking integration (P2)
-- ✅ Sentry performance monitoring (P2)
-- ✅ Stripe subscription data synchronization (P1)
-- ✅ Organization features removal (B2C focus)
-- ✅ User avatar upload feature (P3) - Cloudflare R2 + image processing
-- ✅ Forms migration to TanStack Form
-- ✅ Migration from Prisma to Drizzle ORM
-- ✅ PWA support added
-
----
-
-## 📋 Planned Tasks
-
-### 🔴 High Priority
-
-#### 1. Complete Payment System Integration
-**Location**: `packages/payments/`
-**Description**: Finish Stripe integration for subscription management
-**Tasks**:
-- Webhook handlers for subscription events
-- Payment method management UI
-- Invoice generation and history
-- Subscription upgrade/downgrade flows
-**Effort**: Medium
-**Business Impact**: Critical for revenue
-
-#### 2. Vector Search Implementation
-**Location**: `packages/database/`
-**Description**: Leverage existing vector database support for smart features
-**Tasks**:
-- Implement semantic search for user content
-- Add recommendation engine based on user behavior
-- Vector embeddings generation pipeline
-**Effort**: High
-**Business Impact**: High - Key differentiator feature
-
-#### 3. Analytics Dashboard
-**Location**: `apps/web/src/routes/_authenticated/dashboard/`
-**Description**: Build user-facing analytics dashboard
-**Tasks**:
-- Integrate PostHog data visualization
-- Custom event tracking setup
-- User behavior reports
-- Export functionality
-**Effort**: Medium
-**Business Impact**: High - User retention
-
-### 🟡 Medium Priority
-
-#### 4. Email Template Enhancement
-**Location**: `apps/email/` & `packages/email-templates/`
-**Description**: Complete email template system
-**Tasks**:
-- Design responsive email templates
-- Transactional email flows (welcome, password reset, etc.)
-- Email preview and testing system
-- Personalization engine
-**Effort**: Medium
-**Business Impact**: Medium - User engagement
-
-#### 5. API Layer Standardization
-**Location**: `packages/api/`
-**Description**: Define and implement consistent API patterns
-**Tasks**:
-- REST/GraphQL endpoint design
-- Request/response validation
-- Rate limiting and throttling
-- API versioning strategy
-**Effort**: Medium
-**Business Impact**: Medium - Developer experience
-
-#### 6. Observability Enhancement
-**Location**: `packages/observability/`
-**Description**: Comprehensive monitoring and logging
-**Tasks**:
-- Structured logging implementation
-- Performance metrics collection
-- Alert thresholds and notifications
-- Log aggregation and analysis
-**Effort**: Medium
-**Business Impact**: Medium - Operational excellence
-
-### 🟢 Low Priority
-
-#### 7. Documentation Completion
-**Location**: `apps/docs/`
-**Description**: Complete product and API documentation
-**Tasks**:
-- Component library documentation
-- API reference guides
-- Deployment guides
-- Contributing guidelines
-**Effort**: Low
-**Business Impact**: Low - Developer onboarding
-
-#### 8. Performance Optimization
-**Location**: Multiple packages
-**Description**: Comprehensive performance audit and optimization
-**Tasks**:
-- Bundle size analysis and reduction
-- Lazy loading implementation
-- Image optimization (already using Sharp)
-- Caching strategy review
-- Database query optimization
-**Effort**: Medium
-**Business Impact**: Medium - User experience
-
----
-
-## 💡 Technical Debt & Improvements
-
-### Immediate Improvements
-1. **Dependency Updates**: Regular security updates and feature upgrades
-2. **Type Safety**: Increase strict TypeScript coverage across all packages
-3. **Test Coverage**: Aim for 80%+ coverage across critical paths
-4. **Error Handling**: Standardize error handling patterns across packages
-
-### Architecture Considerations
-1. **Microservices Prep**: Current architecture supports future migration to microservices
-2. **Internationalization**: Add i18n support for global expansion
-3. **A/B Testing**: Implement feature flags and experimentation framework
-4. **CDN Strategy**: Optimize static asset delivery globally
-
----
-
-## 📝 Notes
-
-- All items have corresponding code locations for easy navigation
-- Priority based on business impact and user value
-- Effort estimates assume familiarity with the codebase
-- Consider creating GitHub issues from these items for better tracking
-- **Organization features disabled** - This is a B2C product (user-level subscriptions only)
-- **Sentry integration completed** - ORPC errors and performance metrics now tracked in production
-- **Stripe sync completed** - Subscription status, dates, and cancellation info synced from Stripe API
-- **React 19 active** - Leveraging latest React features including React Compiler
-- **Drizzle ORM** - Migrated from Prisma for better TypeScript support and performance
-- **Monorepo mature** - Well-structured package organization with clear boundaries
-
----
-
-## 🚀 Next Steps
-
-1. **Focus on payment completion** - Critical for revenue generation
-2. **Launch vector search features** - Key differentiator in the market
-3. **Enhance user analytics** - Data-driven decision making
-4. **Continuous performance monitoring** - Maintain high quality standards
-
----
-
-**Maintained by**: Raypx Team | **Next Review**: 2026-03-01
+- [x] 新增 roadmap / architecture / RFC 流程文档
+- [x] 统一 AI 错误码归一化与 RPC 异常映射
+- [x] 统一 chatStream telemetry 指标字段

@@ -17,11 +17,11 @@
   },
   "dependencies": {
     "@opentelemetry/api": "^1.9.0",
-    "@opentelemetry/exporter-trace-otlp-http": "^0.212.0",
-    "@opentelemetry/sdk-node": "^0.212.0",
+    "@opentelemetry/exporter-trace-otlp-http": "^0.213.0",
+    "@opentelemetry/sdk-node": "^0.213.0",
     "@raypx/config": "workspace:*",
-    "@sentry/node": "^10.39.0",
-    "@sentry/react": "^10.39.0",
+    "@sentry/node": "^10.42.0",
+    "@sentry/react": "^10.42.0",
     "consola": "^3.4.2",
     "zod": "catalog:"
   },

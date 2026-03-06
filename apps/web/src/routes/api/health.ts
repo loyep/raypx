@@ -1,21 +1,26 @@
-import { count, db, schemas } from "@raypx/database";
+import { db, schemas } from "@raypx/database";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/api/health")({
   server: {
     handlers: {
       GET: async () => {
-        const result = await db.select({ count: count() }).from(schemas.user);
-        const userCount = result[0]?.count ?? 0;
-        console.log("health - user count:", userCount);
-        return Response.json(
-          {
-            status: "OK",
-            timestamp: new Date().toISOString(),
-            userCount,
-          },
-          { status: 200 },
-        );
+        try {
+          const start = performance.now();
+          const result = await db.$count(schemas.user);
+          const end = performance.now();
+          return Response.json(
+            {
+              status: "OK",
+              duration: `${end - start}ms`,
+              userCount: result,
+            },
+            { status: 200 },
+          );
+        } catch (error) {
+          console.error(error);
+          return Response.json({ status: "ERROR" }, { status: 500 });
+        }
       },
     },
   },

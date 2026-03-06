@@ -11,16 +11,16 @@ import Inspect from "vite-plugin-inspect";
 import tsConfigPaths from "vite-tsconfig-paths";
 import * as MdxConfig from "./source.config";
 
+// import { base } from "./src/config/base";
+
 const jiti = createJiti(fileURLToPath(import.meta.url));
 
 const env = await jiti.import<typeof import("./src/env.ts")>("./src/env.ts").then((m) => m.default);
 
 const isDev = env.NODE_ENV === "development";
 
-const base = "/docs";
-
 export default defineConfig(({ command }) => ({
-  base,
+  // base,
   server: {
     port: 3004,
   },
@@ -55,7 +55,7 @@ export default defineConfig(({ command }) => ({
     }),
     tailwindcss(),
     nitro({
-      baseURL: base,
+      // baseURL: base,
     }),
   ],
 }));

@@ -1,0 +1,418 @@
+---
+title: Admin Features
+description: Built-in admin features for user management and access control.
+---
+
+## Overview
+
+Raypx includes a complete admin system for managing users, roles, and permissions. The admin features are built on top of the authentication system and provide a type-safe API for administrative tasks.
+
+## Features
+
+- **User Management**: List, search, and manage users
+- **Role Management**: Assign admin or user roles
+- **User Ban System**: Ban/unban users with reasons
+- **Statistics Dashboard**: View user statistics
+- **Access Control**: Admin-only routes and APIs
+
+## Quick Start
+
+### Setting Up Admin User
+
+To access admin features, a user must have the `admin` role. Set this directly in the database:
+
+```sql
+-- Using SQL
+UPDATE "user" SET role = 'admin' WHERE email = 'admin@example.com';
+```
+
+Or use Drizzle Studio:
+
+```bash
+pnpm run studio
+```
+
+Navigate to the `user` table and set `role` to `'admin'` for your user.
+
+### Accessing Admin Panel
+
+Once you have admin privileges:
+
+1. Log in to the application
+2. Navigate to `/admin/users`
+3. The admin navigation link will appear in the sidebar
+
+## API Reference
+
+### Middleware
+
+The admin system provides three procedure types for access control:
+
+```typescript
+// packages/rpc/src/middleware.ts
+import { ORPCError, os } from "@orpc/server";
+
+// Public procedure - no authentication required
+export const publicProcedure = os;
+
+// Protected procedure - requires authentication
+export const protectedProcedure = publicProcedure.use(requireAuthMiddleware);
+
+// Admin procedure - requires admin role
+export const adminProcedure = publicProcedure.use(requireAdminMiddleware);
+```
+
+### Admin Middleware
+
+```typescript
+// packages/rpc/src/middleware.ts
+export const requireAdminMiddleware = o.middleware(async ({ context, next }) => {
+  // First check authentication
+  if (!context.session) {
+    throw new ORPCError("UNAUTHORIZED", {
+      message: "Authentication required",
+    });
+  }
+
+  // Then check admin role
+  if (context.session.user.role !== "admin") {
+    throw new ORPCError("FORBIDDEN", {
+      message: "Admin access required",
+    });
+  }
+
+  return next({
+    context: {
+      session: context.session,
+      user: context.session.user,
+    },
+  });
+});
+```
+
+### User Management Endpoints
+
+All admin endpoints are available under `client.adminUsers`:
+
+#### List Users
+
+```typescript
+import { client } from "@/utils/orpc";
+
+// Get paginated user list
+const result = await client.adminUsers.list({
+  page: 1,
+  pageSize: 10,
+  search: "john",        // Optional: search by name or email
+  role: "admin",         // Optional: filter by role
+  banned: false,         // Optional: filter by ban status
+});
+
+// Result structure
+// {
+//   users: User[],
+//   pagination: { page, pageSize, total, totalPages }
+// }
+```
+
+#### Get User by ID
+
+```typescript
+const user = await client.adminUsers.getById({ id: "user_123" });
+```
+
+#### Update User
+
+```typescript
+// Update user role
+await client.adminUsers.update({
+  id: "user_123",
+  role: "admin",
+});
+
+// Ban user with reason
+await client.adminUsers.update({
+  id: "user_123",
+  banned: true,
+  banReason: "Violation of terms",
+});
+
+// Unban user
+await client.adminUsers.update({
+  id: "user_123",
+  banned: false,
+  banReason: undefined,
+});
+```
+
+#### Get Statistics
+
+```typescript
+const stats = await client.adminUsers.stats();
+
+// Result structure
+// {
+//   total: 100,
+//   admins: 5,
+//   banned: 2,
+//   verified: 85
+// }
+```
+
+## User Schema
+
+The user table includes admin-related fields:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | `string` | Unique user identifier |
+| `name` | `string` | User display name |
+| `email` | `string` | User email address |
+| `role` | `string` | User role (`"admin"` or `"user"`) |
+| `banned` | `boolean` | Whether user is banned |
+| `banReason` | `string` | Reason for ban (if any) |
+| `banExpires` | `Date` | Ban expiration date (if temporary) |
+| `emailVerified` | `boolean` | Whether email is verified |
+| `createdAt` | `Date` | Account creation date |
+
+## UI Components
+
+### Admin Users Page
+
+The admin users page at `/admin/users` provides:
+
+- **Statistics Cards**: Total users, admins, banned, verified counts
+- **Search**: Search users by name or email
+- **Filters**: Filter by role and ban status
+- **User Table**: Displays user info with actions
+- **Edit Dialog**: Modal for editing user role and ban status
+
+### Adding Admin Navigation
+
+The sidebar automatically shows admin links for admin users:
+
+```typescript
+// apps/web/src/components/dashboard/dashboard-sidebar.tsx
+interface SidebarNavigationProps {
+  onNavigate?: () => void;
+  userRole?: string | null;
+}
+
+export function SidebarNavigation({ onNavigate, userRole }: SidebarNavigationProps) {
+  return (
+    <nav>
+      {/* Regular navigation */}
+      <Link to="/dashboard">Overview</Link>
+
+      {/* Admin-only navigation */}
+      {userRole === "admin" && (
+        <Link to="/admin/users">User Management</Link>
+      )}
+    </nav>
+  );
+}
+```
+
+## Access Control Patterns
+
+### Protecting Routes
+
+```typescript
+// apps/web/src/routes/(app)/admin/$slug.tsx
+import { useSession } from "@/lib/auth";
+import type { ExtendedUser } from "@/types/auth";
+
+function AdminUsersPage() {
+  const { data: session, isPending } = useSession();
+  const extendedUser = session?.user as ExtendedUser | undefined;
+
+  // Redirect non-admins
+  if (!isPending && extendedUser?.role !== "admin") {
+    return <Navigate to="/dashboard" />;
+  }
+
+  // Render admin content
+  return <AdminContent />;
+}
+```
+
+Unknown admin slugs (for example `/admin/anything`) should be redirected to `/dashboard`.
+
+### Creating Admin Endpoints
+
+```typescript
+// packages/rpc/src/routers/admin.ts
+import { z } from "zod";
+import { adminProcedure } from "../middleware";
+
+export const adminRouter = {
+  // Admin-only endpoint
+  getSystemStats: adminProcedure.handler(async () => {
+    // Only admins can access
+    return {
+      // System statistics
+    };
+  }),
+
+  // Admin action with input
+  sendNotification: adminProcedure
+    .input(z.object({
+      userId: z.string(),
+      message: z.string(),
+    }))
+    .handler(async ({ input }) => {
+      // Send notification to user
+    }),
+};
+```
+
+## Best Practices
+
+### Role Checking
+
+Always use the admin procedure for admin endpoints rather than manual role checking:
+
+```typescript
+// Good - using adminProcedure
+export const adminRouter = {
+  adminAction: adminProcedure.handler(async () => {
+    // Automatically protected
+  }),
+};
+
+// Avoid - manual role checking
+export const badRouter = {
+  adminAction: protectedProcedure.handler(async ({ context }) => {
+    if (context.user.role !== "admin") {
+      throw new Error("Forbidden"); // Manual check
+    }
+  }),
+};
+```
+
+### Ban Reasons
+
+Always provide a clear reason when banning users:
+
+```typescript
+await client.adminUsers.update({
+  id: userId,
+  banned: true,
+  banReason: "Spam behavior detected on 2024-01-15",
+});
+```
+
+### Audit Logging
+
+Consider logging admin actions for audit purposes:
+
+```typescript
+import { logger } from "@raypx/logger";
+
+export const adminRouter = {
+  banUser: adminProcedure
+    .input(z.object({ id: z.string(), reason: z.string() }))
+    .handler(async ({ input, context }) => {
+      await db.update(user).set({
+        banned: true,
+        banReason: input.reason,
+      }).where(eq(user.id, input.id));
+
+      // Log admin action
+      logger.info("User banned", {
+        adminId: context.user.id,
+        targetUserId: input.id,
+        reason: input.reason,
+      });
+    }),
+};
+```
+
+## Extending Admin Features
+
+### Adding New Admin Routes
+
+1. Create the route file:
+
+```typescript
+// packages/rpc/src/routers/admin.ts
+import { adminProcedure } from "../middleware";
+
+export const adminRouter = {
+  getAnalytics: adminProcedure.handler(async () => {
+    // Your admin logic
+  }),
+};
+```
+
+2. Register it via plugin composition:
+
+```typescript
+// packages/rpc/src/plugins/list.ts
+import { adminPlugin } from "@raypx/admin/plugin";
+import { requirePermission } from "../middleware";
+
+{
+  id: adminPlugin.id,
+  version: adminPlugin.version,
+  rpc: {
+    namespace: adminPlugin.rpc.namespace,
+    router: adminPlugin.rpc.createRouter({ requirePermission }),
+  },
+}
+```
+
+3. Use in client:
+
+```typescript
+const analytics = await client.adminUsers.getAnalytics();
+```
+
+### Adding New Admin Pages
+
+1. Create the page component:
+
+```typescript
+// apps/web/src/routes/(app)/admin/analytics.tsx
+import { client } from "@/utils/orpc";
+
+export default function AdminAnalyticsPage() {
+  // Check admin role
+  // Fetch data
+  // Render page
+}
+```
+
+2. Add to the admin web plugin nav metadata:
+
+```typescript
+// packages/admin/src/plugin/web.ts
+export const adminWebPlugin = {
+  prefix: "/admin",
+  navItems: [
+    { key: "admin-users", to: "/admin/users", label: "Users", icon: "users", adminOnly: true },
+    {
+      key: "admin-analytics",
+      to: "/admin/analytics",
+      label: "Analytics",
+      icon: "users",
+      adminOnly: true,
+    },
+  ],
+  routes: [
+    { key: "admin-users", slug: "users", path: "/admin/users", requiresRole: "admin" },
+    {
+      key: "admin-analytics",
+      slug: "analytics",
+      path: "/admin/analytics",
+      requiresRole: "admin",
+    },
+  ],
+};
+```
+
+## Related Documentation
+
+- [API Layer](/docs/features/api) - ORPC documentation
+- [Authentication](/docs/auth/oauth) - OAuth setup
+- [Database](/docs/operations/database) - Database configuration

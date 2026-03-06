@@ -25,8 +25,3 @@ export const organization = pgTable(
   },
   (table) => [index("idx_organization_slug").on(table.slug)],
 );
-
-/**
- * Relations are defined in the files that use this table:
- * - auth.ts: member, invitation relations
- */

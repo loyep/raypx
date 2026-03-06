@@ -1,7 +1,7 @@
 // ==================== Email Domain Configuration ====================
 
-/** Email domain, retrieved from EMAIL_DOMAIN environment variable, defaults to raypx.com */
-const EMAIL_DOMAIN = process.env.EMAIL_DOMAIN || "raypx.com";
+/** Email domain, retrieved from EMAIL_DOMAIN environment variable */
+const EMAIL_DOMAIN = process.env.EMAIL_DOMAIN || "localhost";
 
 // ==================== Email Address Constants ====================
 

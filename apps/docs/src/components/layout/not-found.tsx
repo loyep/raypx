@@ -1,4 +1,4 @@
-import { Button } from "@raypx/ui/components/button";
+import { Button } from "@raypx/design-system/components/ui/button";
 import { Link } from "@tanstack/react-router";
 import { Logo } from "./logo";
 

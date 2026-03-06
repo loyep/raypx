@@ -1,6 +1,8 @@
-import type { orpc } from "@raypx/rpc/orpc";
-import { toast } from "@raypx/ui/components/toast";
+import { toast } from "@raypx/design-system/components/ui/toast";
+import { client, type orpc } from "@raypx/rpc";
 import { QueryCache, QueryClient } from "@tanstack/react-query";
+
+export { client };
 
 export const queryClient = new QueryClient({
   queryCache: new QueryCache({

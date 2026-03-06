@@ -1,0 +1,25 @@
+{
+  "name": "@raypx/i18n",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./server": "./src/server/index.ts"
+  },
+  "scripts": {
+    "clean": "rimraf dist .turbo",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@raypx/config": "workspace:*",
+    "@raypx/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@raypx/tsconfig": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

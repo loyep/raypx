@@ -7,8 +7,8 @@
     "allowJs": false,
     "verbatimModuleSyntax": true,
     "paths": {
-      "~/*": ["./src/*"],
-      "@raypx/ui/*": ["../../packages/ui/src/*"]
+      "@/*": ["./src/*"],
+      "fumadocs-mdx:collections/*": [".source/*"]
     }
   }
 }

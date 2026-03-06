@@ -2,83 +2,86 @@ import type { KnipConfig } from "knip";
 
 const config: KnipConfig = {
   workspaces: {
-    "packages/auth": {
+    // Apps - TanStack Start uses file-based routing
+    "apps/web": {
+      entry: ["src/routes/**/*.{ts,tsx}", "src/router.tsx", "src/components/not-found.tsx"],
+      project: ["src/**/*.{ts,tsx}"],
+    },
+    "apps/app": {
+      entry: ["src/routes/**/*.{ts,tsx}", "src/router.tsx", "src/components/not-found.tsx"],
+      project: ["src/**/*.{ts,tsx}"],
+    },
+    "apps/docs": {
       entry: [
-        "src/index.ts",
-        "src/server.ts",
-        "src/middleware.ts",
-        "src/envs.ts",
-        "src/client/index.ts",
+        "src/routes/**/*.{ts,tsx}",
+        "source.config.ts",
+        "src/router.tsx",
+        "src/components/not-found.tsx",
       ],
+      project: ["src/**/*.{ts,tsx}", "content/**/*.mdx"],
+    },
+    // Scripts - CLI tools
+    scripts: {
+      entry: ["bin/*.mjs", "cli.ts", "cmd/*.ts"],
+      project: ["**/*.ts"],
+    },
+    // Packages - knip auto-detects from package.json exports
+    "packages/auth": {
       project: ["src/**/*.{ts,tsx}"],
     },
     "packages/config": {
-      entry: ["src/index.ts", "src/server.ts", "src/envs.ts"],
-      project: ["src/**/*.{ts}"],
+      project: ["src/**/*.ts"],
     },
     "packages/database": {
-      entry: ["src/index.ts", "seed.ts"],
-      project: ["src/**/*.{ts}", "config/**/*.{ts}", "seed.ts"],
+      project: ["src/**/*.ts", "config/**/*.ts"],
     },
-    "packages/analytics": {
-      entry: ["src/index.ts"],
-      project: ["src/**/*.{ts,tsx}"],
-    },
-    "packages/core": {
-      entry: ["src/index.ts", "src/config.ts", "src/vite.ts"],
-      project: ["src/**/*.{ts}"],
+    "packages/design-system": {
+      project: ["**/*.{ts,tsx}"],
     },
     "packages/email": {
-      entry: ["src/index.ts"],
-      project: ["src/**/*.{ts}"],
+      project: ["src/**/*.ts", "src/**/*.tsx"],
     },
-    "packages/email-templates": {
-      entry: ["src/index.ts"],
-      project: ["src/**/*.{ts,tsx}"],
+    "packages/i18n": {
+      project: ["src/**/*.ts"],
+    },
+    "packages/logger": {
+      project: ["src/**/*.ts"],
     },
     "packages/observability": {
-      entry: ["src/index.ts"],
-      project: ["src/**/*.{ts}"],
+      project: ["src/**/*.ts"],
     },
-    "packages/redis": {
-      entry: ["src/index.ts"],
-      project: ["src/**/*.{ts}"],
+    "packages/rpc": {
+      project: ["src/**/*.ts"],
+    },
+    "packages/seo": {
+      project: ["src/**/*.ts"],
     },
     "packages/shared": {
-      entry: ["src/index.ts"],
-      project: ["src/**/*.{ts}"],
+      project: ["src/**/*.ts"],
     },
     "packages/storage": {
-      entry: ["src/index.ts"],
-      project: ["src/**/*.{ts}"],
-    },
-    "packages/api": {
-      entry: ["src/index.ts"],
-      project: ["src/**/*.{ts}"],
-    },
-    "packages/ui": {
-      entry: ["src/**/*.{ts,tsx}"],
-      project: ["src/**/*.{ts,tsx}"],
+      project: ["src/**/*.ts"],
     },
   },
-  ignore: [
-    "**/node_modules/**",
-    "**/dist/**",
-    "**/.turbo/**",
-    "**/.next/**",
-    "**/.tanstack/**",
-    "**/.nitro/**",
-    "**/.output/**",
-    "**/coverage/**",
-    "**/*.test.{ts,tsx}",
-    "**/*.spec.{ts,tsx}",
-    "**/routeTree.gen.ts",
-    "**/vite-env.d.ts",
-    "**/*.config.{ts,js}",
-    "**/vitest.config.{ts,js}",
-    "**/migrations/**",
+  ignoreDependencies: [
+    "@types/*",
+    "@dotenvx/dotenvx",
+    // Config file dependencies (not detected by knip)
+    "babel-plugin-react-compiler",
+    "tailwindcss",
+    "drizzle-kit",
+    "drizzle-seed",
+    "jiti",
+    "type-fest",
+    // Devtools (runtime browser dependencies)
+    "@tanstack/react-devtools",
+    "@tanstack/react-query-devtools",
+    "@tanstack/react-router-devtools",
   ],
-  ignoreDependencies: ["@types/*", "@vitejs/*", "@dotenvx/dotenvx"],
+  ignoreBinaries: [
+    // Preinstall script (used via npx)
+    "only-allow",
+  ],
 };
 
 export default config;

@@ -2,7 +2,7 @@
    Raypx Web - Global Styles
    ============================================ */
 
-@import "@raypx/ui/styles/globals.css";
+@import "@raypx/design-system/styles/globals.css";
 
 @theme {
   --max-width-8xl: 100rem;

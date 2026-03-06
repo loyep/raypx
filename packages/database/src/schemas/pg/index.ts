@@ -6,7 +6,7 @@
 
 export * from "./ai";
 export * from "./auth";
-export * from "./configs";
 export * from "./organizations";
 export * from "./resources";
+export * from "./subscription";
 export * from "./vector";

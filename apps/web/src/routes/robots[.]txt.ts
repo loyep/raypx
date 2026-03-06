@@ -3,11 +3,12 @@ import { createFileRoute } from "@tanstack/react-router";
 export const Route = createFileRoute("/robots.txt")({
   server: {
     handlers: {
-      GET: async () => {
+      GET: async ({ request }) => {
+        const baseUrl = new URL(request.url).origin;
         const robotsTxt = `User-agent: *
 Allow: /
 
-Sitemap: /sitemap.xml
+Sitemap: ${baseUrl}/sitemap.xml
 `;
 
         return new Response(robotsTxt, {

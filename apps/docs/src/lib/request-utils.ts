@@ -1,3 +1,5 @@
+import { SITE_URL } from "@raypx/shared/config";
+
 /**
  * Get the base URL from a request
  * Handles localhost, reverse proxies, and production environments
@@ -26,6 +28,6 @@ export function getBaseUrl(request: Request): string {
     return `${protocol}://${host}`;
   }
 
-  // Fallback to production domain
-  return "https://raypx.com";
+  // Fallback to configured site URL
+  return SITE_URL;
 }

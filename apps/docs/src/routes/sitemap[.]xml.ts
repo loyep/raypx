@@ -1,12 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { links } from "~/config/site";
-import { getBaseUrl } from "~/lib/request-utils";
+import { links } from "@/config/site";
+import { getBaseUrl } from "@/lib/request-utils";
 
 export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: async ({ request }) => {
-        const { source } = await import("~/lib/source");
+        const { source } = await import("@/lib/source");
 
         const baseUrl = getBaseUrl(request);
         const timestamp = new Date().toISOString();

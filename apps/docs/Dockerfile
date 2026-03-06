@@ -1,5 +1,6 @@
-# Stage 1: Builder
-FROM node:22-alpine AS builder
+# syntax=docker/dockerfile:1.7
+
+FROM node:22-alpine AS base
 
 WORKDIR /app
 
@@ -10,11 +11,21 @@ ENV CI=true
 # Enable pnpm using Corepack
 RUN corepack enable
 
-# Copy source code (including .git for turbo caching)
-COPY . .
+# Stage 1: Builder
+FROM base AS builder
+ENV NODE_ENV=development
 
-# Install all dependencies (including devDependencies for build)
-RUN pnpm install --frozen-lockfile
+# Copy dependency manifests first for better layer caching
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
+COPY apps ./apps
+COPY packages ./packages
+
+# Install dependencies with shared pnpm store cache
+RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
+    pnpm install --frozen-lockfile
+
+# Copy source code
+COPY . .
 
 # Build the application
 RUN pnpm turbo build --filter=docs...

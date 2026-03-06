@@ -1,21 +1,34 @@
 import { drizzle } from "drizzle-orm/postgres-js";
+import type { PostgresType, Sql } from "postgres";
 import postgres from "postgres";
-import type { DatabaseConfig } from "../types";
-import { DRIZZLE_CONFIG } from "./index";
+import * as schema from "../schemas/pg";
+import { relations } from "../schemas/pg/relations";
+import type { DatabaseClient, DatabaseClientWithConnection, DatabaseConfig } from "../types";
+import { DRIZZLE_CONFIG } from ".";
 
-const POSTGRES_CONFIG = {
-  prepare: true,
-  keep_alive: 1000,
-  debug: process.env.NODE_ENV === "development",
-} as const;
+const DEFAULT_CLOSE_TIMEOUT = 5;
 
-export const createClient = <TSchema extends Record<string, unknown>>({
+export const createClientWithConnection = ({
   databaseUrl,
-  schema,
-}: DatabaseConfig<TSchema>) => {
-  const client = postgres(databaseUrl, POSTGRES_CONFIG);
-  return drizzle(client, {
-    schema,
+  postgresOptions,
+  closeTimeout = DEFAULT_CLOSE_TIMEOUT,
+}: DatabaseConfig): DatabaseClientWithConnection => {
+  const client = postgres(databaseUrl, postgresOptions) as Sql<Record<string, PostgresType>>;
+  const db = drizzle({
+    client,
     ...DRIZZLE_CONFIG,
+    schema,
+    relations,
   });
+
+  return {
+    db,
+    client,
+    close: async (options) => {
+      await client.end({ timeout: options?.timeout ?? closeTimeout });
+    },
+  };
 };
+
+export const createClient = (options: DatabaseConfig): DatabaseClient =>
+  createClientWithConnection(options).db;

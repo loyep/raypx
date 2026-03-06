@@ -78,7 +78,7 @@ function getDefaultLevel(): number {
   const envLevel = process.env.LOG_LEVEL;
   if (envLevel) {
     const parsed = Number.parseInt(envLevel, 10);
-    if (!isNaN(parsed)) return Math.min(5, Math.max(0, parsed));
+    if (!Number.isNaN(parsed)) return Math.min(5, Math.max(0, parsed));
   }
   return process.env.NODE_ENV === "production" ? 3 : 4;
 }

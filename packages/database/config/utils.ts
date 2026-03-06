@@ -30,7 +30,7 @@ export function loadDatabaseUrl(envKey: string, fallbackKey?: string): string {
     // jiti import failed, fallback to process.env
   }
 
-  // Fallback to process.env (already loaded by raypx-scripts CLI)
+  // Fallback to process.env (already loaded by forge CLI)
   if (!url) {
     url = process.env[envKey] || (fallbackKey ? process.env[fallbackKey] : undefined);
   }

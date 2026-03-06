@@ -1,0 +1,31 @@
+{
+  "name": "@raypx/telemetry",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./server": "./src/server/index.ts",
+    "./client": "./src/client/index.ts"
+  },
+  "scripts": {
+    "clean": "rimraf dist .turbo",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@opentelemetry/api": "^1.9.0",
+    "@opentelemetry/exporter-trace-otlp-http": "^0.213.0",
+    "@opentelemetry/resources": "^2.6.0",
+    "@opentelemetry/sdk-node": "^0.213.0",
+    "@opentelemetry/sdk-trace-node": "^2.6.0",
+    "@opentelemetry/semantic-conventions": "^1.40.0",
+    "@raypx/config": "workspace:*",
+    "@raypx/logger": "workspace:*"
+  },
+  "devDependencies": {
+    "@raypx/tsconfig": "workspace:*",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

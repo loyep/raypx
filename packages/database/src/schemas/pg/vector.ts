@@ -24,7 +24,7 @@ export const embeddings = pgTable(
     content: text("content"), // Cached content for faster retrieval
     metadata: jsonb("metadata"), // Additional metadata (document ID, etc.)
     model: text("model"), // Embedding model name
-    userId: uuid("user_id").notNull(), // User ID for access control
+    userId: text("user_id").notNull(), // User ID for access control
     createdAt: timestamptz("created_at").notNull().defaultNow(),
     updatedAt: timestamptz("updated_at").notNull().defaultNow(),
   },
@@ -48,7 +48,7 @@ export const chunks = pgTable(
     id: uuid("id").defaultRandom().primaryKey(),
     text: text("text").notNull(),
     index: text("index_name").notNull(), // Chunk index
-    userId: uuid("user_id").notNull(),
+    userId: text("user_id").notNull(),
     metadata: jsonb("metadata"), // Chunk metadata (startIndex, endIndex, etc.)
     createdAt: timestamptz("created_at").notNull().defaultNow(),
     updatedAt: timestamptz("updated_at").notNull().defaultNow(),

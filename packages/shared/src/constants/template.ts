@@ -108,10 +108,10 @@ export const SUPPORTED_LANGUAGES = ["en", "zh", "ja", "ko"] as const;
 
 /** Email configuration constants */
 export const EmailConfig = {
-  /** Default sender */
-  DEFAULT_FROM: "noreply@raypx.com",
-  /** Support email address */
-  SUPPORT_EMAIL: "support@raypx.com",
+  /** Default sender (use environment variable or fallback) */
+  DEFAULT_FROM: process.env.RESEND_FROM || "noreply@localhost",
+  /** Support email address (use environment variable or fallback) */
+  SUPPORT_EMAIL: process.env.SUPPORT_EMAIL || "support@localhost",
   /** Maximum recipients count */
   MAX_RECIPIENTS: 100,
   /** Email template path */

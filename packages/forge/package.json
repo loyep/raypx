@@ -1,0 +1,35 @@
+{
+  "name": "@raypx/forge",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "forge": "./forge.mjs"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "db": "node --import tsx src/cli/index.ts db",
+    "doctor": "node --import tsx src/cli/index.ts doctor",
+    "run": "node --import tsx src/cli/index.ts run",
+    "ui": "node --import tsx src/cli/index.ts ui generate",
+    "clean": "rimraf dist .turbo",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@dotenvx/dotenvx": "^1.53.0",
+    "consola": "^3.4.2",
+    "fast-glob": "^3.3.3",
+    "fs-extra": "^11.3.4",
+    "tsx": "^4.21.0"
+  },
+  "devDependencies": {
+    "@raypx/tsconfig": "workspace:*",
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

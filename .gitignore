@@ -24,6 +24,7 @@ logs
 .env.*.local
 .env.local
 .env.*
+!.env.example
 
 # caches
 .eslintcache
@@ -61,3 +62,8 @@ logs
 
 # pnpm
 .pnpm-store/
+# apps/**/routeTree.gen.ts
+**/.next/
+**/next-env.d.ts
+
+apps/web/stats.html

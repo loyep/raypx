@@ -1,44 +1,56 @@
-# Stage 1: Builder
-FROM node:22-alpine AS builder
+# syntax=docker/dockerfile:1.7
 
+FROM node:22-alpine AS base
 WORKDIR /app
 
 ENV NODE_ENV=production
 ENV LEFTHOOK=0
 ENV CI=true
 
-# Enable pnpm using Corepack
+# Enable pnpm
 RUN corepack enable
 
-# Copy source code (including .git for turbo caching)
+# Pruner: Generate pruned monorepo for target app
+FROM base AS pruner
+# Copy manifests first for better caching
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
+COPY apps ./apps
+COPY packages ./packages
+RUN pnpm dlx turbo prune web --docker
+
+# Installer: Install dependencies from pruned workspace
+FROM base AS installer
+ENV NODE_ENV=development
+COPY --from=pruner /app/out/json/ .
+COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+COPY --from=pruner /app/out/full/packages/forge/forge.mjs ./packages/forge/forge.mjs
+RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
+    pnpm install --frozen-lockfile
+
+# Prod deps: runtime-only dependencies
+FROM base AS prod-deps
+COPY --from=pruner /app/out/json/ .
+COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
+    pnpm install --frozen-lockfile --prod
+
+# Builder: Build web app from pruned sources
+FROM installer AS builder
+COPY --from=pruner /app/out/full/ .
 COPY . .
-
-# Install all dependencies (including devDependencies for build)
-RUN pnpm install --frozen-lockfile
-
-# Build the application
+RUN ls -la
 RUN pnpm turbo build --filter=web...
 
-# Stage 2: Runner
+# Runner: Production runtime with prod deps + build output only
 FROM node:22-alpine AS runner
-
 WORKDIR /app
-
-# Set production environment
 ENV NODE_ENV=production
 ENV PORT=3000
 
-# Install curl for health check
-RUN apk add --no-cache curl
+# Copy prod node_modules and build artifacts
+COPY --chown=node:node --from=prod-deps /app/apps/web/node_modules ./node_modules
+COPY --chown=node:node --from=builder /app/apps/web/.output .output
+USER node
 
-# Copy built application from builder
-COPY --from=builder /app/apps/web/.output .output
-
-# Display size of /app directory
-RUN echo "=== /app Directory Size ===" && du -hs /app && echo "============================"
-
-# Expose the application port
 EXPOSE 3000
-
-# Start the production server
 CMD ["node", ".output/server/index.mjs"]

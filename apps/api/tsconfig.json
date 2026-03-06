@@ -1,0 +1,15 @@
+{
+  "extends": "../../packages/tsconfig/base.json",
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist"],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "rootDir": "src",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "target": "ES2022",
+    "declaration": false,
+    "sourceMap": true,
+    "noEmit": false
+  }
+}

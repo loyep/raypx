@@ -1,0 +1,237 @@
+---
+title: Development Workflow
+description: Learn the day-to-day commands, QA expectations, and collaboration practices for Raypx.
+---
+
+## Environment Setup
+
+### Initial Setup
+
+1. **Install dependencies**
+   ```bash
+   pnpm install
+   ```
+
+2. **Configure environment variables**
+   ```bash
+   cp .env.example .env
+   ```
+
+   Edit `.env` with required values:
+   - `DATABASE_URL` - PostgreSQL connection string
+   - `BETTER_AUTH_SECRET` - Min 32 characters for auth encryption
+   - `AUTH_URL` - Your app URL (http://localhost:3000 for dev)
+   - Optional: Redis, OAuth, Analytics, AI services (137+ env vars available)
+
+3. **Setup database**
+   ```bash
+   pnpm --filter @raypx/database migrate
+   ```
+
+4. **Start development**
+   ```bash
+   pnpm dev           # All apps (web + docs)
+   # or
+   pnpm dev:web       # Just web app
+   ```
+
+### Environment Variables
+
+The project uses **type-safe environment variables** via `@raypx/config`:
+
+- **Validation**: All env vars validated with Zod schemas
+- **Organization**: Grouped by category (app, feature flags, database, auth, etc.)
+- **Type safety**: Full TypeScript support in code
+- **Examples**: See `.env.example` for all 137+ available variables
+
+## Common Scripts
+
+| Command | Description |
+| ------- | ----------- |
+| `pnpm dev` | Start all apps (web + docs) with hot reload |
+| `pnpm dev:web` | Just the TanStack Start web app |
+| `pnpm dev:docs` | Just the Fumadocs documentation site |
+| `pnpm dev:email` | Email template preview server |
+| `pnpm build` | Production build of all apps (validates everything) |
+| `pnpm build:pkg` | Build packages only |
+| `pnpm start:web` | Start production web server |
+| `pnpm typecheck` | TypeScript validation across workspace |
+| `pnpm check` | Biome linting and formatting check |
+| `pnpm format` | Auto-format all code with Biome |
+| `pnpm test` | Run Vitest unit tests |
+| `pnpm coverage` | Generate HTML coverage reports |
+| `pnpm clean` | Remove build artifacts and caches |
+| `pnpm db` | Database commands |
+| `pnpm shadcn` | Add shadcn/ui components to @raypx/design-system |
+| `pnpm bump-ui` | Update all UI components |
+| `pnpm knip` | Find unused code |
+
+## Coding Standards
+
+### TypeScript
+
+- **Strict mode enabled**: All projects use strict TypeScript settings
+- **Explicit types**: Prefer explicit return types in shared packages
+- **Type over interface**: Use `type` over `interface` for consistency
+- **Avoid `any`**: Use `unknown` instead and narrow with type guards
+
+### Code Style
+
+- **Formatting**: Biome handles all formatting (replaces Prettier)
+- **Linting**: Biome enforces code quality rules (replaces ESLint)
+- **Pre-commit hooks**: Lefthook runs `pnpm format` before commits
+- **Variable names**: Use clear, descriptive names over short abbreviations
+
+### Project Structure
+
+- **Tests**: Co-locate tests next to modules (`*.test.ts[x]`) or in `__tests__/`
+- **Routes**: TanStack Start file-based routing in `apps/web/src/routes/`
+- **Components**: React components in `apps/web/src/components/`
+- **No build for packages**: All packages consumed as TypeScript source
+
+## Git Practices
+
+### Commit Convention
+
+Follow **Conventional Commits** format:
+
+```
+<type>(<scope>): <description>
+
+[optional body]
+```
+
+**Types**: `feat`, `fix`, `docs`, `refactor`, `perf`, `test`, `chore`, `ci`
+
+**Examples**:
+```bash
+git commit -m "feat(auth): add OAuth providers"
+git commit -m "fix(ui): resolve button hover state"
+git commit -m "docs: update environment setup guide"
+git commit -m "feat(web,auth): add login flow"
+```
+
+### Pre-push Checklist
+
+**Always run before pushing**:
+
+```bash
+pnpm typecheck  # TypeScript validation
+pnpm check      # Linting
+pnpm test       # Unit tests
+pnpm build      # Verify production build
+```
+
+Build time is only 10-15 seconds, so always build before commits.
+
+### Branch Strategy
+
+- Work on feature branches (`feature/add-oauth`)
+- Avoid force-pushing shared branches
+- Use `git push --force-with-lease` if necessary (coordinate with team)
+
+## Testing
+
+### Current State
+
+⚠️ **Testing is a critical gap** (15% coverage):
+- ✅ Vitest framework configured
+- ✅ CI runs tests automatically
+- ✅ E2E tests with Playwright configured
+- ❌ Minimal test coverage
+
+### Testing Guidelines
+
+When adding tests:
+
+1. **Unit tests**: Test business logic and utilities
+   ```typescript
+   // packages/shared/__tests__/utils.test.ts
+   import { describe, it, expect } from 'vitest'
+   import { yourFunction } from '../utils'
+
+   describe('yourFunction', () => {
+     it('should handle valid input', () => {
+       expect(yourFunction('test')).toBe('expected')
+     })
+   })
+   ```
+
+2. **Integration tests**: Test API endpoints, database operations
+
+### Running Tests
+
+```bash
+# Unit and integration tests
+pnpm test           # All tests
+pnpm test --watch   # Watch mode
+pnpm coverage       # Generate coverage report
+```
+
+Coverage reports are uploaded to Codecov in CI.
+
+## Database Development
+
+### Workflow
+
+1. **Modify schema** in `packages/database/src/schemas/pg/`
+2. **Generate migration**:
+   ```bash
+   pnpm --filter @raypx/database generate
+   ```
+3. **Review migration** in `packages/database/migrations/pg/`
+4. **Apply migration**:
+   ```bash
+   pnpm --filter @raypx/database migrate
+   ```
+5. **Verify in Drizzle Studio**:
+   ```bash
+   pnpm db studio
+   ```
+
+### Database Tips
+
+- Use Drizzle's type-safe query builder
+- Leverage PostgreSQL features (JSONB, arrays, etc.)
+- Add indexes for frequently queried columns
+- Use migrations for all schema changes (never manual ALTER TABLE)
+
+> 📘 **Production Setup**: See [Database Hosting Guide](/docs/operations/database) for setting up PostgreSQL in production environments (Neon, Supabase, Railway, etc.)
+
+## Working with Documentation
+
+- Documentation lives in `apps/docs/content/docs/`
+- Write documentation in MDX format (Markdown + JSX)
+- Run `pnpm dev:docs` to preview docs at http://localhost:3001
+- Fumadocs auto-generates navigation from file structure and frontmatter
+
+## Troubleshooting
+
+### Build Issues
+
+```bash
+# Clear all caches and rebuild
+pnpm clean
+rm -rf node_modules .turbo
+pnpm install
+pnpm build
+```
+
+### TypeScript Errors
+
+1. Restart TypeScript server (VS Code: Cmd+Shift+P → "Restart TS Server")
+2. Clear TypeScript cache: `rm -rf tsconfig.tsbuildinfo`
+3. Reinstall dependencies: `pnpm install`
+
+### Common Errors
+
+- **"Cannot find module '@raypx/...'"** → Run `pnpm install`
+- **"Port 3000 in use"** → Kill process: `lsof -ti:3000 | xargs kill -9`
+- **"Type error in node_modules"** → Delete `node_modules` and reinstall
+- **Biome errors** → Run `pnpm format` to auto-fix
+
+### Getting Help
+
+- Check [CLAUDE.md](/CLAUDE.md) for architecture details
+- Review [TODO.md](/TODO.md) for known issues and roadmap
+- See `.env.example` for all environment variables

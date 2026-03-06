@@ -8,8 +8,7 @@
     "verbatimModuleSyntax": true,
     "paths": {
       "fumadocs-mdx:collections/*": [".source/*"],
-      "~/*": ["./src/*"],
-      "@raypx/ui/*": ["../../packages/ui/src/*"]
+      "@/*": ["./src/*"]
     }
   }
 }

@@ -5,8 +5,10 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./server": "./src/server.ts",
-    "./client": "./src/client.ts",
+    "./client": "./src/client/index.ts",
+    "./rpc": "./src/rpc.ts",
+    "./server": "./src/server/index.ts",
+    "./provider": "./src/provider.tsx",
     "./types": "./src/types.ts"
   },
   "scripts": {
@@ -15,13 +17,16 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@better-auth/drizzle-adapter": "1.5.3",
     "@raypx/config": "workspace:*",
     "@raypx/database": "workspace:*",
-    "better-auth": "^1.4.18"
+    "better-auth": "1.5.3"
   },
   "devDependencies": {
     "@raypx/tsconfig": "workspace:*",
     "@types/node": "catalog:",
+    "@types/react": "catalog:react19",
+    "react": "catalog:react19",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }

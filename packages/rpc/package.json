@@ -5,6 +5,7 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
+    "./client": "./src/client.ts",
     "./orpc": "./src/orpc.ts"
   },
   "scripts": {
@@ -13,14 +14,20 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@orpc/client": "^1.13.5",
-    "@orpc/openapi": "^1.13.5",
-    "@orpc/server": "^1.13.5",
-    "@orpc/tanstack-query": "^1.13.5",
-    "@orpc/zod": "^1.13.5",
+    "@orpc/client": "^1.13.6",
+    "@orpc/openapi": "^1.13.6",
+    "@orpc/server": "^1.13.6",
+    "@orpc/tanstack-query": "^1.13.6",
+    "@orpc/zod": "^1.13.6",
+    "@raypx/admin": "workspace:*",
+    "@raypx/ai": "workspace:*",
     "@raypx/auth": "workspace:*",
+    "@raypx/config": "workspace:*",
+    "@raypx/core": "workspace:*",
     "@raypx/database": "workspace:*",
-    "better-auth": "^1.4.18",
+    "@raypx/logger": "workspace:*",
+    "@raypx/shared": "workspace:*",
+    "@raypx/stripe": "workspace:*",
     "zod": "catalog:"
   },
   "devDependencies": {

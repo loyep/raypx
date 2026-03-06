@@ -24,7 +24,6 @@ export function initSentry(config: SentryConfig): void {
     integrations: [
       Sentry.httpIntegration(),
       Sentry.expressIntegration(),
-      Sentry.prismaIntegration(),
       Sentry.nodeContextIntegration(),
     ],
   });

@@ -8,6 +8,7 @@ export const getRouter = () => {
     routeTree,
     defaultPreload: "intent",
     defaultPreloadStaleTime: 0,
+    defaultPendingMinMs: 0,
     defaultErrorComponent: DefaultCatchBoundary,
     defaultNotFoundComponent: () => <NotFound />,
     scrollRestoration: true,

@@ -37,7 +37,7 @@ export interface AuthConfig {
   /**
    * Base URL for the auth server
    */
-  baseUrl?: string;
+  baseURL?: string;
 
   /**
    * Secret key for signing tokens

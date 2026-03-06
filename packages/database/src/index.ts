@@ -20,18 +20,15 @@ export {
   sql,
 } from "drizzle-orm";
 
-import { createClient } from "./adapters/postgres";
-import * as schemas from "./schemas/pg";
+import { createClient, createClientWithConnection } from "./adapters/postgres";
+import { env } from "./envs";
 
+export { createClient, createClientWithConnection };
 export * as schemas from "./schemas/pg";
-export * from "./services/config";
 export * from "./types";
 export * from "./utils";
 
-import { envs } from "./envs";
-
-// Main database connection
-export const db = createClient<typeof schemas>({
-  databaseUrl: envs().DATABASE_URL,
-  schema: schemas,
+// Main database connection for long-running services.
+export const db = createClient({
+  databaseUrl: env.DATABASE_URL,
 });

@@ -1,11 +1,13 @@
 import { createRequire } from "node:module";
 import react from "@vitejs/plugin-react";
+import tsconfigPaths from "vite-tsconfig-paths";
 import { defineConfig } from "vitest/config";
 
 const require = createRequire(import.meta.url);
 
 export default defineConfig({
   plugins: [
+    tsconfigPaths(),
     react({
       babel: {
         plugins: [

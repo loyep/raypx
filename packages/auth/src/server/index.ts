@@ -1,0 +1,211 @@
+import { db, uuidv7 } from "@raypx/database";
+import * as schema from "@raypx/database/schemas";
+import { betterAuth } from "better-auth";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import {
+  admin,
+  bearer,
+  jwt,
+  lastLoginMethod,
+  multiSession,
+  organization,
+  username,
+} from "better-auth/plugins";
+import { defaultRoles } from "better-auth/plugins/admin/access";
+
+import { env } from "../envs";
+import type { AuthConfig } from "../types";
+
+/**
+ * Default session expiration (7 days in seconds)
+ */
+const DEFAULT_SESSION_EXPIRES_IN = 60 * 60 * 24 * 7;
+
+function resolveProviders(
+  providers: AuthConfig["providers"],
+): NonNullable<AuthConfig["providers"]> {
+  if (providers !== undefined) {
+    return providers;
+  }
+
+  const enabled: NonNullable<AuthConfig["providers"]> = [];
+  if (env.AUTH_GOOGLE_ID && env.AUTH_GOOGLE_SECRET) enabled.push("google");
+  if (env.AUTH_GITHUB_ID && env.AUTH_GITHUB_SECRET) enabled.push("github");
+  if (env.AUTH_APPLE_ID && env.AUTH_APPLE_SECRET) enabled.push("apple");
+  if (env.AUTH_MICROSOFT_ID && env.AUTH_MICROSOFT_SECRET) enabled.push("microsoft");
+  if (env.AUTH_DISCORD_ID && env.AUTH_DISCORD_SECRET) enabled.push("discord");
+  if (env.AUTH_TWITTER_ID && env.AUTH_TWITTER_SECRET) enabled.push("twitter");
+  if (env.AUTH_FACEBOOK_ID && env.AUTH_FACEBOOK_SECRET) enabled.push("facebook");
+
+  return enabled;
+}
+
+/**
+ * Create a Better Auth instance configured for the server
+ */
+export function createAuth(config: AuthConfig = {}) {
+  const resolvedSecret = env.AUTH_SECRET?.trim() || env.APP_KEY?.trim();
+  const {
+    baseURL = env.AUTH_URL,
+    secret = resolvedSecret,
+    providers = resolveProviders(config.providers),
+    enableCredentials = true,
+    enablePasskeys = false,
+    enable2FA = false,
+    sessionExpiresIn = DEFAULT_SESSION_EXPIRES_IN,
+  } = config;
+
+  // Configure cookie domain for cross-subdomain auth
+  // In production, set AUTH_DOMAIN to share cookies across subdomains (e.g., ".yourdomain.com")
+  const cookieDomain = env.AUTH_DOMAIN;
+
+  const auth = betterAuth({
+    baseURL,
+    secret,
+    advanced: {
+      database: {
+        generateId: (): string => uuidv7(),
+      },
+      cookie: {
+        domain: cookieDomain,
+      },
+    },
+    database: drizzleAdapter(db, {
+      provider: "pg",
+      schema,
+    }),
+    session: {
+      expiresIn: sessionExpiresIn,
+      updateAge: 60 * 60 * 24, // Update session once per day
+    },
+    emailAndPassword: {
+      enabled: enableCredentials,
+      requireEmailVerification: false,
+    },
+    passkey: {
+      enabled: enablePasskeys,
+    },
+    twoFactor: {
+      enabled: enable2FA,
+    },
+    plugins: [
+      organization(),
+      admin({
+        defaultRole: "user",
+        adminRoles: ["admin", "superadmin"],
+        roles: {
+          user: defaultRoles.user,
+          admin: defaultRoles.admin,
+          superadmin: defaultRoles.admin,
+        },
+      }),
+      username(),
+      jwt(),
+      multiSession(),
+      bearer(),
+      lastLoginMethod(),
+    ],
+    socialProviders: {
+      google: providers.includes("google")
+        ? {
+            clientId: env.AUTH_GOOGLE_ID ?? "",
+            clientSecret: env.AUTH_GOOGLE_SECRET ?? "",
+          }
+        : undefined,
+      github: providers.includes("github")
+        ? {
+            clientId: env.AUTH_GITHUB_ID ?? "",
+            clientSecret: env.AUTH_GITHUB_SECRET ?? "",
+          }
+        : undefined,
+      apple: providers.includes("apple")
+        ? {
+            clientId: env.AUTH_APPLE_ID ?? "",
+            clientSecret: env.AUTH_APPLE_SECRET ?? "",
+          }
+        : undefined,
+      microsoft: providers.includes("microsoft")
+        ? {
+            clientId: env.AUTH_MICROSOFT_ID ?? "",
+            clientSecret: env.AUTH_MICROSOFT_SECRET ?? "",
+          }
+        : undefined,
+      discord: providers.includes("discord")
+        ? {
+            clientId: env.AUTH_DISCORD_ID ?? "",
+            clientSecret: env.AUTH_DISCORD_SECRET ?? "",
+          }
+        : undefined,
+      twitter: providers.includes("twitter")
+        ? {
+            clientId: env.AUTH_TWITTER_ID ?? "",
+            clientSecret: env.AUTH_TWITTER_SECRET ?? "",
+          }
+        : undefined,
+      facebook: providers.includes("facebook")
+        ? {
+            clientId: env.AUTH_FACEBOOK_ID ?? "",
+            clientSecret: env.AUTH_FACEBOOK_SECRET ?? "",
+          }
+        : undefined,
+    },
+  });
+
+  return auth;
+}
+
+/**
+ * Session payload returned by Better Auth
+ */
+export type ServerSession = Awaited<ReturnType<Auth["api"]["getSession"]>>;
+
+/**
+ * Framework-agnostic auth helpers
+ */
+function createServerAuthHelpers(config: AuthConfig = {}) {
+  const auth = createAuth(config);
+
+  async function getSession(headers: Headers): Promise<ServerSession> {
+    return auth.api.getSession({ headers });
+  }
+
+  async function hasSession(headers: Headers): Promise<boolean> {
+    const session = await getSession(headers);
+    return Boolean(session?.session);
+  }
+
+  return {
+    auth,
+    getSession,
+    hasSession,
+  };
+}
+
+const defaultServerAuthHelpers = createServerAuthHelpers();
+
+export const serverAuth = defaultServerAuthHelpers.auth;
+
+export const getServerSession = defaultServerAuthHelpers.getSession;
+
+export const hasServerSession = defaultServerAuthHelpers.hasSession;
+
+/**
+ * Get session from request headers
+ */
+export async function getSessionFromRequest(auth: ReturnType<typeof createAuth>, request: Request) {
+  try {
+    const headers = request.headers;
+    if (!headers) {
+      return null;
+    }
+    const session = await auth.api.getSession({ headers });
+    return session;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Type export for the auth instance
+ */
+export type Auth = ReturnType<typeof createAuth>;

@@ -18,67 +18,72 @@
   },
   "scripts": {
     "build": "turbo build",
+    "build:app": "turbo build --filter=app",
+    "build:api": "turbo build --filter=api",
+    "build:docs": "turbo build --filter=docs",
     "build:pkg": "turbo build --filter=@raypx/*",
     "build:web": "turbo build --filter=web",
-    "build:docs": "turbo build --filter=docs",
+    "bump-ui": "npx shadcn@latest add --all --overwrite -c packages/design-system && pnpm -w format",
     "changeset": "changeset",
-    "check": "biome check",
-    "clean": "raypx-scripts clean",
-    "coverage": "vitest --coverage",
-    "db": "raypx-scripts db",
+    "clean": "turbo clean && rimraf '**/node_modules/.vite'",
+    "db": "forge db",
+    "db:check-ai": "forge db check-ai",
+    "db:generate": "forge db generate",
+    "db:migrate": "forge db migrate",
+    "db:pull": "forge db pull",
+    "db:push": "forge db push",
+    "db:seed": "pnpm --filter @raypx/database run seed",
+    "db:studio": "forge db studio",
+    "doctor": "forge doctor",
+    "dev": "turbo dev --filter=web",
+    "dev:app": "turbo dev --filter=app",
+    "dev:api": "turbo dev --filter=api",
     "dev:docs": "turbo dev --filter=docs",
     "dev:email": "turbo dev --filter=email",
-    "dev:web": "rr turbo dev --filter=web",
-    "docs:build": "turbo build --filter=docs",
-    "format": "raypx-scripts format",
+    "dev:web": "turbo dev --filter=web",
+    "format": "biome check --write .",
     "preinstall": "npx only-allow pnpm",
-    "prepare": "test -n \"$CI\" && echo 'Skipping lefthook' || lefthook install",
     "knip": "knip",
-    "knip:files": "knip --files",
-    "knip:production": "knip --production",
-    "setup": "raypx-scripts setup",
+    "knip:fix": "knip --fix",
+    "lint": "biome check",
+    "lint:fix": "biome check --write",
+    "prepare": "test -n \"$CI\" && echo 'Skipping lefthook' || lefthook install",
+    "release": "changeset version",
+    "setup": "pnpm db:migrate && lefthook install",
     "shadcn": "pnpm --filter web run shadcn && pnpm -w format",
     "start": "turbo start",
+    "start:app": "turbo start --filter=app",
+    "start:api": "turbo start --filter=api",
+    "start:docs": "turbo start --filter=docs",
     "start:web": "turbo start --filter=web",
     "test": "turbo test",
-    "turbo": "turbo",
-    "typecheck": "turbo typecheck --affected --cache-dir=.turbo",
+    "test:coverage": "vitest --coverage",
+    "test:watch": "vitest watch",
+    "typecheck": "turbo typecheck",
     "update:deps": "pnpm update --latest --interactive --recursive"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.4.3",
-    "@changesets/cli": "^2.29.8",
-    "@dotenvx/dotenvx": "^1.52.0",
-    "@raypx/scripts": "workspace:*",
+    "@biomejs/biome": "^2.4.6",
+    "@changesets/cli": "^2.30.0",
+    "@commitlint/cli": "^20.4.3",
+    "@commitlint/config-conventional": "^20.4.3",
+    "@dotenvx/dotenvx": "^1.53.0",
+    "@raypx/forge": "workspace:*",
     "@types/node": "catalog:",
-    "@vitest/coverage-v8": "^4.0.18",
+    "@vitest/coverage-v8": "catalog:",
     "jsdom": "^28.1.0",
-    "knip": "^5.84.1",
-    "lefthook": "^2.1.1",
+    "knip": "^5.85.0",
+    "lefthook": "^2.1.2",
     "rimraf": "^6.1.3",
-    "turbo": "^2.8.10",
+    "tsx": "^4.21.0",
+    "turbo": "^2.8.13",
     "typescript": "^5.9.3",
-    "vite": "catalog:",
-    "vitest": "^4.0.18"
+    "vite": "catalog:beta",
+    "vitest": "catalog:"
   },
-  "packageManager": "pnpm@10.30.1",
+  "packageManager": "pnpm@10.30.3",
   "engines": {
     "node": ">=22",
     "pnpm": ">=10.26.0"
-  },
-  "pnpm": {
-    "peerDependencyRules": {
-      "allowedVersions": {
-        "vite": "^8.0.0-0"
-      }
-    },
-    "overrides": {
-      "esbuild": "^0.27.3"
-    },
-    "updateConfig": {
-      "ignoreDependencies": [
-        "@types/node"
-      ]
-    }
   }
 }

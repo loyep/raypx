@@ -1,11 +1,21 @@
-// Server-side exports
+// Type augmentation for Better Auth (must be imported first)
+import "./types-ext";
 
-// Client-side exports
-export { createAuthClient } from "better-auth/react";
-export type { Auth } from "./server";
-export { createAuth, getSessionFromRequest } from "./server";
+// Client-side exports (safe for browser)
+export {
+  authClient,
+  createAuthClient,
+  getSession,
+  signIn,
+  signOut,
+  signUp,
+  useSession,
+} from "./client";
 
-// Types
+// Provider exports (safe for browser)
+export { AuthProvider, useAuthContext } from "./provider";
+
+// Types (safe for browser)
 export type {
   AuthConfig,
   AuthErrorType,

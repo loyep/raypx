@@ -1,4 +1,5 @@
 import type { SiteConfig } from "@raypx/seo";
+import { SITE_URL } from "@raypx/shared/config";
 
 export type SiteLinks = {
   docs: string;
@@ -40,7 +41,7 @@ export const siteConfig: SiteConfig = {
     "SSG",
     "RSC",
   ],
-  url: "https://raypx.com",
+  url: SITE_URL,
   author: "Raypx",
   image: "/og.png",
   github: links.github,

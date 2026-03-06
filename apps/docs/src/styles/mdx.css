@@ -4,3 +4,67 @@
 
 @import "@fumadocs/base-ui/css/neutral.css";
 @import "@fumadocs/base-ui/css/preset.css";
+
+/* Content polish on top of Fumadocs defaults */
+.prose {
+  line-height: 1.75;
+}
+
+.prose :where(h2, h3, h4) {
+  scroll-margin-top: 5rem;
+}
+
+.prose :where(h2) {
+  margin-top: 2.2rem;
+  padding-top: 0.2rem;
+  border-top: 1px solid color-mix(in oklab, var(--color-fd-border) 70%, transparent);
+}
+
+.prose :where(p) {
+  margin-top: 0.95rem;
+  margin-bottom: 0.95rem;
+  text-wrap: pretty;
+}
+
+.prose :where(a) {
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 0.08em;
+}
+
+.prose :where(code):not(:where(pre code)) {
+  padding: 0.15rem 0.4rem;
+  border-radius: 0.4rem;
+  border: 1px solid color-mix(in oklab, var(--color-fd-border) 75%, transparent);
+  background: color-mix(in oklab, var(--color-fd-muted) 80%, transparent);
+  font-size: 0.9em;
+}
+
+.prose :where(pre) {
+  border: 1px solid color-mix(in oklab, var(--color-fd-border) 72%, transparent);
+  border-radius: 0.9rem;
+  box-shadow:
+    0 1px 0 color-mix(in oklab, var(--color-fd-border) 55%, transparent),
+    0 10px 28px color-mix(in oklab, var(--color-fd-foreground) 8%, transparent);
+}
+
+.prose :where(blockquote) {
+  border-left-width: 3px;
+  border-left-color: var(--color-fd-primary);
+  background: color-mix(in oklab, var(--color-fd-primary) 7%, transparent);
+  border-radius: 0 0.7rem 0.7rem 0;
+  padding: 0.75rem 1rem;
+}
+
+.prose :where(table) {
+  border: 1px solid color-mix(in oklab, var(--color-fd-border) 72%, transparent);
+  border-radius: 0.8rem;
+  overflow: hidden;
+}
+
+.prose :where(th) {
+  background: color-mix(in oklab, var(--color-fd-muted) 65%, transparent);
+}
+
+.prose :where(tr:hover td) {
+  background: color-mix(in oklab, var(--color-fd-muted) 45%, transparent);
+}

@@ -1,6 +1,6 @@
-import { Image } from "@raypx/ui/components/image";
-import { useTheme } from "@raypx/ui/hooks/use-theme";
-import { cn } from "@raypx/ui/lib/utils";
+import { Image } from "@raypx/design-system/components/image";
+import { useTheme } from "@raypx/design-system/hooks/use-theme";
+import { cn } from "@raypx/design-system/lib/utils";
 import { useEffect, useState } from "react";
 
 const logoLight = "/logo.png";

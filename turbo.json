@@ -9,14 +9,23 @@
       "cache": true,
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env", "vite.config.*", "tsconfig.json"],
-      "outputs": ["dist/**", ".tanstack/**", ".output/**", ".nitro/**", ".netlify/**"],
+      "outputs": ["dist/**", ".tanstack/**", ".output/**", ".nitro/**", ".netlify/**", ".next/**"],
       "outputLogs": "new-only"
+    },
+    "web#build": {
+      "outputs": [".tanstack/**", ".output/**", ".nitro/**", ".netlify/**"]
+    },
+    "app#build": {
+      "outputs": [".tanstack/**", ".output/**", ".nitro/**", ".netlify/**"]
+    },
+    "docs#build": {
+      "outputs": [".tanstack/**", ".output/**", ".nitro/**", ".netlify/**", ".source/**"]
     },
     "start": {
       "cache": true,
       "dependsOn": ["build", "^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env", "vite.config.*", "tsconfig.json"],
-      "outputs": ["dist/**", ".tanstack/**", ".output/**", ".nitro/**", ".netlify/**"]
+      "outputs": ["dist/**", ".tanstack/**", ".output/**", ".nitro/**", ".netlify/**", ".next/**"]
     },
     "typecheck": {
       "cache": true,
@@ -25,7 +34,6 @@
     },
     "dev": {
       "cache": false,
-      "dependsOn": ["^build"],
       "persistent": true
     },
     "format": {

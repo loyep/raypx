@@ -1,14 +1,16 @@
 import browserCollections from "fumadocs-mdx:collections/browser";
 import { DocsLayout } from "@fumadocs/base-ui/layouts/notebook";
 import { DocsBody, DocsDescription, DocsPage, DocsTitle } from "@fumadocs/base-ui/page";
+import { generatePageHead } from "@raypx/seo";
 import { createFileRoute, notFound, redirect, useLoaderData } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import type * as PageTree from "fumadocs-core/page-tree";
-import { useMemo } from "react";
-import { getMdxComponents } from "~/components/layout/mdx-components";
-import { siteConfig } from "~/config/site";
-import { baseOptions } from "~/lib/layout.shared";
-import { source } from "~/lib/source";
+import { type ComponentType, useMemo } from "react";
+import { getMdxComponents } from "@/components/layout/mdx-components";
+import { githubConfig } from "@/config/docs";
+import { siteConfig } from "@/config/site";
+import { baseOptions } from "@/lib/layout.shared";
+import { source } from "@/lib/source";
 
 const loader = createServerFn({ method: "GET" })
   .inputValidator((slugs: string[]) => slugs)
@@ -56,39 +58,45 @@ export function DocsPageComponent() {
   const tree = useMemo(() => transformPageTree(data.tree as PageTree.Folder), [data.tree]);
 
   return (
-    <main id="main-content">
-      <DocsLayout
-        {...options}
-        nav={{ ...options.nav, mode: "top" }}
-        sidebar={{
-          collapsible: false,
-          tabs: [
-            {
-              title: "Docs",
-              url: "/",
-            },
-          ],
-        }}
-        tabMode="navbar"
-        tree={tree}
-      >
-        <Content path={data.path} />
-      </DocsLayout>
-    </main>
+    <DocsLayout
+      {...options}
+      nav={{ ...options.nav, mode: "auto" }}
+      sidebar={{
+        collapsible: true,
+        tabs: [
+          {
+            title: "Docs",
+            url: "/",
+          },
+        ],
+      }}
+      tabMode="sidebar"
+      tree={tree}
+    >
+      <Content path={data.path} />
+    </DocsLayout>
   );
 }
 
 const clientLoader = browserCollections.docs.createClientLoader({
-  component({ toc, frontmatter, lastModified, default: MDX }, { path }: { path: string }) {
+  component(
+    {
+      toc,
+      frontmatter,
+      default: MDX,
+    }: {
+      toc: any[] | undefined;
+      frontmatter: { title?: string; description?: string };
+      default: ComponentType<{ components?: any }>;
+    },
+    { path }: { path: string },
+  ) {
     return (
       <DocsPage
         editOnGithub={{
-          owner: "raypx",
-          repo: "raypx",
-          sha: "main",
+          ...githubConfig,
           path: `apps/docs/content/docs/${path}`,
         }}
-        lastUpdate={lastModified as Date}
         tableOfContent={{ enabled: true, style: "clerk" }}
         toc={toc}
       >
@@ -118,23 +126,14 @@ export const Route = createFileRoute("/$")({
   head: async (props) => {
     const { title, description, path } = props.loaderData ?? {};
     const url = `${siteConfig.url}/${path ?? ""}`;
+    const pageTitle = title ? `${title} - ${siteConfig.name}` : siteConfig.title;
 
-    return {
-      meta: [
-        { title: `${title} - ${siteConfig.name}` },
-        { name: "description", content: description ?? siteConfig.description },
-        { property: "og:title", content: `${title} - ${siteConfig.name}` },
-        { property: "og:description", content: description ?? siteConfig.description },
-        { property: "og:type", content: "article" },
-        { property: "og:url", content: url },
-        { property: "og:image", content: `${siteConfig.url}${siteConfig.image}` },
-        { name: "twitter:card", content: "summary_large_image" },
-        { name: "twitter:title", content: `${title} - ${siteConfig.name}` },
-        { name: "twitter:description", content: description ?? siteConfig.description },
-        { name: "twitter:image", content: `${siteConfig.url}${siteConfig.image}` },
-        { name: "article:published_time", content: new Date().toISOString() },
-      ],
-      links: [{ rel: "canonical", href: url }],
-    };
+    return generatePageHead(siteConfig, {
+      title: pageTitle,
+      description: description ?? siteConfig.description,
+      url,
+      ogType: "article",
+      publishedTime: new Date(),
+    });
   },
 });
