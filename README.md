@@ -7,15 +7,9 @@ Raypx is an open-source SaaS template monorepo. It is built for fast product shi
 
 ## Product Shape
 
-- `apps/app`: SaaS console (admin + business features)
-- `apps/web`: marketing/site shell + sign-in entry
-- `apps/docs`: standalone docs app for separate deployment
-
-Recommended production domains:
-
-- `raypx.com` -> `apps/web`
-- `app.raypx.com` -> `apps/app`
-- `docs.raypx.com` -> `apps/docs`
+- `apps/web`: main web app (dashboard + app routes + chat + settings)
+- `apps/docs`: docs content is served via `apps/web` docs routes
+- `apps/api`: API app/runtime entry for backend surface
 
 ## Architecture Principles
 
@@ -24,7 +18,7 @@ Recommended production domains:
 - AI is provider-pluggable (default path: Qwen, optional Zhipu).
 - Package boundaries are enforced by dependency layers.
 
-See [ROADMAP.md](./ROADMAP.md) and [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) for the execution plan.
+See [ROADMAP.md](./ROADMAP.md) for the execution plan.
 
 ## Requirements
 
@@ -44,18 +38,19 @@ pnpm dev
 ```text
 raypx/
 ├── apps/
-│   ├── app/     # SaaS dashboard app
-│   ├── web/     # Marketing/main web app
-│   └── docs/    # Documentation app
+│   ├── web/     # Main app (dashboard, chat, settings, docs routes)
+│   └── api/     # API app/runtime entry
 ├── packages/
-│   ├── core/            # Cross-package context + base contracts
-│   ├── config/          # Runtime/env config
-│   ├── shared/          # Cross-end pure types/constants
-│   ├── database/        # Drizzle schemas + adapters
-│   ├── auth/            # Better Auth integration + rpc helpers
+│   ├── admin/           # Admin plugin (UI/API helpers)
 │   ├── ai/              # AI domain services (providers, stream, logs)
-│   ├── rpc/             # oRPC transport layer
+│   ├── auth/            # Better Auth integration + rpc helpers
+│   ├── config/          # Runtime/env config
+│   ├── core/            # Cross-package context + base contracts
+│   ├── database/        # Drizzle schemas + adapters
 │   ├── design-system/   # Shared UI
+│   ├── forge/           # Internal command tooling
+│   ├── rpc/             # oRPC transport layer
+│   ├── shared/          # Cross-end pure types/constants
 │   └── ...
 └── scripts/             # Internal automation scripts
 ```
@@ -78,9 +73,8 @@ raypx/
 | Command | Description |
 | --- | --- |
 | `pnpm dev` | Start default dev workflow (`web`) |
-| `pnpm dev:app` | Start `apps/app` |
+| `pnpm dev:api` | Start `apps/api` |
 | `pnpm dev:web` | Start `apps/web` |
-| `pnpm dev:docs` | Start `apps/docs` |
 | `pnpm build` | Build all workspaces |
 | `pnpm typecheck` | Run TypeScript checks |
 | `pnpm lint` | Run Biome checks |
