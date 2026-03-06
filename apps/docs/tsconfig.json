@@ -1,0 +1,15 @@
+{
+  "extends": "@raypx/tsconfig/vite.json",
+  "include": ["src/**/*.ts", "src/**/*.tsx", "*.ts", "*.tsx"],
+  "exclude": ["node_modules"],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "allowJs": false,
+    "verbatimModuleSyntax": true,
+    "paths": {
+      "fumadocs-mdx:collections/*": [".source/*"],
+      "~/*": ["./src/*"],
+      "@raypx/ui/*": ["../../packages/ui/src/*"]
+    }
+  }
+}

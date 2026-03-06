@@ -1,0 +1,63 @@
+# dependencies
+node_modules
+
+# temp files
+/temp
+
+# output
+out
+dist
+*.tgz
+
+# code coverage
+coverage
+*.lcov
+
+# logs
+logs
+*.log
+
+# dotenv environment variable files
+.env
+.env.development.local
+.env.test.local
+.env.*.local
+.env.local
+.env.*
+
+# caches
+.eslintcache
+.cache
+*.tsbuildinfo
+
+# IntelliJ based IDEs
+.idea
+
+# Finder (MacOS) folder config
+.DS_Store
+
+# Fumadocs
+.source
+
+# Turbo
+.turbo
+
+# Claude Code personal settings
+.claude/settings.local.json
+.claude/auth.json
+.claude/cache/
+.claude/logs/
+
+# Tanstack
+**/.tanstack
+
+.netlify
+.vercel
+
+**/.nitro
+**/.output
+
+**/.raypx
+
+# pnpm
+.pnpm-store/

@@ -1,0 +1,44 @@
+{
+  "name": "web",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "rr vite build",
+    "clean": "rimraf dist .turbo .tanstack .nitro .output .netlify",
+    "dev": "rr vite dev",
+    "serve": "rr vite preview",
+    "start": "rr node .output/server/index.mjs",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@raypx/config": "workspace:*",
+    "@raypx/database": "workspace:*",
+    "@raypx/rpc": "workspace:*",
+    "@raypx/seo": "workspace:*",
+    "@raypx/ui": "workspace:*",
+    "@tanstack/react-query": "catalog:",
+    "@tanstack/react-router": "catalog:",
+    "@tanstack/react-start": "catalog:",
+    "react": "catalog:react19",
+    "react-dom": "catalog:react19",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@raypx/tsconfig": "workspace:*",
+    "@tailwindcss/vite": "catalog:tailwindv4",
+    "@tanstack/devtools-vite": "catalog:",
+    "@tanstack/react-devtools": "catalog:",
+    "@tanstack/react-query-devtools": "catalog:",
+    "@tanstack/react-router-devtools": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:react19",
+    "@types/react-dom": "catalog:react19",
+    "@vitejs/plugin-react": "catalog:",
+    "nitro": "catalog:",
+    "tailwindcss": "catalog:tailwindv4",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vite-tsconfig-paths": "^6.1.1",
+    "vitest": "catalog:"
+  }
+}

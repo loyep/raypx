@@ -1,0 +1,47 @@
+{
+  "name": "docs",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "rr vite build",
+    "clean": "rimraf dist .turbo .tanstack .nitro .output .netlify",
+    "dev": "rr vite dev",
+    "serve": "rr vite preview",
+    "shadcn": "shadcn add --overwrite",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@fumadocs/base-ui": "^16.6.4",
+    "@raypx/config": "workspace:*",
+    "@raypx/seo": "workspace:*",
+    "@raypx/ui": "workspace:*",
+    "@tanstack/react-router": "catalog:",
+    "@tanstack/react-start": "catalog:",
+    "fumadocs-core": "^16.6.4",
+    "fumadocs-mdx": "^14.2.7",
+    "react": "catalog:react19",
+    "react-dom": "catalog:react19",
+    "shadcn": "^3.8.5",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@raypx/tsconfig": "workspace:*",
+    "@tailwindcss/vite": "catalog:tailwindv4",
+    "@tanstack/devtools-vite": "^0.5.1",
+    "@tanstack/react-devtools": "^0.9.6",
+    "@tanstack/react-router-devtools": "^1.161.3",
+    "@types/react": "catalog:react19",
+    "@types/react-dom": "catalog:react19",
+    "@vitejs/plugin-react": "catalog:",
+    "babel-plugin-react-compiler": "catalog:",
+    "jiti": "catalog:",
+    "nitro": "catalog:",
+    "tailwindcss": "catalog:tailwindv4",
+    "type-fest": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vite-plugin-inspect": "^11.3.3",
+    "vite-tsconfig-paths": "^6.1.1",
+    "vitest": "catalog:"
+  }
+}

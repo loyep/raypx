@@ -1,0 +1,24 @@
+# USAGE:
+#
+#   Refer for explanation to following link:
+#   https://lefthook.dev/configuration/
+#
+commit-msg:
+  jobs:
+    - name: remove co-author
+      run: sed -i '' '/Co-Authored-By:/d' {1}
+
+pre-commit:
+  jobs:
+    - run: pnpm exec biome check --write --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}
+      glob:
+        - "*.js"
+        - "*.jsx"
+        - "*.ts"
+        - "*.tsx"
+        - "*.json"
+        - "*.jsonc"
+        - "*.css"
+        - "*.mdx"
+      root: "."
+      stage_fixed: true

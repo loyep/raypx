@@ -1,0 +1,56 @@
+{
+  "name": "@raypx/ui",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./styles/*.css": "./src/styles/*.css",
+    "./lib/*": "./src/lib/*.ts",
+    "./components": "./src/components/index.ts",
+    "./components/*": "./src/components/*.tsx",
+    "./business": "./src/business/index.ts",
+    "./business/*": "./src/business/*.tsx",
+    "./hooks/*": "./src/hooks/*.ts"
+  },
+  "scripts": {
+    "clean": "rimraf dist .turbo",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@base-ui/react": "^1.2.0",
+    "@phosphor-icons/react": "^2.1.10",
+    "@raypx/shared": "workspace:*",
+    "@tanstack/react-query": "catalog:",
+    "@tanstack/react-table": "^8.21.3",
+    "@unpic/placeholder": "^0.1.2",
+    "@unpic/react": "^1.0.2",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "cmdk-base": "^1.0.0",
+    "consola": "^3.4.2",
+    "date-fns": "^4.1.0",
+    "embla-carousel-react": "^8.6.0",
+    "input-otp": "^1.4.2",
+    "motion": "^12.34.3",
+    "next-themes": "^0.4.6",
+    "react": "catalog:react19",
+    "react-day-picker": "^9.13.2",
+    "react-dom": "catalog:react19",
+    "react-resizable-panels": "^4.6.4",
+    "shadcn": "^3.8.5",
+    "sonner": "^2.0.7",
+    "tailwind-merge": "^3.5.0",
+    "tw-animate-css": "catalog:",
+    "vaul-base": "^1.0.0",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@raypx/tsconfig": "workspace:*",
+    "@types/react": "catalog:react19",
+    "@types/react-dom": "catalog:react19",
+    "tailwindcss": "catalog:tailwindv4",
+    "type-fest": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:"
+  }
+}
