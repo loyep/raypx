@@ -13,6 +13,7 @@
       "outputLogs": "new-only"
     },
     "web#build": {
+      "inputs": ["$TURBO_DEFAULT$", "!README.md", "!apps/web/README.md"],
       "outputs": [".tanstack/**", ".output/**", ".nitro/**", ".netlify/**"]
     },
     "app#build": {

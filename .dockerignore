@@ -1,5 +1,5 @@
-.git
 .github
+.git
 .turbo
 .pnpm-store
 .DS_Store
@@ -12,3 +12,19 @@ node_modules
 **/.turbo
 coverage
 *.log
+.tmp*
+tmp
+docs
+
+# Local/dev-only configs not needed for image build context
+**/vitest.config.*
+knip.config.ts
+commitlint.config.ts
+
+# Local tool metadata
+.vscode
+.cursor
+.claude
+.agents
+.codex
+.gemini

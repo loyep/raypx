@@ -25,11 +25,6 @@ export default defineConfig(async ({ command, isSsrBuild }) => {
 
   return {
     ssr: {
-      external: [
-        "@tanstack/react-devtools",
-        "@tanstack/react-router-devtools",
-        "@tanstack/react-query-devtools",
-      ],
       noExternal: isBuild ? true : undefined,
     },
     optimizeDeps: {
