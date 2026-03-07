@@ -385,6 +385,57 @@ export const aiProviders = pgTable(
 
 export const CreateAIProviderSchema = createInsertSchema(aiProviders);
 
+// Provider models (1:N with provider)
+export const aiProviderModels = pgTable(
+  "provider_models",
+  {
+    id: uuid("id")
+      .primaryKey()
+      .$defaultFn(() => uuidv7()),
+    providerId: uuid("provider_id")
+      .notNull()
+      .references(() => aiProviders.id, { onDelete: "cascade" }),
+    modelId: text("model_id").notNull(),
+    displayName: text("display_name"),
+    modelType: text("model_type").notNull().default("llm"), // llm | embedding | rerank | image | audio | tts | stt
+    isEnabled: boolean("is_enabled").notNull().default(true),
+    isDefault: boolean("is_default").notNull().default(false),
+    priority: integer("priority").notNull().default(0),
+    maxTokens: integer("max_tokens"),
+    contextWindow: integer("context_window"),
+    metadata: jsonb("metadata"),
+    createdAt: timestamptz("created_at")
+      .notNull()
+      .$defaultFn(() => new Date()),
+    updatedAt: timestamptz("updated_at")
+      .notNull()
+      .$defaultFn(() => new Date())
+      .$onUpdateFn(() => new Date()),
+  },
+  (table) => [
+    uniqueIndex("uidx_provider_models_provider_model").on(table.providerId, table.modelId),
+    index("idx_provider_models_provider_id").on(table.providerId),
+    index("idx_provider_models_provider_enabled").on(table.providerId, table.isEnabled),
+    index("idx_provider_models_provider_default").on(table.providerId, table.isDefault),
+    index("idx_provider_models_provider_priority").on(table.providerId, table.priority),
+    check(
+      "chk_provider_models_type_valid",
+      sql`${table.modelType} IN ('llm', 'embedding', 'rerank', 'image', 'audio', 'tts', 'stt')`,
+    ),
+    check("chk_provider_models_priority_non_negative", sql`${table.priority} >= 0`),
+    check(
+      "chk_provider_models_max_tokens_non_negative",
+      sql`${table.maxTokens} IS NULL OR ${table.maxTokens} >= 0`,
+    ),
+    check(
+      "chk_provider_models_context_window_non_negative",
+      sql`${table.contextWindow} IS NULL OR ${table.contextWindow} >= 0`,
+    ),
+  ],
+);
+
+export const CreateAIProviderModelSchema = createInsertSchema(aiProviderModels);
+
 // Provider API keys (1:1 with provider)
 export const aiProviderKeys = pgTable(
   "ai_provider_keys",

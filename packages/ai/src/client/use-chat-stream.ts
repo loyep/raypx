@@ -12,6 +12,7 @@ export type StreamTiming = {
 export type ChatStreamInput = {
   prompt: string;
   providerId?: string;
+  model?: string;
   conversationId?: string;
 };
 
@@ -51,6 +52,7 @@ export function useChatStream(call: ChatStreamCall, options?: UseChatStreamOptio
         const stream = await call({
           prompt,
           providerId: input.providerId,
+          model: input.model,
           conversationId: input.conversationId,
         });
 

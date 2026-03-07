@@ -47,6 +47,7 @@ vi.mock("./persistence/preferences", () => ({
       metadata: null,
     },
   ]),
+  listSystemProviders: vi.fn().mockResolvedValue([]),
   getUserProviderById: vi.fn().mockResolvedValue({
     id: "11111111-1111-4111-8111-111111111111",
     userId: "user-1",
@@ -58,12 +59,13 @@ vi.mock("./persistence/preferences", () => ({
     isDefault: true,
     metadata: null,
   }),
+  getSystemProviderById: vi.fn().mockResolvedValue(null),
   getDefaultUserProvider: vi.fn(),
   createUserProvider: vi.fn(),
   updateUserProvider: vi.fn(),
   deleteUserProvider: vi.fn(),
   setDefaultUserProvider: vi.fn(),
-  listUserProviderCredentialsByProviderIds: vi.fn().mockResolvedValue([
+  listSystemProviderCredentialsByProviderIds: vi.fn().mockResolvedValue([
     {
       id: "c1",
       providerId: "11111111-1111-4111-8111-111111111111",

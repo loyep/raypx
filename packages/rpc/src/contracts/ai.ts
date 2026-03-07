@@ -7,6 +7,7 @@ export const aiErrorCodeSchema = z.enum(AI_ERROR_CODES);
 export const aiChatInputSchema = z.object({
   prompt: z.string().min(1).max(4000),
   providerId: z.string().uuid().optional(),
+  model: z.string().min(1).max(120).optional(),
   conversationId: z.string().uuid().optional(),
   messageId: z.string().uuid().optional(),
   systemPromptPreset: z.string().max(64).optional(),
@@ -36,6 +37,7 @@ export const aiRegenerateMessageInputSchema = z.object({
   conversationId: z.string().uuid(),
   messageId: z.string().uuid().optional(),
   providerId: z.string().uuid().optional(),
+  model: z.string().min(1).max(120).optional(),
   systemPromptPreset: z.string().max(64).optional(),
 });
 
@@ -68,6 +70,7 @@ export const aiCreateProviderInputSchema = z.object({
   driver: providerDriverSchema,
   baseUrl: z.string().url().nullable().optional(),
   defaultModel: z.string().min(1).max(120),
+  models: z.array(z.string().min(1).max(120)).max(50).optional(),
   isEnabled: z.boolean().optional(),
   setDefault: z.boolean().optional(),
   metadata: z.record(z.string(), z.unknown()).nullable().optional(),
@@ -79,6 +82,7 @@ export const aiUpdateProviderInputSchema = z.object({
   driver: providerDriverSchema.optional(),
   baseUrl: z.string().url().nullable().optional(),
   defaultModel: z.string().min(1).max(120).optional(),
+  models: z.array(z.string().min(1).max(120)).max(50).optional(),
   isEnabled: z.boolean().optional(),
   metadata: z.record(z.string(), z.unknown()).nullable().optional(),
 });

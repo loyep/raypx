@@ -22,6 +22,8 @@ type ProviderItem = {
   id: string;
   name: string;
   driver: string;
+  defaultModel: string;
+  models: string[];
 };
 
 type ConversationPanelProps = {
@@ -34,6 +36,9 @@ type ConversationPanelProps = {
   hasProviders: boolean;
   providerId: string;
   onProviderChange: (providerId: string) => void;
+  model: string;
+  models: string[];
+  onModelChange: (model: string) => void;
   prompt: string;
   onPromptChange: (prompt: string) => void;
   canSend: boolean;
@@ -50,6 +55,9 @@ export function ConversationPanel({
   hasProviders,
   providerId,
   onProviderChange,
+  model,
+  models,
+  onModelChange,
   prompt,
   onPromptChange,
   canSend,
@@ -137,6 +145,25 @@ export function ConversationPanel({
               {providers.map((item) => (
                 <option key={item.id} value={item.id}>
                   {item.name} ({item.driver})
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <label className="font-medium text-muted-foreground text-xs" htmlFor="chat-model">
+              Model
+            </label>
+            <select
+              className="rounded-md border bg-background px-2 py-1 text-sm"
+              disabled={isLoading || !hasProviders}
+              id="chat-model"
+              onChange={(event) => onModelChange(event.target.value)}
+              value={model}
+            >
+              <option value="default">Use provider default</option>
+              {models.map((item) => (
+                <option key={item} value={item}>
+                  {item}
                 </option>
               ))}
             </select>

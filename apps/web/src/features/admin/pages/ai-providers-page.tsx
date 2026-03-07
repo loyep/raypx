@@ -19,7 +19,7 @@ import { toast } from "@raypx/design-system/components/ui/toast";
 import { AI_PROVIDER_DRIVERS, type AIProviderDriver } from "@raypx/shared/ai";
 import { IconPencil, IconPlus, IconTrash } from "@tabler/icons-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { client } from "@/utils/orpc";
 
 type ProviderItem = Awaited<
@@ -33,6 +33,7 @@ type FormState = {
   driver: AIProviderDriver;
   baseUrl: string;
   defaultModel: string;
+  modelsText: string;
   apiKey: string;
 };
 
@@ -42,8 +43,36 @@ const emptyForm: FormState = {
   driver: "openai",
   baseUrl: "",
   defaultModel: "",
+  modelsText: "",
   apiKey: "",
 };
+
+const RECOMMENDED_MODELS: Record<AIProviderDriver, string[]> = {
+  openai: ["gpt-4o-mini", "gpt-4.1-mini", "gpt-4.1"],
+  anthropic: ["claude-3-5-haiku-latest", "claude-3-5-sonnet-latest"],
+  google: ["gemini-2.0-flash", "gemini-1.5-pro"],
+  alibaba: ["qwen-max", "qwen-plus", "qwen-turbo"],
+  zhipu: ["glm-4-plus", "glm-4-air", "glm-4-flash"],
+  "azure-openai": ["gpt-4o-mini", "gpt-4.1-mini", "gpt-4.1"],
+};
+
+function parseModels(modelsText: string): string[] {
+  const seen = new Set<string>();
+  const models: string[] = [];
+
+  for (const part of modelsText.split(",")) {
+    const model = part.trim();
+    if (!model || seen.has(model)) continue;
+    seen.add(model);
+    models.push(model);
+  }
+
+  return models;
+}
+
+function toRecommendedModelText(driver: AIProviderDriver): string {
+  return RECOMMENDED_MODELS[driver].join(", ");
+}
 
 export function AdminAIProvidersPage() {
   const queryClient = useQueryClient();
@@ -60,6 +89,19 @@ export function AdminAIProvidersPage() {
     () => [...providers].sort((a, b) => Number(b.isDefault) - Number(a.isDefault)),
     [providers],
   );
+  const modelOptions = useMemo(() => {
+    const options = parseModels(form.modelsText);
+    const defaultModel = form.defaultModel.trim();
+    if (!defaultModel || options.includes(defaultModel)) {
+      return options;
+    }
+    return [defaultModel, ...options];
+  }, [form.defaultModel, form.modelsText]);
+
+  useEffect(() => {
+    if (form.defaultModel.trim() || modelOptions.length === 0) return;
+    setForm((prev) => ({ ...prev, defaultModel: modelOptions[0] ?? prev.defaultModel }));
+  }, [form.defaultModel, modelOptions]);
 
   const refresh = async () => {
     await queryClient.invalidateQueries({ queryKey: ["adminAiProviders"] });
@@ -74,6 +116,7 @@ export function AdminAIProvidersPage() {
           driver: form.driver,
           baseUrl: form.baseUrl.trim() || null,
           defaultModel: form.defaultModel.trim(),
+          models: parseModels(form.modelsText),
           isEnabled: true,
           setDefault: providers.length === 0,
         });
@@ -99,6 +142,7 @@ export function AdminAIProvidersPage() {
         driver: form.driver,
         baseUrl: form.baseUrl.trim() || null,
         defaultModel: form.defaultModel.trim(),
+        models: parseModels(form.modelsText),
       });
 
       if (form.apiKey.trim()) {
@@ -138,6 +182,7 @@ export function AdminAIProvidersPage() {
       driver: provider.driver,
       baseUrl: provider.baseUrl ?? "",
       defaultModel: provider.defaultModel,
+      modelsText: provider.models.join(", "),
       apiKey: "",
     });
     setDialogOpen(true);
@@ -180,6 +225,9 @@ export function AdminAIProvidersPage() {
                     </div>
                     <p className="text-muted-foreground text-xs">
                       {provider.driver} · {provider.defaultModel}
+                    </p>
+                    <p className="text-muted-foreground text-xs">
+                      Models: {provider.models.join(", ")}
                     </p>
                     <p className="text-muted-foreground text-xs">
                       Key: {provider.hasKey ? (provider.keyHint ?? "Configured") : "Missing"}
@@ -276,6 +324,26 @@ export function AdminAIProvidersPage() {
                   </option>
                 ))}
               </select>
+              <div className="pt-1">
+                <Button
+                  onClick={() =>
+                    setForm((prev) => {
+                      const modelsText = toRecommendedModelText(prev.driver);
+                      const models = parseModels(modelsText);
+                      return {
+                        ...prev,
+                        modelsText,
+                        defaultModel: prev.defaultModel.trim() || models[0] || prev.defaultModel,
+                      };
+                    })
+                  }
+                  size="sm"
+                  type="button"
+                  variant="outline"
+                >
+                  Load Recommended Models
+                </Button>
+              </div>
             </div>
             <div className="space-y-1">
               <Label>Base URL</Label>
@@ -287,9 +355,32 @@ export function AdminAIProvidersPage() {
             </div>
             <div className="space-y-1">
               <Label>Default Model</Label>
+              {modelOptions.length > 0 ? (
+                <select
+                  className="h-9 w-full rounded-md border bg-background px-3 text-sm"
+                  onChange={(e) => setForm((prev) => ({ ...prev, defaultModel: e.target.value }))}
+                  value={form.defaultModel}
+                >
+                  {modelOptions.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <Input
+                  onChange={(e) => setForm((prev) => ({ ...prev, defaultModel: e.target.value }))}
+                  placeholder="Type a model or load recommended models first"
+                  value={form.defaultModel}
+                />
+              )}
+            </div>
+            <div className="space-y-1">
+              <Label>Models (comma separated)</Label>
               <Input
-                onChange={(e) => setForm((prev) => ({ ...prev, defaultModel: e.target.value }))}
-                value={form.defaultModel}
+                onChange={(e) => setForm((prev) => ({ ...prev, modelsText: e.target.value }))}
+                placeholder="gpt-4o-mini, gpt-4.1-mini"
+                value={form.modelsText}
               />
             </div>
             <div className="space-y-1">

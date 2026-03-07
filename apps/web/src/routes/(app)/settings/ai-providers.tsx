@@ -28,7 +28,7 @@ import {
 } from "@tabler/icons-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { siteConfig } from "@/config/site";
 import { client } from "@/utils/orpc";
 
@@ -43,6 +43,7 @@ type FormState = {
   driver: AIProviderDriver;
   baseUrl: string;
   defaultModel: string;
+  modelsText: string;
   apiKey: string;
 };
 
@@ -52,8 +53,36 @@ const emptyForm: FormState = {
   driver: "openai",
   baseUrl: "",
   defaultModel: "",
+  modelsText: "",
   apiKey: "",
 };
+
+const RECOMMENDED_MODELS: Record<AIProviderDriver, string[]> = {
+  openai: ["gpt-4o-mini", "gpt-4.1-mini", "gpt-4.1"],
+  anthropic: ["claude-3-5-haiku-latest", "claude-3-5-sonnet-latest"],
+  google: ["gemini-2.0-flash", "gemini-1.5-pro"],
+  alibaba: ["qwen-max", "qwen-plus", "qwen-turbo"],
+  zhipu: ["glm-4-plus", "glm-4-air", "glm-4-flash"],
+  "azure-openai": ["gpt-4o-mini", "gpt-4.1-mini", "gpt-4.1"],
+};
+
+function parseModels(modelsText: string): string[] {
+  const seen = new Set<string>();
+  const models: string[] = [];
+
+  for (const part of modelsText.split(",")) {
+    const model = part.trim();
+    if (!model || seen.has(model)) continue;
+    seen.add(model);
+    models.push(model);
+  }
+
+  return models;
+}
+
+function toRecommendedModelText(driver: AIProviderDriver): string {
+  return RECOMMENDED_MODELS[driver].join(", ");
+}
 
 export const Route = createFileRoute("/(app)/settings/ai-providers")({
   component: AIProviderSettingsPage,
@@ -76,6 +105,19 @@ function AIProviderSettingsPage() {
     () => [...providers].sort((a, b) => Number(b.isDefault) - Number(a.isDefault)),
     [providers],
   );
+  const modelOptions = useMemo(() => {
+    const options = parseModels(form.modelsText);
+    const defaultModel = form.defaultModel.trim();
+    if (!defaultModel || options.includes(defaultModel)) {
+      return options;
+    }
+    return [defaultModel, ...options];
+  }, [form.defaultModel, form.modelsText]);
+
+  useEffect(() => {
+    if (form.defaultModel.trim() || modelOptions.length === 0) return;
+    setForm((prev) => ({ ...prev, defaultModel: modelOptions[0] ?? prev.defaultModel }));
+  }, [form.defaultModel, modelOptions]);
 
   const createOrUpdateMutation = useMutation({
     mutationFn: async () => {
@@ -85,6 +127,7 @@ function AIProviderSettingsPage() {
           driver: form.driver,
           baseUrl: form.baseUrl.trim() || null,
           defaultModel: form.defaultModel.trim(),
+          models: parseModels(form.modelsText),
           isEnabled: true,
           setDefault: providers.length === 0,
         });
@@ -111,6 +154,7 @@ function AIProviderSettingsPage() {
         driver: form.driver,
         baseUrl: form.baseUrl.trim() || null,
         defaultModel: form.defaultModel.trim(),
+        models: parseModels(form.modelsText),
       });
 
       if (form.apiKey.trim()) {
@@ -188,6 +232,7 @@ function AIProviderSettingsPage() {
       driver: provider.driver,
       baseUrl: provider.baseUrl ?? "",
       defaultModel: provider.defaultModel,
+      modelsText: provider.models.join(", "),
       apiKey: "",
     });
     setDialogOpen(true);
@@ -240,6 +285,10 @@ function AIProviderSettingsPage() {
                 <div className="rounded-md border px-3 py-2">
                   <p className="text-muted-foreground text-xs">Model</p>
                   <p className="mt-1 font-mono">{provider.defaultModel}</p>
+                </div>
+                <div className="rounded-md border px-3 py-2">
+                  <p className="text-muted-foreground text-xs">Models</p>
+                  <p className="mt-1 font-mono text-xs">{provider.models.join(", ")}</p>
                 </div>
                 <div className="rounded-md border px-3 py-2">
                   <p className="text-muted-foreground text-xs">Key</p>
@@ -329,6 +378,26 @@ function AIProviderSettingsPage() {
                   </option>
                 ))}
               </select>
+              <div className="pt-1">
+                <Button
+                  onClick={() =>
+                    setForm((prev) => {
+                      const modelsText = toRecommendedModelText(prev.driver);
+                      const models = parseModels(modelsText);
+                      return {
+                        ...prev,
+                        modelsText,
+                        defaultModel: prev.defaultModel.trim() || models[0] || prev.defaultModel,
+                      };
+                    })
+                  }
+                  size="sm"
+                  type="button"
+                  variant="outline"
+                >
+                  Load Recommended Models
+                </Button>
+              </div>
             </div>
             <div className="space-y-2 sm:col-span-2">
               <Label htmlFor="provider-base-url">Base URL</Label>
@@ -341,12 +410,41 @@ function AIProviderSettingsPage() {
             </div>
             <div className="space-y-2 sm:col-span-2">
               <Label htmlFor="provider-model">Default Model</Label>
+              {modelOptions.length > 0 ? (
+                <select
+                  className="h-10 w-full rounded-md border bg-background px-3 text-sm"
+                  id="provider-model"
+                  onChange={(event) =>
+                    setForm((prev) => ({ ...prev, defaultModel: event.target.value }))
+                  }
+                  value={form.defaultModel}
+                >
+                  {modelOptions.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <Input
+                  id="provider-model"
+                  onChange={(event) =>
+                    setForm((prev) => ({ ...prev, defaultModel: event.target.value }))
+                  }
+                  placeholder="Type a model or load recommended models first"
+                  value={form.defaultModel}
+                />
+              )}
+            </div>
+            <div className="space-y-2 sm:col-span-2">
+              <Label htmlFor="provider-models">Models (comma separated)</Label>
               <Input
-                id="provider-model"
+                id="provider-models"
                 onChange={(event) =>
-                  setForm((prev) => ({ ...prev, defaultModel: event.target.value }))
+                  setForm((prev) => ({ ...prev, modelsText: event.target.value }))
                 }
-                value={form.defaultModel}
+                placeholder="gpt-4o-mini, gpt-4.1-mini"
+                value={form.modelsText}
               />
             </div>
             <div className="space-y-2 sm:col-span-2">

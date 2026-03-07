@@ -59,6 +59,7 @@ export function useChatController({
   onRouteConversationChange,
 }: UseChatControllerParams) {
   const [providerId, setProviderId] = useState<string>("default");
+  const [model, setModel] = useState<string>("default");
   const [optimisticConversationKeyId, setOptimisticConversationKeyId] = useState<string | null>(
     null,
   );
@@ -96,6 +97,7 @@ export function useChatController({
       client.ai.chatStream({
         prompt: input.prompt,
         providerId: input.providerId,
+        model: input.model,
         conversationId: input.conversationId,
       }) as Promise<any>,
     {
@@ -331,6 +333,14 @@ export function useChatController({
     return Boolean(providers.find((provider) => provider.id === providerId && provider.isEnabled));
   }, [hasEnabledProviders, preferencesQuery.data?.defaultProviderId, providerId, providers]);
 
+  const effectiveProviderId =
+    providerId === "default" ? preferencesQuery.data?.defaultProviderId : providerId;
+  const activeProvider = useMemo(
+    () => providers.find((provider) => provider.id === effectiveProviderId && provider.isEnabled),
+    [effectiveProviderId, providers],
+  );
+  const availableModels = activeProvider?.models ?? [];
+
   useEffect(() => {
     if (providers.length === 0) return;
 
@@ -354,12 +364,17 @@ export function useChatController({
     });
   }, [enabledProviders, preferencesQuery.data?.defaultProviderId, providers]);
 
+  useEffect(() => {
+    setModel((currentModel) => {
+      if (currentModel === "default") return currentModel;
+      if (availableModels.includes(currentModel)) return currentModel;
+      return "default";
+    });
+  }, [availableModels]);
+
   const sendPrompt = useCallback(async () => {
     const input = prompt.trim();
     if (!input || isLoading) return;
-
-    const effectiveProviderId =
-      providerId === "default" ? preferencesQuery.data?.defaultProviderId : providerId;
     if (!effectiveProviderId) return;
 
     const baseConversationId = routeConversationId ?? conversationId ?? null;
@@ -407,6 +422,7 @@ export function useChatController({
       await sendChatPrompt({
         prompt: input,
         providerId: effectiveProviderId,
+        model: model === "default" ? undefined : model,
         conversationId: baseConversationId ?? undefined,
       });
     } finally {
@@ -429,7 +445,8 @@ export function useChatController({
     clearError,
     conversationId,
     isLoading,
-    preferencesQuery.data?.defaultProviderId,
+    effectiveProviderId,
+    model,
     prompt,
     providerId,
     queryClient,
@@ -467,7 +484,10 @@ export function useChatController({
     messagesContainerRef,
     onPromptChange: setPrompt,
     onProviderChange: setProviderId,
+    onModelChange: setModel,
     onSendPrompt: sendPrompt,
+    model,
+    models: availableModels,
     prompt,
     providerId,
     providers: enabledProviders,

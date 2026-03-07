@@ -71,6 +71,68 @@ import type {
 
 const env = createEnv(aiEnv);
 
+function normalizeModelCatalog(input: unknown): string[] {
+  if (!Array.isArray(input)) return [];
+  const seen = new Set<string>();
+  const models: string[] = [];
+
+  for (const value of input) {
+    if (typeof value !== "string") continue;
+    const model = value.trim();
+    if (!model || seen.has(model)) continue;
+    seen.add(model);
+    models.push(model);
+  }
+
+  return models;
+}
+
+function extractMetadata(metadata: unknown): Record<string, unknown> | null {
+  if (!metadata || typeof metadata !== "object" || Array.isArray(metadata)) {
+    return null;
+  }
+  return metadata as Record<string, unknown>;
+}
+
+function resolveProviderModels(provider: { defaultModel: string; metadata: unknown }): string[] {
+  const defaultModel = provider.defaultModel.trim();
+  const metadata = extractMetadata(provider.metadata);
+  const models = normalizeModelCatalog(metadata?.models);
+
+  if (!defaultModel) return models;
+  if (models.includes(defaultModel)) return models;
+  return [defaultModel, ...models];
+}
+
+function withProviderModelsMetadata(
+  input: {
+    defaultModel: string;
+    models?: string[];
+    metadata?: Record<string, unknown> | null;
+  },
+  existingMetadata?: unknown,
+) {
+  if (input.models === undefined) {
+    return input.metadata;
+  }
+
+  const defaultModel = input.defaultModel.trim();
+  const modelCatalog = normalizeModelCatalog(input.models);
+  if (defaultModel && !modelCatalog.includes(defaultModel)) {
+    modelCatalog.unshift(defaultModel);
+  }
+
+  const baseMetadata = {
+    ...(extractMetadata(existingMetadata) ?? {}),
+    ...(input.metadata ?? {}),
+  };
+
+  return {
+    ...baseMetadata,
+    models: modelCatalog,
+  };
+}
+
 function promptToTitle(prompt: string) {
   const compact = prompt.replace(/\s+/g, " ").trim();
   return compact.length > 64 ? `${compact.slice(0, 64)}...` : compact;
@@ -152,17 +214,19 @@ async function resolveProviderSummaries(
 
   const summaries: AIUserProviderSummary[] = providers.map((provider) => {
     const credential = credentialMap.get(provider.id);
+    const metadata = extractMetadata(provider.metadata);
     return {
       id: provider.id,
       name: provider.name,
       driver: provider.driver as AIUserProviderSummary["driver"],
       baseUrl: provider.baseUrl,
       defaultModel: provider.defaultModel,
+      models: resolveProviderModels(provider),
       isEnabled: provider.isEnabled,
       isDefault: provider.isDefault,
       hasKey: Boolean(credential),
       keyHint: credential?.keyHint ?? null,
-      metadata: (provider.metadata as Record<string, unknown> | null) ?? null,
+      metadata,
     };
   });
 
@@ -261,10 +325,14 @@ async function resolveRuntime(
       driver: provider.driver as AIUserProviderSummary["driver"],
       baseUrl: provider.baseUrl,
       defaultModel: provider.defaultModel,
+      availableModels: resolveProviderModels(provider),
     },
     {
       apiKey: decryptCredential(credential.apiKeyEncrypted),
-      model: input.preferredModel,
+      model:
+        input.preferredModel?.trim() ||
+        (targetProviderId === preferences.defaultProviderId ? preferences.model : null),
+      strictModel: Boolean(input.preferredModel?.trim()),
     },
   );
 
@@ -328,9 +396,11 @@ export const chatService = {
   },
 
   async createUserProvider(context: AIServiceContext, input: AICreateUserProviderInput) {
+    const metadata = withProviderModelsMetadata(input);
     const created = await createUserProvider(context.db, {
       userId: context.userId,
       ...input,
+      metadata,
     });
 
     if (!created) {
@@ -362,9 +432,30 @@ export const chatService = {
   },
 
   async updateUserProvider(context: AIServiceContext, input: AIUpdateUserProviderInput) {
+    const current = await getUserProviderById(context.db, {
+      userId: context.userId,
+      providerId: input.providerId,
+    });
+    if (!current) {
+      throw createAIServiceError("AI_BAD_REQUEST", "Provider not found");
+    }
+
+    const metadata =
+      input.models === undefined
+        ? input.metadata
+        : withProviderModelsMetadata(
+            {
+              defaultModel: input.defaultModel ?? current.defaultModel,
+              models: input.models,
+              metadata: input.metadata,
+            },
+            current.metadata,
+          );
+
     const updated = await updateUserProvider(context.db, {
       userId: context.userId,
       ...input,
+      metadata,
     });
     if (!updated) {
       throw createAIServiceError("AI_BAD_REQUEST", "Provider not found");
@@ -509,22 +600,29 @@ export const chatService = {
         .map((item) => [item.providerId, item] as const),
     );
 
-    return providers.map((provider) => ({
-      id: provider.id,
-      name: provider.name,
-      driver: provider.driver as AIUserProviderSummary["driver"],
-      baseUrl: provider.baseUrl,
-      defaultModel: provider.defaultModel,
-      isEnabled: provider.isEnabled,
-      isDefault: provider.isDefault,
-      hasKey: Boolean(credentialMap.get(provider.id)),
-      keyHint: credentialMap.get(provider.id)?.keyHint ?? null,
-      metadata: (provider.metadata as Record<string, unknown> | null) ?? null,
-    }));
+    return providers.map((provider) => {
+      const metadata = extractMetadata(provider.metadata);
+      return {
+        id: provider.id,
+        name: provider.name,
+        driver: provider.driver as AIUserProviderSummary["driver"],
+        baseUrl: provider.baseUrl,
+        defaultModel: provider.defaultModel,
+        models: resolveProviderModels(provider),
+        isEnabled: provider.isEnabled,
+        isDefault: provider.isDefault,
+        hasKey: Boolean(credentialMap.get(provider.id)),
+        keyHint: credentialMap.get(provider.id)?.keyHint ?? null,
+        metadata,
+      };
+    });
   },
 
   async createSystemProvider(context: AIServiceContext, input: AICreateUserProviderInput) {
-    const created = await createSystemProviderRecord(context.db, input);
+    const created = await createSystemProviderRecord(context.db, {
+      ...input,
+      metadata: withProviderModelsMetadata(input),
+    });
     if (!created) {
       throw createAIServiceError("AI_INTERNAL", "Failed to create system provider");
     }
@@ -538,7 +636,29 @@ export const chatService = {
   },
 
   async updateSystemProvider(context: AIServiceContext, input: AIUpdateUserProviderInput) {
-    const updated = await updateSystemProviderRecord(context.db, input);
+    const current = await getSystemProviderById(context.db, {
+      providerId: input.providerId,
+    });
+    if (!current) {
+      throw createAIServiceError("AI_BAD_REQUEST", "System provider not found");
+    }
+
+    const metadata =
+      input.models === undefined
+        ? input.metadata
+        : withProviderModelsMetadata(
+            {
+              defaultModel: input.defaultModel ?? current.defaultModel,
+              models: input.models,
+              metadata: input.metadata,
+            },
+            current.metadata,
+          );
+
+    const updated = await updateSystemProviderRecord(context.db, {
+      ...input,
+      metadata,
+    });
     if (!updated) {
       throw createAIServiceError("AI_BAD_REQUEST", "System provider not found");
     }
@@ -697,6 +817,7 @@ export const chatService = {
   async regenerateMessage(context: AIServiceContext, input: AIRegenerateMessageInput) {
     const resolved = await resolveRuntime(context, {
       providerId: input.providerId,
+      preferredModel: input.model,
     });
 
     const result = await ensureConversationExists(context, input.conversationId);
@@ -743,6 +864,7 @@ export const chatService = {
   async chat(context: AIServiceContext, input: AIChatInput): Promise<AIChatResult> {
     const resolved = await resolveRuntime(context, {
       providerId: input.providerId,
+      preferredModel: input.model,
     });
 
     let conversationId = input.conversationId;
@@ -798,6 +920,7 @@ export const chatService = {
   async chatStream(context: AIServiceContext, input: AIChatInput): Promise<AIChatStreamResult> {
     const resolved = await resolveRuntime(context, {
       providerId: input.providerId,
+      preferredModel: input.model,
     });
 
     let conversationId = input.conversationId;

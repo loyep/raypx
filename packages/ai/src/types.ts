@@ -12,6 +12,7 @@ export type {
 export type AIChatInput = {
   prompt: string;
   providerId?: string;
+  model?: string;
   conversationId?: string;
   messageId?: string;
   systemPromptPreset?: string;
@@ -37,6 +38,7 @@ export type AIRegenerateMessageInput = {
   conversationId: string;
   messageId?: string;
   providerId?: string;
+  model?: string;
   systemPromptPreset?: string;
 };
 
@@ -89,6 +91,7 @@ export type AICreateUserProviderInput = {
   driver: AIProviderDriver;
   baseUrl?: string | null;
   defaultModel: string;
+  models?: string[];
   isEnabled?: boolean;
   setDefault?: boolean;
   metadata?: Record<string, unknown> | null;
@@ -100,6 +103,7 @@ export type AIUpdateUserProviderInput = {
   driver?: AIProviderDriver;
   baseUrl?: string | null;
   defaultModel?: string;
+  models?: string[];
   isEnabled?: boolean;
   metadata?: Record<string, unknown> | null;
 };
@@ -128,6 +132,7 @@ export type AIUserProviderSummary = {
   driver: AIProviderDriver;
   baseUrl: string | null;
   defaultModel: string;
+  models: string[];
   isEnabled: boolean;
   isDefault: boolean;
   hasKey: boolean;
@@ -141,6 +146,7 @@ export type AISystemProviderSummary = {
   driver: AIProviderDriver;
   baseUrl: string | null;
   defaultModel: string;
+  models: string[];
   isEnabled: boolean;
   isDefault: boolean;
   hasKey: boolean;

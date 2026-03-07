@@ -21,7 +21,10 @@ export function ChatPage({ routeConversationId, onRouteConversationChange }: Cha
     messagesContainerRef,
     onPromptChange,
     onProviderChange,
+    onModelChange,
     onSendPrompt,
+    model,
+    models,
     prompt,
     providerId,
     providers,
@@ -55,6 +58,9 @@ export function ChatPage({ routeConversationId, onRouteConversationChange }: Cha
         isLoading={isLoading}
         messages={messages}
         messagesContainerRef={messagesContainerRef}
+        model={model}
+        models={models}
+        onModelChange={onModelChange}
         onPromptChange={onPromptChange}
         onProviderChange={onProviderChange}
         onSendPrompt={onSendPrompt}

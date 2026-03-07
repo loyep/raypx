@@ -26,6 +26,7 @@ export type ProviderRuntimeConfig = {
   driver: AIProviderDriver;
   baseUrl: string | null;
   defaultModel: string;
+  availableModels?: string[];
 };
 
 function requireApiKey(apiKey: string | null | undefined) {
@@ -42,6 +43,57 @@ function requireModel(model: string | null | undefined) {
     throw createAIServiceError("AI_BAD_REQUEST", "Provider model is not configured");
   }
   return normalized;
+}
+
+function normalizeModelList(models: string[] | undefined): string[] {
+  if (!models) return [];
+  const seen = new Set<string>();
+  const normalized: string[] = [];
+
+  for (const item of models) {
+    const model = item.trim();
+    if (!model || seen.has(model)) continue;
+    seen.add(model);
+    normalized.push(model);
+  }
+
+  return normalized;
+}
+
+function resolveModelName(
+  config: ProviderRuntimeConfig,
+  input: { model?: string | null; strict?: boolean },
+) {
+  const defaultModel = requireModel(config.defaultModel);
+  const requestedModel = input.model?.trim() || null;
+  const availableModels = normalizeModelList(config.availableModels);
+
+  if (availableModels.length === 0) {
+    return requestedModel ? requireModel(requestedModel) : defaultModel;
+  }
+
+  const catalog = new Set(availableModels);
+  if (!catalog.has(defaultModel)) {
+    catalog.add(defaultModel);
+  }
+
+  if (!requestedModel) {
+    return defaultModel;
+  }
+
+  const normalizedRequestedModel = requireModel(requestedModel);
+  if (catalog.has(normalizedRequestedModel)) {
+    return normalizedRequestedModel;
+  }
+
+  if (input.strict) {
+    throw createAIServiceError(
+      "AI_BAD_REQUEST",
+      `Model "${normalizedRequestedModel}" is not configured for provider "${config.name}"`,
+    );
+  }
+
+  return defaultModel;
 }
 
 function resolveBaseUrl(config: ProviderRuntimeConfig): string {
@@ -76,10 +128,14 @@ export function getChatRuntime(
   input: {
     apiKey: string;
     model?: string | null;
+    strictModel?: boolean;
   },
 ): ChatRuntime {
   const apiKey = requireApiKey(input.apiKey);
-  const modelName = requireModel(input.model?.trim() || config.defaultModel);
+  const modelName = resolveModelName(config, {
+    model: input.model,
+    strict: input.strictModel,
+  });
 
   if (config.driver === "alibaba") {
     const client = createAlibaba({

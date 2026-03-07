@@ -6,6 +6,7 @@ import {
   aiGenerations,
   aiMessages,
   aiProviderKeys,
+  aiProviderModels,
   aiProviders,
   aiRuntimePolicies,
 } from "../ai";
@@ -17,6 +18,7 @@ export const aiRelations = defineRelations(
     aiConversations,
     aiMessages,
     aiProviders,
+    aiProviderModels,
     aiProviderKeys,
     aiGenerations,
     aiAnalyses,
@@ -56,6 +58,16 @@ export const aiRelations = defineRelations(
       keys: r.many.aiProviderKeys({
         from: r.aiProviders.id,
         to: r.aiProviderKeys.providerId,
+      }),
+      models: r.many.aiProviderModels({
+        from: r.aiProviders.id,
+        to: r.aiProviderModels.providerId,
+      }),
+    },
+    aiProviderModels: {
+      provider: r.one.aiProviders({
+        from: r.aiProviderModels.providerId,
+        to: r.aiProviders.id,
       }),
     },
     aiProviderKeys: {
