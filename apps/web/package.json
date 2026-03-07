@@ -5,7 +5,7 @@
   "scripts": {
     "analyze": "BUNDLE_ANALYZE=true pnpm run build",
     "build": "forge run vite build",
-    "clean": "rimraf dist .turbo .tanstack .nitro .output .netlify",
+    "clean": "rimraf dist .turbo .tanstack .nitro .output .netlify .tmp-*",
     "dev": "forge run vite dev",
     "serve": "forge run vite preview",
     "start": "forge run node .output/server/index.mjs",
