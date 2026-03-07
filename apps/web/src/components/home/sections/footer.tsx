@@ -1,5 +1,6 @@
 import type { SiteConfig } from "@raypx/seo";
 import { Link } from "@tanstack/react-router";
+import { Logo } from "@/components/logo";
 
 type HomeFooterProps = {
   siteConfig: SiteConfig;
@@ -10,10 +11,7 @@ export function HomeFooter({ siteConfig }: HomeFooterProps) {
     <footer className="border-t px-4 py-6">
       <div className="container mx-auto flex flex-col items-center justify-between gap-4 text-muted-foreground text-sm sm:flex-row">
         <div className="flex items-center gap-2">
-          <picture>
-            <source media="(prefers-color-scheme: dark)" srcSet="/logo-dark.png" />
-            <img alt="Raypx" className="h-5 w-5" src="/logo.png" />
-          </picture>
+          <Logo alt={siteConfig.name} className="h-5 w-5" />
           <span>© {new Date().getFullYear()} Raypx. All rights reserved.</span>
         </div>
         <div className="flex items-center gap-4">

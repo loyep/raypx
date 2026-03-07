@@ -1,6 +1,7 @@
 import { ThemeSwitcher } from "@raypx/design-system/components/theme-switcher";
 import { Link } from "@tanstack/react-router";
 import type { FC } from "react";
+import { Logo } from "@/components/logo";
 
 type AuthLayoutProps = {
   children: React.ReactNode;
@@ -28,7 +29,7 @@ export const AuthLayout: FC<AuthLayoutProps> = ({ children, title, subtitle }) =
           {/* Logo & Header */}
           <div className="mb-8 text-center">
             <Link className="mb-6 inline-block" to="/">
-              <img alt="Raypx" className="mx-auto h-12 w-12" src="/logo.png" />
+              <Logo alt="Raypx" className="mx-auto h-12 w-12" />
             </Link>
             <h1 className="font-bold text-2xl text-foreground">{title}</h1>
             <p className="mt-2 text-muted-foreground text-sm">{subtitle}</p>

@@ -37,6 +37,7 @@ import {
 } from "@tabler/icons-react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import type { FC } from "react";
+import { Logo } from "@/components/logo";
 import { siteConfig } from "@/config/site";
 
 type SidebarNavigationProps = {
@@ -184,10 +185,7 @@ export function SidebarLogo({ onNavigate }: SidebarLogoProps) {
   return (
     <SidebarHeader className="flex h-16 flex-row items-center justify-start gap-2 border-b px-6">
       <Link className="flex items-center gap-2" onClick={onNavigate} to="/">
-        <picture>
-          <source media="(prefers-color-scheme: dark)" srcSet="/logo-dark.png" />
-          <img alt="Raypx" className="h-6 w-6" src="/logo.png" />
-        </picture>
+        <Logo />
         <span className="font-semibold">{siteConfig.name}</span>
       </Link>
     </SidebarHeader>

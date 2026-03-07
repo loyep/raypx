@@ -3,6 +3,7 @@ import { Button } from "@raypx/design-system/components/ui/button";
 import type { SiteConfig } from "@raypx/seo";
 import { IconBrandGithub } from "@tabler/icons-react";
 import { Link } from "@tanstack/react-router";
+import { Logo } from "@/components/logo";
 import { useSession } from "@/lib/auth";
 
 type HomeHeaderProps = {
@@ -17,10 +18,7 @@ export function HomeHeader({ siteConfig }: HomeHeaderProps) {
     <header className="sticky top-0 z-50 border-b bg-background/90">
       <div className="container mx-auto flex h-14 items-center justify-between px-4">
         <Link className="flex items-center gap-2" to="/">
-          <picture>
-            <source media="(prefers-color-scheme: dark)" srcSet="/logo-dark.png" />
-            <img alt="Raypx" className="h-6 w-6" src="/logo.png" />
-          </picture>
+          <Logo alt={siteConfig.name} />
           <span className="font-semibold">{siteConfig.name}</span>
         </Link>
 

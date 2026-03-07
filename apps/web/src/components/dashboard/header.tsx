@@ -2,6 +2,7 @@ import { ThemeSwitcher } from "@raypx/design-system/components/theme-switcher";
 import { Button } from "@raypx/design-system/components/ui/button";
 import { IconList } from "@tabler/icons-react";
 import { Link } from "@tanstack/react-router";
+import { Logo } from "@/components/logo";
 import { siteConfig } from "@/config/site";
 import { CommandPaletteTrigger } from "./command-palette";
 import { UserButton } from "./user-button";
@@ -37,10 +38,7 @@ export function DashboardHeader({
 
           {/* Mobile Logo */}
           <Link className="flex items-center gap-2 lg:hidden" to="/">
-            <picture>
-              <source media="(prefers-color-scheme: dark)" srcSet="/logo-dark.png" />
-              <img alt="Raypx" className="h-6 w-6" src="/logo.png" />
-            </picture>
+            <Logo />
             <span className="font-semibold">{siteConfig.name}</span>
           </Link>
 
