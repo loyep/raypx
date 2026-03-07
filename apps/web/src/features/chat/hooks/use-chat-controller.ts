@@ -1,4 +1,4 @@
-import { useChatStream } from "@raypx/tanstack";
+import { useChatStream } from "@raypx/ai/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { type ConversationList, conversationsQueryOptions } from "@/features/chat/queries";

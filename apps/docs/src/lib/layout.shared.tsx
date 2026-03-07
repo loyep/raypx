@@ -14,7 +14,7 @@ export function baseOptions(): BaseLayoutProps {
       ),
     },
     themeSwitch: {
-      component: <ThemeSwitcher variant="horizontal" />,
+      component: <ThemeSwitcher />,
     },
     githubUrl: links.github,
     links: [

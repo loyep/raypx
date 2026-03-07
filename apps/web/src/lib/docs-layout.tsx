@@ -6,13 +6,16 @@ export function getDocsLayoutOptions(): BaseLayoutProps {
   return {
     nav: {
       title: <span className="font-semibold text-lg">{siteConfig.name}</span>,
+      url: "/",
     },
     themeSwitch: {
-      component: <ThemeSwitcher variant="horizontal" />,
+      component: <ThemeSwitcher />,
     },
     githubUrl: siteConfig.github,
     links: [
       { text: "Home", url: "/" },
+      { text: "Chat", url: "/chat", active: "nested-url" },
+      { text: "Dashboard", url: "/dashboard", active: "nested-url" },
       { text: "GitHub", url: siteConfig.github ?? "" },
     ],
   };

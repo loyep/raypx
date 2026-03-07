@@ -1,5 +1,5 @@
 import { generateRootHead } from "@raypx/seo";
-import { HeadContent } from "@raypx/tanstack";
+import { HeadContent } from "@raypx/seo/client";
 import type { QueryClient } from "@tanstack/react-query";
 import { createRootRouteWithContext, Outlet, Scripts } from "@tanstack/react-router";
 import { siteConfig } from "@/config/site";

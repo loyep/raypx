@@ -1,8 +1,9 @@
 import { ORPCError, os } from "@orpc/server";
 import { getRpcSessionFromRequest } from "@raypx/auth/rpc";
 import type { AuthSession as Session, AuthUser as User } from "@raypx/auth/types";
-import { createORPCContext, createRPCContext, type RPCContext } from "@raypx/core";
 import { db } from "@raypx/database";
+import { createORPCContext } from "./orpc-context";
+import { createRPCContext, type RPCContext } from "./rpc-context";
 
 const DEFAULT_TIMEOUT_MS = 30_000;
 

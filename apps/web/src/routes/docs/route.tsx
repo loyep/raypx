@@ -13,7 +13,14 @@ export const Route = createFileRoute("/docs")({
 function RouteComponent() {
   return (
     <TanstackProvider>
-      <RootProvider>
+      <RootProvider
+        search={{
+          enabled: true,
+          options: {
+            api: "/api/search",
+          },
+        }}
+      >
         <Outlet />
       </RootProvider>
     </TanstackProvider>

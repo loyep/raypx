@@ -200,9 +200,6 @@ importers:
       '@raypx/shared':
         specifier: workspace:*
         version: link:../../packages/shared
-      '@raypx/tanstack':
-        specifier: workspace:*
-        version: link:../../packages/tanstack
       '@tabler/icons-react':
         specifier: ^3.39.0
         version: 3.40.0(react@19.2.4)
@@ -297,6 +294,9 @@ importers:
       '@raypx/admin':
         specifier: workspace:*
         version: link:../../packages/admin
+      '@raypx/ai':
+        specifier: workspace:*
+        version: link:../../packages/ai
       '@raypx/auth':
         specifier: workspace:*
         version: link:../../packages/auth
@@ -321,9 +321,6 @@ importers:
       '@raypx/stripe':
         specifier: workspace:*
         version: link:../../packages/stripe
-      '@raypx/tanstack':
-        specifier: workspace:*
-        version: link:../../packages/tanstack
       '@tabler/icons-react':
         specifier: ^3.39.0
         version: 3.40.0(react@19.2.4)
@@ -485,6 +482,9 @@ importers:
       ai:
         specifier: ^6.0.116
         version: 6.0.116(zod@4.3.6)
+      react:
+        specifier: catalog:react19
+        version: 19.2.4
     devDependencies:
       '@raypx/tsconfig':
         specifier: workspace:*
@@ -492,6 +492,9 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.4
+      '@types/react':
+        specifier: catalog:react19
+        version: 19.2.14
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -560,34 +563,6 @@ importers:
       tsdown:
         specifier: catalog:beta
         version: 0.21.0(oxc-resolver@11.19.1)(typescript@5.9.3)
-      typescript:
-        specifier: 'catalog:'
-        version: 5.9.3
-      vitest:
-        specifier: 'catalog:'
-        version: 4.0.18(@opentelemetry/api@1.9.0)(@types/node@24.10.4)(esbuild@0.27.3)(jiti@2.6.1)(jsdom@28.1.0(@noble/hashes@2.0.1))(msw@2.12.10(@types/node@24.10.4)(typescript@5.9.3))(tsx@4.21.0)(yaml@2.8.2)
-
-  packages/core:
-    dependencies:
-      '@orpc/server':
-        specifier: ^1.13.6
-        version: 1.13.6(@opentelemetry/api@1.9.0)(crossws@0.4.4(srvx@0.11.8))(ws@8.19.0)
-      '@raypx/config':
-        specifier: workspace:*
-        version: link:../config
-      '@raypx/logger':
-        specifier: workspace:*
-        version: link:../logger
-      '@raypx/shared':
-        specifier: workspace:*
-        version: link:../shared
-    devDependencies:
-      '@raypx/tsconfig':
-        specifier: workspace:*
-        version: link:../../tooling/tsconfig
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.10.4
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -909,9 +884,6 @@ importers:
       '@raypx/config':
         specifier: workspace:*
         version: link:../config
-      '@raypx/core':
-        specifier: workspace:*
-        version: link:../core
       '@raypx/database':
         specifier: workspace:*
         version: link:../database
@@ -946,6 +918,12 @@ importers:
       '@raypx/config':
         specifier: workspace:*
         version: link:../config
+      '@tanstack/react-router':
+        specifier: 'catalog:'
+        version: 1.166.2(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      react:
+        specifier: catalog:react19
+        version: 19.2.4
     devDependencies:
       '@raypx/tsconfig':
         specifier: workspace:*
@@ -1043,34 +1021,6 @@ importers:
       '@raypx/tsconfig':
         specifier: workspace:*
         version: link:../../tooling/tsconfig
-      typescript:
-        specifier: 'catalog:'
-        version: 5.9.3
-      vitest:
-        specifier: 'catalog:'
-        version: 4.0.18(@opentelemetry/api@1.9.0)(@types/node@24.10.4)(esbuild@0.27.3)(jiti@2.6.1)(jsdom@28.1.0(@noble/hashes@2.0.1))(msw@2.12.10(@types/node@24.10.4)(typescript@5.9.3))(tsx@4.21.0)(yaml@2.8.2)
-
-  packages/tanstack:
-    dependencies:
-      '@raypx/shared':
-        specifier: workspace:*
-        version: link:../shared
-      '@tanstack/react-router':
-        specifier: 'catalog:'
-        version: 1.166.2(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      react:
-        specifier: catalog:react19
-        version: 19.2.4
-    devDependencies:
-      '@raypx/tsconfig':
-        specifier: workspace:*
-        version: link:../../tooling/tsconfig
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.10.4
-      '@types/react':
-        specifier: catalog:react19
-        version: 19.2.14
       typescript:
         specifier: 'catalog:'
         version: 5.9.3

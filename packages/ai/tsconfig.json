@@ -1,8 +1,8 @@
 {
-  "extends": "@raypx/tsconfig/node.json",
+  "extends": "@raypx/tsconfig/react.json",
   "compilerOptions": {
     "baseUrl": "."
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": ["node_modules"]
 }

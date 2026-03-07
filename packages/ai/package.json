@@ -7,6 +7,7 @@
     ".": "./src/index.ts",
     "./server": "./src/server.ts",
     "./chat": "./src/chat-service.ts",
+    "./client": "./src/client/index.ts",
     "./providers": "./src/providers/index.ts",
     "./types": "./src/types.ts"
   },
@@ -17,6 +18,7 @@
   },
   "dependencies": {
     "@ai-sdk/alibaba": "^1.0.10",
+    "react": "catalog:react19",
     "@ai-sdk/openai-compatible": "^2.0.35",
     "@raypx/config": "workspace:*",
     "@raypx/database": "workspace:*",
@@ -27,6 +29,7 @@
   "devDependencies": {
     "@raypx/tsconfig": "workspace:*",
     "@types/node": "catalog:",
+    "@types/react": "catalog:react19",
     "typescript": "catalog:",
     "vitest": "catalog:",
     "zod": "catalog:"

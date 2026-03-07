@@ -118,7 +118,7 @@ export const ThemeSwitcher = memo(({ mode = "light-dark-system", variant }: Them
 
   // Show skeleton during SSR/hydration to prevent layout shift
   if (!mounted && (effectiveVariant === "dropdown" || effectiveVariant === "toggle")) {
-    return <Skeleton className="size-8 rounded-full" />;
+    return <Skeleton className="size-7 rounded-full" />;
   }
 
   // Toggle button: single button that switches between light and dark (only for light-dark mode)
@@ -132,9 +132,9 @@ export const ThemeSwitcher = memo(({ mode = "light-dark-system", variant }: Them
     return (
       <Button
         aria-label={`Switch to ${nextTheme} theme`}
-        className={cn("size-8", BUTTON_CLASSES)}
+        className={cn(BUTTON_CLASSES)}
         onClick={() => setTheme(nextTheme)}
-        size="sm"
+        size="icon-sm"
         variant="ghost"
       >
         <Icon className={ICON_SIZE} icon={icon} />
@@ -176,8 +176,8 @@ export const ThemeSwitcher = memo(({ mode = "light-dark-system", variant }: Them
         render={
           <Button
             aria-label="Toggle theme"
-            className={cn("size-8", BUTTON_CLASSES, "focus-visible:!none")}
-            size="sm"
+            className={cn(BUTTON_CLASSES, "focus-visible:!none")}
+            size="icon-sm"
             variant="ghost"
           >
             <Icon className={ICON_SIZE} icon={triggerIcon} />

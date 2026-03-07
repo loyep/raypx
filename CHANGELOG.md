@@ -35,7 +35,7 @@ Related:
 - `packages/ai/src/errors.ts`
 - `packages/ai/src/telemetry/index.ts`
 - `packages/rpc/src/routers/ai.ts`
-- `packages/tanstack/src/client/use-chat-stream.ts`
+- `packages/ai/src/client/use-chat-stream.ts`
 
 ### feat(database): add ai consistency check command
 

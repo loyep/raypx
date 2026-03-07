@@ -1,5 +1,3 @@
-// Application-wide constants
-
 export const APP_NAME = "Raypx";
 
 export const ROUTES = {

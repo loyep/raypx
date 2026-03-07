@@ -14,6 +14,7 @@
   "dependencies": {
     "@fumadocs/base-ui": "^16.6.10",
     "@raypx/admin": "workspace:*",
+    "@raypx/ai": "workspace:*",
     "@tabler/icons-react": "^3.39.0",
     "@raypx/auth": "workspace:*",
     "@raypx/config": "workspace:*",
@@ -23,7 +24,6 @@
     "@raypx/seo": "workspace:*",
     "@raypx/shared": "workspace:*",
     "@raypx/stripe": "workspace:*",
-    "@raypx/tanstack": "workspace:*",
     "@tanstack/react-query": "catalog:",
     "@tanstack/react-router": "catalog:",
     "@tanstack/react-start": "catalog:",

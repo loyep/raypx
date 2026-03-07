@@ -1,5 +1,5 @@
 import { generateRootHead } from "@raypx/seo";
-import { HeadContent } from "@raypx/tanstack";
+import { HeadContent } from "@raypx/seo/client";
 import { createRootRoute, Outlet, Scripts } from "@tanstack/react-router";
 import { DefaultCatchBoundary } from "@/components/default-catch-boundary";
 import Loading from "@/components/layout/loading";

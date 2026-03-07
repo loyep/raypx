@@ -56,7 +56,6 @@ raypx/
 │   └── docs/         # Documentation site
 ├── packages/
 │   ├── tsconfig/     # Shared TypeScript configurations
-│   ├── core/         # Base context/contracts
 │   ├── config/       # Environment validation
 │   ├── logger/       # Logging utilities
 │   ├── shared/       # Shared utilities
@@ -75,7 +74,7 @@ raypx/
 Raypx follows a dual-track strategy:
 
 1. Product track: ship usable SaaS templates (`app`, `web`, `docs`).
-2. Platform track: keep `core/auth/ai/rpc/design-system` stable and reusable.
+2. Platform track: keep `auth/ai/rpc/design-system` stable and reusable.
 
 References:
 
@@ -271,7 +270,7 @@ Follow the dependency hierarchy:
 ```
 Layer 0: @raypx/tsconfig
 Layer 1: @raypx/config
-Layer 2: @raypx/logger, @raypx/shared, @raypx/core
+Layer 2: @raypx/logger, @raypx/shared
 Layer 3: @raypx/database, @raypx/email, @raypx/storage, @raypx/seo
 Layer 4: @raypx/auth, @raypx/ai
 Layer 5: @raypx/rpc

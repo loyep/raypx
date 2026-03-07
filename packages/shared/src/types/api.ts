@@ -1,5 +1,3 @@
-// Shared type definitions
-
 export type UserRole = "admin" | "user" | "superadmin";
 
 export type StatusCode = 200 | 201 | 400 | 401 | 403 | 404 | 500;
