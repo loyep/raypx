@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+
 import { mkdirSync, appendFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { spawn } from "node:child_process";

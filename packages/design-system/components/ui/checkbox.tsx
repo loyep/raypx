@@ -1,6 +1,7 @@
 "use client";
 
 import { Checkbox as CheckboxPrimitive } from "@base-ui/react/checkbox";
+
 import { cn } from "@raypx/design-system/lib/utils";
 import { IconCheck } from "@tabler/icons-react";
 

@@ -47,60 +47,26 @@ function ChartContainer({
 }) {
   const uniqueId = React.useId();
   const chartId = `chart-${id ?? uniqueId.replace(/:/g, "")}`;
-  const containerRef = React.useRef<HTMLDivElement>(null);
-  const [containerSize, setContainerSize] = React.useState({ width: 0, height: 0 });
-
-  React.useEffect(() => {
-    const element = containerRef.current;
-    if (!element) return;
-
-    const updateSizeState = () => {
-      setContainerSize({
-        width: element.clientWidth,
-        height: element.clientHeight,
-      });
-    };
-
-    updateSizeState();
-
-    if (typeof ResizeObserver === "undefined") {
-      setContainerSize({
-        width: element.clientWidth,
-        height: element.clientHeight,
-      });
-      return;
-    }
-
-    const observer = new ResizeObserver(updateSizeState);
-    observer.observe(element);
-    return () => observer.disconnect();
-  }, []);
 
   return (
     <ChartContext.Provider value={{ config }}>
       <div
         className={cn(
-          "flex min-h-0 min-w-0 justify-center text-xs [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-hidden [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-sector]:outline-hidden [&_.recharts-surface]:outline-hidden",
+          "flex min-h-1 min-w-1 justify-center text-xs [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-hidden [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-sector]:outline-hidden [&_.recharts-surface]:outline-hidden",
           className,
         )}
         data-chart={chartId}
         data-slot="chart"
-        ref={containerRef}
         {...props}
       >
         <ChartStyle config={config} id={chartId} />
-        {containerSize.width > 0 && containerSize.height > 0 ? (
-          <RechartsPrimitive.ResponsiveContainer
-            height={containerSize.height}
-            minHeight={1}
-            minWidth={0}
-            width={containerSize.width}
-          >
-            {children}
-          </RechartsPrimitive.ResponsiveContainer>
-        ) : (
-          <div className="h-full w-full" />
-        )}
+        <RechartsPrimitive.ResponsiveContainer
+          initialDimension={{ width: 1, height: 1 }}
+          minHeight={1}
+          minWidth={0}
+        >
+          {children}
+        </RechartsPrimitive.ResponsiveContainer>
       </div>
     </ChartContext.Provider>
   );
@@ -139,18 +105,18 @@ const ChartTooltip = RechartsPrimitive.Tooltip;
 
 function ChartTooltipContent({
   active,
-  payload,
   className,
   indicator = "dot",
   hideLabel = false,
   hideIndicator = false,
-  label,
   labelFormatter,
   labelClassName,
   formatter,
   color,
   nameKey,
   labelKey,
+  payload,
+  label,
 }: React.ComponentProps<typeof RechartsPrimitive.Tooltip> &
   React.ComponentProps<"div"> & {
     hideLabel?: boolean;
@@ -186,7 +152,7 @@ function ChartTooltipContent({
     }
 
     return <div className={cn("font-medium", labelClassName)}>{value}</div>;
-  }, [label, labelFormatter, payload, hideLabel, labelClassName, config, labelKey]);
+  }, [config, hideLabel, label, labelClassName, labelFormatter, labelKey, payload]);
 
   if (!active || !payload?.length) {
     return null;
@@ -204,7 +170,7 @@ function ChartTooltipContent({
       {!nestLabel ? tooltipLabel : null}
       <div className="grid gap-1.5">
         {payload
-          .filter((item) => item.type !== "none")
+          .filter((i) => i.type !== "none")
           .map((item, index) => {
             const key = `${nameKey ?? item.name ?? item.dataKey ?? "value"}`;
             const itemConfig = getPayloadConfigFromPayload(config, item, key);
@@ -303,7 +269,7 @@ function ChartLegendContent({
       )}
     >
       {payload
-        .filter((item) => item.type !== "none")
+        .filter((i) => i.type !== "none")
         .map((item) => {
           const key = `${nameKey ?? item.dataKey ?? "value"}`;
           const itemConfig = getPayloadConfigFromPayload(config, item, key);
@@ -367,169 +333,3 @@ export {
   ChartLegendContent,
   ChartStyle,
 };
-
-// ============== Wrapped Chart Components ==============
-
-export interface BarChartProps {
-  data: Record<string, unknown>[];
-  series: {
-    dataKey: string;
-    name?: string;
-    color?: string;
-  }[];
-  xAxisKey: string;
-  height?: number;
-  showXAxis?: boolean;
-  showYAxis?: boolean;
-  showGrid?: boolean;
-  showTooltip?: boolean;
-  radius?: [number, number, number, number];
-}
-
-export function BarChart({
-  data,
-  series,
-  xAxisKey,
-  height = 200,
-  showXAxis = true,
-  showYAxis = true,
-  showGrid = false,
-  showTooltip = true,
-  radius = [4, 4, 0, 0],
-}: BarChartProps) {
-  return (
-    <RechartsPrimitive.ResponsiveContainer height={height} width="100%">
-      <RechartsPrimitive.BarChart data={data}>
-        {showGrid && <RechartsPrimitive.CartesianGrid strokeDasharray="3 3" vertical={false} />}
-        {showXAxis && (
-          <RechartsPrimitive.XAxis
-            axisLine={false}
-            dataKey={xAxisKey}
-            tickLine={false}
-            tickMargin={10}
-          />
-        )}
-        {showYAxis && <RechartsPrimitive.YAxis axisLine={false} tickLine={false} tickMargin={10} />}
-        {showTooltip && (
-          <RechartsPrimitive.Tooltip
-            content={({ active, payload, label }) => {
-              if (!active || !payload?.length) return null;
-              return (
-                <div className="rounded-lg border border-border/50 bg-background px-2.5 py-1.5 text-xs shadow-xl">
-                  <div className="font-medium">{label}</div>
-                  {payload.map((item, index) => (
-                    <div className="flex items-center gap-2" key={index}>
-                      <div
-                        className="h-2 w-2 rounded-[2px]"
-                        style={{ backgroundColor: item.color }}
-                      />
-                      <span className="text-muted-foreground">{item.name}</span>
-                      <span className="font-medium font-mono">
-                        {typeof item.value === "number"
-                          ? item.value.toLocaleString()
-                          : String(item.value)}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              );
-            }}
-          />
-        )}
-        {series.map((s, index) => (
-          <RechartsPrimitive.Bar
-            dataKey={s.dataKey}
-            fill={s.color ?? `hsl(var(--chart-${(index % 5) + 1}))`}
-            key={index}
-            name={s.name ?? s.dataKey}
-            radius={radius}
-          />
-        ))}
-      </RechartsPrimitive.BarChart>
-    </RechartsPrimitive.ResponsiveContainer>
-  );
-}
-
-export interface LineChartProps {
-  data: Record<string, unknown>[];
-  series: {
-    dataKey: string;
-    name?: string;
-    color?: string;
-  }[];
-  xAxisKey: string;
-  height?: number;
-  showXAxis?: boolean;
-  showYAxis?: boolean;
-  showGrid?: boolean;
-  showTooltip?: boolean;
-  showDots?: boolean;
-  curve?: "linear" | "monotone" | "natural" | "step";
-}
-
-export function LineChart({
-  data,
-  series,
-  xAxisKey,
-  height = 200,
-  showXAxis = true,
-  showYAxis = true,
-  showGrid = false,
-  showTooltip = true,
-  showDots = true,
-  curve = "monotone",
-}: LineChartProps) {
-  return (
-    <RechartsPrimitive.ResponsiveContainer height={height} width="100%">
-      <RechartsPrimitive.LineChart data={data}>
-        {showGrid && <RechartsPrimitive.CartesianGrid strokeDasharray="3 3" vertical={false} />}
-        {showXAxis && (
-          <RechartsPrimitive.XAxis
-            axisLine={false}
-            dataKey={xAxisKey}
-            tickLine={false}
-            tickMargin={10}
-          />
-        )}
-        {showYAxis && <RechartsPrimitive.YAxis axisLine={false} tickLine={false} tickMargin={10} />}
-        {showTooltip && (
-          <RechartsPrimitive.Tooltip
-            content={({ active, payload, label }) => {
-              if (!active || !payload?.length) return null;
-              return (
-                <div className="rounded-lg border border-border/50 bg-background px-2.5 py-1.5 text-xs shadow-xl">
-                  <div className="font-medium">{label}</div>
-                  {payload.map((item, index) => (
-                    <div className="flex items-center gap-2" key={index}>
-                      <div
-                        className="h-2 w-2 rounded-full"
-                        style={{ backgroundColor: item.color }}
-                      />
-                      <span className="text-muted-foreground">{item.name}</span>
-                      <span className="font-medium font-mono">
-                        {typeof item.value === "number"
-                          ? item.value.toLocaleString()
-                          : String(item.value)}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              );
-            }}
-          />
-        )}
-        {series.map((s, index) => (
-          <RechartsPrimitive.Line
-            dataKey={s.dataKey}
-            dot={showDots}
-            key={index}
-            name={s.name ?? s.dataKey}
-            stroke={s.color ?? `hsl(var(--chart-${(index % 5) + 1}))`}
-            strokeWidth={2}
-            type={curve}
-          />
-        ))}
-      </RechartsPrimitive.LineChart>
-    </RechartsPrimitive.ResponsiveContainer>
-  );
-}

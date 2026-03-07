@@ -18,7 +18,7 @@ import {
 } from "@raypx/design-system/components/ui/tooltip";
 import { useIsMobile } from "@raypx/design-system/hooks/use-mobile";
 import { cn } from "@raypx/design-system/lib/utils";
-import { IconLayoutSidebarLeftExpand } from "@tabler/icons-react";
+import { IconLayoutSidebar } from "@tabler/icons-react";
 import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
 
@@ -261,7 +261,7 @@ function SidebarTrigger({ className, onClick, ...props }: React.ComponentProps<t
       variant="ghost"
       {...props}
     >
-      <IconLayoutSidebarLeftExpand />
+      <IconLayoutSidebar />
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   );
@@ -499,7 +499,7 @@ function SidebarMenuButton({
       },
       props,
     ),
-    render: !tooltip ? render : TooltipTrigger,
+    render: !tooltip ? render : <TooltipTrigger render={render} />,
     state: {
       slot: "sidebar-menu-button",
       sidebar: "menu-button",

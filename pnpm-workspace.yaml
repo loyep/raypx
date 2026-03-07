@@ -49,6 +49,7 @@ catalog:
   '@vitejs/plugin-react': ^5.1.4
   babel-plugin-react-compiler: ^1.0.0
   jiti: ^2.6.1
+  recharts: ^3.8.0
   type-fest: ^5.4.4
   typescript: ^5.9.3
   vitest: ^4.0.18
