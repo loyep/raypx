@@ -16,8 +16,10 @@ raypx/
 │   │   └── public/         # Static assets
 │   ├── app/                # Secondary application
 │   └── docs/               # Fumadocs documentation site
-├── packages/               # Shared packages (see below)
-├── packages/forge/         # Unified monorepo CLI (forge)
+├── packages/               # Shared runtime packages (see below)
+├── tooling/                # Workspace tooling packages
+│   ├── forge/              # Unified monorepo CLI (forge)
+│   └── tsconfig/           # Shared TypeScript configs
 └── turbo.json              # Turborepo build pipeline
 ```
 
@@ -81,7 +83,7 @@ Packages can depend on each other, but follow these rules:
 ### Development Tools
 
 - **Biome** (`biome.json`) – Replaces ESLint + Prettier for linting and formatting
-- **TypeScript** (`packages/tsconfig/`) – Shared configs with strict mode enabled
+- **TypeScript** (`tooling/tsconfig/`) – Shared configs with strict mode enabled
 - **Turborepo** (`turbo.json`) – Build orchestration and caching
 - **Vitest** – Unit testing framework (jsdom)
 - **Lefthook** – Git hooks for pre-commit checks

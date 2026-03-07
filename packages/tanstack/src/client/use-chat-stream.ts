@@ -54,7 +54,6 @@ export function useChatStream(call: ChatStreamCall, options?: UseChatStreamOptio
           conversationId: input.conversationId,
         });
 
-        let fullText = "";
         for await (const event of stream) {
           options?.onEvent?.(event);
 
@@ -64,7 +63,6 @@ export function useChatStream(call: ChatStreamCall, options?: UseChatStreamOptio
           }
 
           if (event.type === "delta" && event.text) {
-            fullText += event.text;
             setTiming((prev) => {
               if (!prev) return prev;
               const now = Date.now();

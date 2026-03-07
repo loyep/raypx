@@ -113,11 +113,11 @@ importers:
         specifier: ^20.4.3
         version: 20.4.3
       '@dotenvx/dotenvx':
-        specifier: ^1.53.0
-        version: 1.53.0
+        specifier: ^1.54.1
+        version: 1.54.1
       '@raypx/forge':
         specifier: workspace:*
-        version: link:packages/forge
+        version: link:tooling/forge
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.4
@@ -166,7 +166,7 @@ importers:
     devDependencies:
       '@raypx/tsconfig':
         specifier: workspace:*
-        version: link:../../packages/tsconfig
+        version: link:../../tooling/tsconfig
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.4
@@ -233,10 +233,10 @@ importers:
     devDependencies:
       '@raypx/forge':
         specifier: workspace:*
-        version: link:../../packages/forge
+        version: link:../../tooling/forge
       '@raypx/tsconfig':
         specifier: workspace:*
-        version: link:../../packages/tsconfig
+        version: link:../../tooling/tsconfig
       '@tailwindcss/vite':
         specifier: catalog:tailwindv4
         version: 4.2.1(vite@8.0.0-beta.16(@types/node@24.10.4)(esbuild@0.27.3)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.2))
@@ -366,10 +366,10 @@ importers:
     devDependencies:
       '@raypx/forge':
         specifier: workspace:*
-        version: link:../../packages/forge
+        version: link:../../tooling/forge
       '@raypx/tsconfig':
         specifier: workspace:*
-        version: link:../../packages/tsconfig
+        version: link:../../tooling/tsconfig
       '@tailwindcss/vite':
         specifier: catalog:tailwindv4
         version: 4.2.1(vite@8.0.0-beta.16(@types/node@24.10.4)(esbuild@0.27.3)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.2))
@@ -448,7 +448,7 @@ importers:
     devDependencies:
       '@raypx/tsconfig':
         specifier: workspace:*
-        version: link:../tsconfig
+        version: link:../../tooling/tsconfig
       '@types/react':
         specifier: catalog:react19
         version: 19.2.14
@@ -488,7 +488,7 @@ importers:
     devDependencies:
       '@raypx/tsconfig':
         specifier: workspace:*
-        version: link:../tsconfig
+        version: link:../../tooling/tsconfig
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.4
@@ -519,7 +519,7 @@ importers:
     devDependencies:
       '@raypx/tsconfig':
         specifier: workspace:*
-        version: link:../tsconfig
+        version: link:../../tooling/tsconfig
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.4
@@ -550,7 +550,7 @@ importers:
     devDependencies:
       '@raypx/tsconfig':
         specifier: workspace:*
-        version: link:../tsconfig
+        version: link:../../tooling/tsconfig
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.4
@@ -584,7 +584,7 @@ importers:
     devDependencies:
       '@raypx/tsconfig':
         specifier: workspace:*
-        version: link:../tsconfig
+        version: link:../../tooling/tsconfig
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.4
@@ -624,10 +624,10 @@ importers:
     devDependencies:
       '@raypx/forge':
         specifier: workspace:*
-        version: link:../forge
+        version: link:../../tooling/forge
       '@raypx/tsconfig':
         specifier: workspace:*
-        version: link:../tsconfig
+        version: link:../../tooling/tsconfig
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.4
@@ -733,7 +733,7 @@ importers:
     devDependencies:
       '@raypx/tsconfig':
         specifier: workspace:*
-        version: link:../tsconfig
+        version: link:../../tooling/tsconfig
       '@types/react':
         specifier: catalog:react19
         version: 19.2.14
@@ -785,7 +785,7 @@ importers:
     devDependencies:
       '@raypx/tsconfig':
         specifier: workspace:*
-        version: link:../tsconfig
+        version: link:../../tooling/tsconfig
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.4
@@ -795,40 +795,6 @@ importers:
       '@types/react':
         specifier: catalog:react19
         version: 19.2.14
-      typescript:
-        specifier: 'catalog:'
-        version: 5.9.3
-      vitest:
-        specifier: 'catalog:'
-        version: 4.0.18(@opentelemetry/api@1.9.0)(@types/node@24.10.4)(esbuild@0.27.3)(jiti@2.6.1)(jsdom@28.1.0(@noble/hashes@2.0.1))(msw@2.12.10(@types/node@24.10.4)(typescript@5.9.3))(tsx@4.21.0)(yaml@2.8.2)
-
-  packages/forge:
-    dependencies:
-      '@dotenvx/dotenvx':
-        specifier: ^1.53.0
-        version: 1.53.0
-      consola:
-        specifier: ^3.4.2
-        version: 3.4.2
-      fast-glob:
-        specifier: ^3.3.3
-        version: 3.3.3
-      fs-extra:
-        specifier: ^11.3.4
-        version: 11.3.4
-      tsx:
-        specifier: ^4.21.0
-        version: 4.21.0
-    devDependencies:
-      '@raypx/tsconfig':
-        specifier: workspace:*
-        version: link:../tsconfig
-      '@types/fs-extra':
-        specifier: ^11.0.4
-        version: 11.0.4
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.10.4
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -847,7 +813,7 @@ importers:
     devDependencies:
       '@raypx/tsconfig':
         specifier: workspace:*
-        version: link:../tsconfig
+        version: link:../../tooling/tsconfig
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.4
@@ -866,7 +832,7 @@ importers:
     devDependencies:
       '@raypx/tsconfig':
         specifier: workspace:*
-        version: link:../tsconfig
+        version: link:../../tooling/tsconfig
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.4
@@ -906,7 +872,7 @@ importers:
     devDependencies:
       '@raypx/tsconfig':
         specifier: workspace:*
-        version: link:../tsconfig
+        version: link:../../tooling/tsconfig
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.4
@@ -967,7 +933,7 @@ importers:
     devDependencies:
       '@raypx/tsconfig':
         specifier: workspace:*
-        version: link:../tsconfig
+        version: link:../../tooling/tsconfig
       '@tanstack/react-start':
         specifier: 'catalog:'
         version: 1.166.2(crossws@0.4.4(srvx@0.11.8))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(vite@8.0.0-beta.16(@types/node@24.10.4)(esbuild@0.27.3)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.2))
@@ -986,7 +952,7 @@ importers:
     devDependencies:
       '@raypx/tsconfig':
         specifier: workspace:*
-        version: link:../tsconfig
+        version: link:../../tooling/tsconfig
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.4
@@ -1023,7 +989,7 @@ importers:
     devDependencies:
       '@raypx/tsconfig':
         specifier: workspace:*
-        version: link:../tsconfig
+        version: link:../../tooling/tsconfig
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.4
@@ -1054,7 +1020,7 @@ importers:
     devDependencies:
       '@raypx/tsconfig':
         specifier: workspace:*
-        version: link:../tsconfig
+        version: link:../../tooling/tsconfig
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.4
@@ -1079,7 +1045,7 @@ importers:
     devDependencies:
       '@raypx/tsconfig':
         specifier: workspace:*
-        version: link:../tsconfig
+        version: link:../../tooling/tsconfig
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -1101,7 +1067,7 @@ importers:
     devDependencies:
       '@raypx/tsconfig':
         specifier: workspace:*
-        version: link:../tsconfig
+        version: link:../../tooling/tsconfig
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.4
@@ -1144,7 +1110,7 @@ importers:
     devDependencies:
       '@raypx/tsconfig':
         specifier: workspace:*
-        version: link:../tsconfig
+        version: link:../../tooling/tsconfig
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -1152,7 +1118,41 @@ importers:
         specifier: 'catalog:'
         version: 4.0.18(@opentelemetry/api@1.9.0)(@types/node@24.10.4)(esbuild@0.27.3)(jiti@2.6.1)(jsdom@28.1.0(@noble/hashes@2.0.1))(msw@2.12.10(@types/node@24.10.4)(typescript@5.9.3))(tsx@4.21.0)(yaml@2.8.2)
 
-  packages/tsconfig:
+  tooling/forge:
+    dependencies:
+      '@dotenvx/dotenvx':
+        specifier: ^1.53.0
+        version: 1.54.1
+      consola:
+        specifier: ^3.4.2
+        version: 3.4.2
+      fast-glob:
+        specifier: ^3.3.3
+        version: 3.3.3
+      fs-extra:
+        specifier: ^11.3.4
+        version: 11.3.4
+      tsx:
+        specifier: ^4.21.0
+        version: 4.21.0
+    devDependencies:
+      '@raypx/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@types/fs-extra':
+        specifier: ^11.0.4
+        version: 11.0.4
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.10.4
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+      vitest:
+        specifier: 'catalog:'
+        version: 4.0.18(@opentelemetry/api@1.9.0)(@types/node@24.10.4)(esbuild@0.27.3)(jiti@2.6.1)(jsdom@28.1.0(@noble/hashes@2.0.1))(msw@2.12.10(@types/node@24.10.4)(typescript@5.9.3))(tsx@4.21.0)(yaml@2.8.2)
+
+  tooling/tsconfig:
     devDependencies:
       '@types/node':
         specifier: 'catalog:'
@@ -1832,8 +1832,8 @@ packages:
   '@date-fns/tz@1.4.1':
     resolution: {integrity: sha512-P5LUNhtbj6YfI3iJjw5EL9eUAG6OitD0W3fWQcpQjDRc/QIsL0tRNuO1PcDvPccWL1fSTXXdE1ds+l95DV/OFA==}
 
-  '@dotenvx/dotenvx@1.53.0':
-    resolution: {integrity: sha512-OnsVuJ5O2WCUMXBnyuYah08/I6Tnt1FEZ2PGH9skSRuRh3LK5UoGa6Bzi5Toj/F/0mbeFfv+eNKTsYRoGgRh3Q==}
+  '@dotenvx/dotenvx@1.54.1':
+    resolution: {integrity: sha512-41gU3q7v05GM92QPuPUf4CmUw+mmF8p4wLUh6MCRlxpCkJ9ByLcY9jUf6MwrMNmiKyG/rIckNxj9SCfmNCmCqw==}
     hasBin: true
 
   '@drizzle-team/brocli@0.11.0':
@@ -9317,7 +9317,7 @@ snapshots:
 
   '@date-fns/tz@1.4.1': {}
 
-  '@dotenvx/dotenvx@1.53.0':
+  '@dotenvx/dotenvx@1.54.1':
     dependencies:
       commander: 11.1.0
       dotenv: 17.3.1
@@ -15103,7 +15103,7 @@ snapshots:
       '@babel/parser': 7.29.0
       '@babel/plugin-transform-typescript': 7.28.6(@babel/core@7.29.0)
       '@babel/preset-typescript': 7.28.5(@babel/core@7.29.0)
-      '@dotenvx/dotenvx': 1.53.0
+      '@dotenvx/dotenvx': 1.54.1
       '@modelcontextprotocol/sdk': 1.27.1(zod@3.25.76)
       '@types/validate-npm-package-name': 4.0.2
       browserslist: 4.28.1

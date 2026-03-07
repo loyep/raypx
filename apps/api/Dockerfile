@@ -19,6 +19,7 @@ ENV NODE_ENV=development
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
 COPY apps ./apps
 COPY packages ./packages
+COPY tooling ./tooling
 
 # Install dependencies with shared pnpm store cache
 RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \

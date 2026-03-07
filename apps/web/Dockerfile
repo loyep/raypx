@@ -14,6 +14,7 @@ FROM base AS pruner
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
 COPY apps ./apps
 COPY packages ./packages
+COPY tooling ./tooling
 COPY .dockerignore ./.dockerignore
 COPY .gitignore ./.gitignore
 COPY tsconfig.json ./tsconfig.json
@@ -24,7 +25,7 @@ RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
 FROM base AS installer
 COPY --from=pruner /app/out/json/ .
 COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
-COPY --from=pruner /app/out/full/packages/forge/forge.mjs ./packages/forge/forge.mjs
+COPY --from=pruner /app/out/full/tooling/forge/forge.mjs ./tooling/forge/forge.mjs
 RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
     pnpm install --frozen-lockfile
 
@@ -39,6 +40,7 @@ COPY --from=pruner /app/out/full/pnpm-workspace.yaml ./pnpm-workspace.yaml
 COPY --from=pruner /app/out/full/turbo.json ./turbo.json
 COPY --from=pruner /app/out/full/apps ./apps
 COPY --from=pruner /app/out/full/packages ./packages
+COPY --from=pruner /app/out/full/tooling ./tooling
 COPY --from=pruner /app/.dockerignore /app/.gitignore /app/tsconfig.json ./
 RUN --mount=type=cache,id=turbo-cache,target=/app/.turbo \
     pnpm turbo build --filter=web...

@@ -1,8 +1,8 @@
+import { useEffect } from "react";
 import { ConversationPanel } from "@/features/chat/components/conversation";
 import { ChatHeader } from "@/features/chat/components/header";
 import { ProviderMissingCard } from "@/features/chat/components/provider-missing";
 import { useChatController } from "@/features/chat/hooks/use-chat-controller";
-import { useEffect } from "react";
 
 type ChatPageProps = {
   routeConversationId: string | null;

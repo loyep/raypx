@@ -10,6 +10,8 @@ if (!databaseUrl) {
 }
 
 const sql = postgres(databaseUrl);
+const writeOut = (message: string) => process.stdout.write(`${message}\n`);
+const writeErr = (message: string) => process.stderr.write(`${message}\n`);
 
 async function fetchCount(query: postgres.PendingQuery<RowCount[]>): Promise<number> {
   const rows = await query;
@@ -97,14 +99,14 @@ async function main() {
     .filter((check) => check.severity === "warn")
     .reduce((acc, check) => acc + check.value, 0);
 
-  console.log("[ai-check] AI consistency report");
+  writeOut("[ai-check] AI consistency report");
   for (const check of checks) {
     const marker = check.severity === "critical" ? "CRITICAL" : "WARN";
-    console.log(
+    writeOut(
       `${marker.padEnd(8)} ${check.id.padEnd(28)} ${String(check.value).padStart(6)}  ${check.description}`,
     );
   }
-  console.log(
+  writeOut(
     `[ai-check] summary critical=${totalCritical} warn=${totalWarn} checks=${checks.length}`,
   );
 
@@ -115,7 +117,9 @@ async function main() {
 
 main()
   .catch((error) => {
-    console.error("[ai-check] failed:", error);
+    writeErr(
+      `[ai-check] failed: ${error instanceof Error ? (error.stack ?? error.message) : String(error)}`,
+    );
     process.exitCode = 1;
   })
   .finally(async () => {
