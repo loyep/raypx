@@ -6,11 +6,11 @@ import { Separator } from "@raypx/design-system/components/ui/separator";
 import { Spinner } from "@raypx/design-system/components/ui/spinner";
 import { generatePageHead } from "@raypx/seo";
 import { IconBrandGithub, IconBrandGoogle, IconEye, IconEyeOff } from "@tabler/icons-react";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { useState } from "react";
 import { AuthLayout } from "@/components/auth";
 import { siteConfig } from "@/config/site";
-import { signIn, useSession } from "@/lib/auth";
+import { OAuthButton, OAuthButtonGroup, signIn } from "@/lib/auth";
 
 export const Route = createFileRoute("/(auth)/login")({
   component: LoginPage,
@@ -19,20 +19,13 @@ export const Route = createFileRoute("/(auth)/login")({
 
 function LoginPage() {
   const navigate = useNavigate();
-  const { data: session } = useSession();
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [oauthLoading, setOauthLoading] = useState<"github" | "google" | null>(null);
-
-  // Redirect if already logged in
-  if (session) {
-    navigate({ to: "/dashboard" });
-    return null;
-  }
 
   async function handleEmailSignIn(e: React.FormEvent) {
     e.preventDefault();
@@ -58,55 +51,56 @@ function LoginPage() {
     }
   }
 
-  async function handleOAuthSignIn(provider: "github" | "google") {
-    setOauthLoading(provider);
-    setError(null);
-
-    try {
-      await signIn.social({
-        provider,
-        callbackURL: "/dashboard",
-      });
-    } catch {
-      setError(`Failed to sign in with ${provider}`);
-      setOauthLoading(null);
-    }
-  }
-
   return (
     <AuthLayout subtitle="Sign in to your account to continue" title="Welcome back">
       <div className="space-y-5">
         {/* OAuth Buttons */}
-        <div className="grid gap-3">
-          <Button
-            className="h-11 w-full"
-            disabled={oauthLoading !== null}
-            onClick={() => handleOAuthSignIn("google")}
-            type="button"
-            variant="outline"
-          >
-            {oauthLoading === "google" ? (
-              <Spinner className="mr-2" />
-            ) : (
-              <IconBrandGoogle className="mr-2 size-5" />
-            )}
-            Continue with Google
-          </Button>
-          <Button
-            className="h-11 w-full"
-            disabled={oauthLoading !== null}
-            onClick={() => handleOAuthSignIn("github")}
-            type="button"
-            variant="outline"
-          >
-            {oauthLoading === "github" ? (
-              <Spinner className="mr-2" />
-            ) : (
-              <IconBrandGithub className="mr-2 size-5" />
-            )}
-            Continue with GitHub
-          </Button>
-        </div>
+        <OAuthButtonGroup
+          callbackURL="/dashboard"
+          onError={setError}
+          onFocusReturn={() => router.invalidate()}
+        >
+          <div className="grid gap-3">
+            <OAuthButton
+              provider="google"
+              render={({ disabled, isLoading, onClick }) => (
+                <Button
+                  className="h-11 w-full"
+                  disabled={disabled}
+                  onClick={onClick}
+                  type="button"
+                  variant="outline"
+                >
+                  {isLoading ? (
+                    <Spinner className="mr-2" />
+                  ) : (
+                    <IconBrandGoogle className="mr-2 size-5" />
+                  )}
+                  Continue with Google
+                </Button>
+              )}
+            />
+            <OAuthButton
+              provider="github"
+              render={({ disabled, isLoading, onClick }) => (
+                <Button
+                  className="h-11 w-full"
+                  disabled={disabled}
+                  onClick={onClick}
+                  type="button"
+                  variant="outline"
+                >
+                  {isLoading ? (
+                    <Spinner className="mr-2" />
+                  ) : (
+                    <IconBrandGithub className="mr-2 size-5" />
+                  )}
+                  Continue with GitHub
+                </Button>
+              )}
+            />
+          </div>
+        </OAuthButtonGroup>
 
         <div className="relative">
           <div className="absolute inset-0 flex items-center">

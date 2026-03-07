@@ -6,11 +6,11 @@ import { Label } from "@raypx/design-system/components/ui/label";
 import { Spinner } from "@raypx/design-system/components/ui/spinner";
 import { generatePageHead } from "@raypx/seo";
 import { IconBrandGithub, IconBrandGoogle, IconEye, IconEyeOff } from "@tabler/icons-react";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { createFileRoute, Link, useNavigate, useRouter } from "@tanstack/react-router";
+import { useState } from "react";
 import { AuthLayout } from "@/components/auth";
 import { siteConfig } from "@/config/site";
-import { signIn, signUp, useSession } from "@/lib/auth";
+import { OAuthButton, OAuthButtonGroup, signUp } from "@/lib/auth";
 
 export const Route = createFileRoute("/(auth)/signup")({
   component: SignUpPage,
@@ -19,7 +19,7 @@ export const Route = createFileRoute("/(auth)/signup")({
 
 function SignUpPage() {
   const navigate = useNavigate();
-  const { data: session } = useSession();
+  const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -27,17 +27,9 @@ function SignUpPage() {
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [oauthLoading, setOauthLoading] = useState<"github" | "google" | null>(null);
 
   // Password strength indicator
   const passwordStrength = getPasswordStrength(password);
-
-  // Redirect if already logged in
-  useEffect(() => {
-    if (session) {
-      navigate({ to: "/dashboard" });
-    }
-  }, [session, navigate]);
 
   function getPasswordStrength(pwd: string): {
     score: number;
@@ -81,54 +73,56 @@ function SignUpPage() {
     }
   }
 
-  async function handleOAuthSignUp(provider: "github" | "google") {
-    setError(null);
-    setOauthLoading(provider);
-    try {
-      await signIn.social({
-        provider,
-        callbackURL: "/dashboard",
-      });
-    } catch {
-      setError(`Failed to sign up with ${provider}`);
-      setOauthLoading(null);
-    }
-  }
-
   return (
     <AuthLayout subtitle="Get started with Raypx for free" title="Create an account">
       <div className="space-y-5">
         {/* OAuth Buttons */}
-        <div className="grid gap-3">
-          <Button
-            className="h-10 w-full text-sm"
-            disabled={oauthLoading !== null}
-            onClick={() => handleOAuthSignUp("google")}
-            type="button"
-            variant="outline"
-          >
-            {oauthLoading === "google" ? (
-              <Spinner className="mr-2" />
-            ) : (
-              <IconBrandGoogle className="mr-2 size-5" />
-            )}
-            Continue with Google
-          </Button>
-          <Button
-            className="h-10 w-full text-sm"
-            disabled={oauthLoading !== null}
-            onClick={() => handleOAuthSignUp("github")}
-            type="button"
-            variant="outline"
-          >
-            {oauthLoading === "github" ? (
-              <Spinner className="mr-2" />
-            ) : (
-              <IconBrandGithub className="mr-2 size-5" />
-            )}
-            Continue with GitHub
-          </Button>
-        </div>
+        <OAuthButtonGroup
+          callbackURL="/dashboard"
+          onError={setError}
+          onFocusReturn={() => router.invalidate()}
+        >
+          <div className="grid gap-3">
+            <OAuthButton
+              provider="google"
+              render={({ disabled, isLoading, onClick }) => (
+                <Button
+                  className="h-10 w-full text-sm"
+                  disabled={disabled}
+                  onClick={onClick}
+                  type="button"
+                  variant="outline"
+                >
+                  {isLoading ? (
+                    <Spinner className="mr-2" />
+                  ) : (
+                    <IconBrandGoogle className="mr-2 size-5" />
+                  )}
+                  Continue with Google
+                </Button>
+              )}
+            />
+            <OAuthButton
+              provider="github"
+              render={({ disabled, isLoading, onClick }) => (
+                <Button
+                  className="h-10 w-full text-sm"
+                  disabled={disabled}
+                  onClick={onClick}
+                  type="button"
+                  variant="outline"
+                >
+                  {isLoading ? (
+                    <Spinner className="mr-2" />
+                  ) : (
+                    <IconBrandGithub className="mr-2 size-5" />
+                  )}
+                  Continue with GitHub
+                </Button>
+              )}
+            />
+          </div>
+        </OAuthButtonGroup>
 
         <FieldSeparator className="my-1 h-1">OR</FieldSeparator>
 

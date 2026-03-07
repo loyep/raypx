@@ -11,7 +11,11 @@ export {
   signUp,
   useSession,
 } from "./client";
+// Components (safe for browser)
+export { OAuthButton, OAuthButtonGroup } from "./components/oauth-buttons";
 
+// Hooks (safe for browser)
+export { useOAuthReset } from "./hooks/use-oauth-reset";
 // Provider exports (safe for browser)
 export { AuthProvider, useAuthContext } from "./provider";
 

@@ -12,9 +12,9 @@ import { Label } from "@raypx/design-system/components/ui/label";
 import { Separator } from "@raypx/design-system/components/ui/separator";
 import { Spinner } from "@raypx/design-system/components/ui/spinner";
 import { IconEye, IconEyeOff } from "@tabler/icons-react";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { useState } from "react";
-import { signIn } from "@/lib/auth";
+import { OAuthButton, OAuthButtonGroup, signIn } from "@/lib/auth";
 
 interface LoginDialogProps {
   open: boolean;
@@ -54,13 +54,13 @@ function GitHubBrandIcon({ className }: { className?: string }) {
 
 export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
   const navigate = useNavigate();
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [oauthLoading, setOauthLoading] = useState<"github" | "google" | null>(null);
 
   async function handleEmailSignIn(e: React.FormEvent) {
     e.preventDefault();
@@ -88,21 +88,6 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
     }
   }
 
-  async function handleOAuthSignIn(provider: "github" | "google") {
-    setOauthLoading(provider);
-    setError(null);
-
-    try {
-      await signIn.social({
-        provider,
-        callbackURL: "/dashboard",
-      });
-    } catch {
-      setError(`Failed to sign in with ${provider}`);
-      setOauthLoading(null);
-    }
-  }
-
   return (
     <Dialog onOpenChange={onOpenChange} open={open}>
       <DialogContent className="gap-3 p-5 sm:max-w-md sm:p-6">
@@ -112,36 +97,52 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
         </DialogHeader>
 
         <div className="space-y-3">
-          <div className="grid gap-2">
-            <Button
-              className="h-9 w-full text-sm"
-              disabled={oauthLoading !== null}
-              onClick={() => handleOAuthSignIn("google")}
-              type="button"
-              variant="outline"
-            >
-              {oauthLoading === "google" ? (
-                <Spinner className="mr-2" />
-              ) : (
-                <GoogleBrandIcon className="mr-2 size-4" />
-              )}
-              Continue with Google
-            </Button>
-            <Button
-              className="h-9 w-full text-sm"
-              disabled={oauthLoading !== null}
-              onClick={() => handleOAuthSignIn("github")}
-              type="button"
-              variant="outline"
-            >
-              {oauthLoading === "github" ? (
-                <Spinner className="mr-2" />
-              ) : (
-                <GitHubBrandIcon className="mr-2 size-4" />
-              )}
-              Continue with GitHub
-            </Button>
-          </div>
+          <OAuthButtonGroup
+            callbackURL="/dashboard"
+            onError={setError}
+            onFocusReturn={() => router.invalidate()}
+          >
+            <div className="grid gap-2">
+              <OAuthButton
+                provider="google"
+                render={({ disabled, isLoading, onClick }) => (
+                  <Button
+                    className="h-9 w-full text-sm"
+                    disabled={disabled}
+                    onClick={onClick}
+                    type="button"
+                    variant="outline"
+                  >
+                    {isLoading ? (
+                      <Spinner className="mr-2" />
+                    ) : (
+                      <GoogleBrandIcon className="mr-2 size-4" />
+                    )}
+                    Continue with Google
+                  </Button>
+                )}
+              />
+              <OAuthButton
+                provider="github"
+                render={({ disabled, isLoading, onClick }) => (
+                  <Button
+                    className="h-9 w-full text-sm"
+                    disabled={disabled}
+                    onClick={onClick}
+                    type="button"
+                    variant="outline"
+                  >
+                    {isLoading ? (
+                      <Spinner className="mr-2" />
+                    ) : (
+                      <GitHubBrandIcon className="mr-2 size-4" />
+                    )}
+                    Continue with GitHub
+                  </Button>
+                )}
+              />
+            </div>
+          </OAuthButtonGroup>
 
           <div className="relative">
             <div className="absolute inset-0 flex items-center">

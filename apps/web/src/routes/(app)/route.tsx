@@ -1,5 +1,4 @@
 import { getDashboardNavigationItems } from "@raypx/admin/server";
-import { getServerSession } from "@raypx/auth/server";
 import {
   createFileRoute,
   Outlet,
@@ -7,8 +6,6 @@ import {
   useNavigate,
   useRouterState,
 } from "@tanstack/react-router";
-import { createServerFn } from "@tanstack/react-start";
-import { getRequestHeaders } from "@tanstack/react-start/server";
 import { useState } from "react";
 import {
   CommandPalette,
@@ -18,11 +15,7 @@ import {
 } from "@/components/dashboard";
 import { RouteLoading } from "@/components/route-loading";
 import { signOut } from "@/lib/auth";
-
-const getSession = createServerFn({ method: "GET" }).handler(async () => {
-  const headers = getRequestHeaders();
-  return getServerSession(headers);
-});
+import { getSession } from "@/lib/auth-server";
 
 export const Route = createFileRoute("/(app)")({
   component: AppLayout,
