@@ -1,7 +1,6 @@
 import { NavigationMenu as NavigationMenuPrimitive } from "@base-ui/react/navigation-menu";
-import { CaretDownIcon } from "@phosphor-icons/react";
-
 import { cn } from "@raypx/design-system/lib/utils";
+import { IconChevronDown } from "@tabler/icons-react";
 import { cva } from "class-variance-authority";
 
 function NavigationMenu({
@@ -67,7 +66,7 @@ function NavigationMenuTrigger({
       {...props}
     >
       {children}{" "}
-      <CaretDownIcon
+      <IconChevronDown
         aria-hidden="true"
         className="relative top-px ml-1 size-3 transition duration-300 group-data-open/navigation-menu-trigger:rotate-180 group-data-popup-open/navigation-menu-trigger:rotate-180"
       />

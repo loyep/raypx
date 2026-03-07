@@ -1,4 +1,3 @@
-import { GearIcon, LightningIcon, PersonIcon } from "@phosphor-icons/react";
 import { Button } from "@raypx/design-system/components/ui/button";
 import {
   Card,
@@ -8,6 +7,7 @@ import {
   CardTitle,
 } from "@raypx/design-system/components/ui/card";
 import { generatePageHead } from "@raypx/seo";
+import { IconBolt, IconSettings, IconUser } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link, useLoaderData } from "@tanstack/react-router";
 import { lazy, Suspense } from "react";
@@ -122,7 +122,7 @@ function DashboardPage() {
             <Link to="/settings/profile">
               <Button className="h-auto w-full justify-start gap-3 p-4" variant="outline">
                 <div className="flex size-10 items-center justify-center rounded-lg bg-primary/10">
-                  <PersonIcon className="size-5 text-primary" />
+                  <IconUser className="size-5 text-primary" />
                 </div>
                 <div className="text-left">
                   <p className="font-medium">Edit Profile</p>
@@ -133,7 +133,7 @@ function DashboardPage() {
             <Link to="/settings">
               <Button className="h-auto w-full justify-start gap-3 p-4" variant="outline">
                 <div className="flex size-10 items-center justify-center rounded-lg bg-primary/10">
-                  <GearIcon className="size-5 text-primary" />
+                  <IconSettings className="size-5 text-primary" />
                 </div>
                 <div className="text-left">
                   <p className="font-medium">Settings</p>
@@ -144,7 +144,7 @@ function DashboardPage() {
             <Link to="/settings/api-keys">
               <Button className="h-auto w-full justify-start gap-3 p-4" variant="outline">
                 <div className="flex size-10 items-center justify-center rounded-lg bg-primary/10">
-                  <LightningIcon className="size-5 text-primary" />
+                  <IconBolt className="size-5 text-primary" />
                 </div>
                 <div className="text-left">
                   <p className="font-medium">API Keys</p>

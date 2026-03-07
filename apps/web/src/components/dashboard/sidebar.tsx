@@ -1,13 +1,3 @@
-import {
-  CaretUpDownIcon,
-  ChatCircleTextIcon,
-  GearIcon,
-  LightningIcon,
-  LockKeyIcon,
-  PersonIcon,
-  SignOutIcon,
-  UsersIcon,
-} from "@phosphor-icons/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@raypx/design-system/components/ui/avatar";
 import { Button } from "@raypx/design-system/components/ui/button";
 import {
@@ -35,6 +25,16 @@ import {
   SidebarMenuItem,
   SidebarProvider,
 } from "@raypx/design-system/components/ui/sidebar";
+import {
+  IconBolt,
+  IconLock,
+  IconLogout,
+  IconMessageCircle,
+  IconSelector,
+  IconSettings,
+  IconUser,
+  IconUsers,
+} from "@tabler/icons-react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import type { FC } from "react";
 import { siteConfig } from "@/config/site";
@@ -63,12 +63,12 @@ export const SidebarNavigation: FC<SidebarNavigationProps> = ({
   const pathname = useRouterState({
     select: (state) => state.location.pathname,
   });
-  const iconMap: Record<NavigationItem["icon"], FC<{ className?: string; weight?: "fill" }>> = {
-    lightning: LightningIcon,
-    chat: ChatCircleTextIcon,
-    users: UsersIcon,
-    person: PersonIcon,
-    gear: GearIcon,
+  const iconMap: Record<NavigationItem["icon"], FC<{ className?: string }>> = {
+    lightning: IconBolt,
+    chat: IconMessageCircle,
+    users: IconUsers,
+    person: IconUser,
+    gear: IconSettings,
   };
   const resolvedItems: NavigationItem[] = items.map((item) => ({
     ...item,
@@ -98,7 +98,7 @@ export const SidebarNavigation: FC<SidebarNavigationProps> = ({
                   )
                 }
               >
-                <Icon className="size-5" weight={item.key === "overview" ? "fill" : undefined} />
+                <Icon className="size-5" />
                 <span>{item.label}</span>
                 {item.soon && (
                   <span className="ml-auto text-muted-foreground/60 text-xs">Soon</span>
@@ -139,7 +139,7 @@ export function SidebarUser({ user, initials, onSignOut }: SidebarUserProps) {
                 <p className="truncate font-medium text-sm">{user.name || "User"}</p>
                 <p className="truncate text-muted-foreground text-xs">{user.email ?? ""}</p>
               </div>
-              <CaretUpDownIcon className="size-4 text-muted-foreground" />
+              <IconSelector className="size-4 text-muted-foreground" />
             </Button>
           }
         />
@@ -149,15 +149,15 @@ export function SidebarUser({ user, initials, onSignOut }: SidebarUserProps) {
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuItem render={<Link to="/settings/profile" />}>
-            <PersonIcon className="mr-2 size-4" />
+            <IconUser className="mr-2 size-4" />
             Profile
           </DropdownMenuItem>
           <DropdownMenuItem render={<Link to="/settings" />}>
-            <GearIcon className="mr-2 size-4" />
+            <IconSettings className="mr-2 size-4" />
             Settings
           </DropdownMenuItem>
           <DropdownMenuItem render={<Link to="/settings/api-keys" />}>
-            <LockKeyIcon className="mr-2 size-4" />
+            <IconLock className="mr-2 size-4" />
             API Keys
           </DropdownMenuItem>
           <DropdownMenuSeparator />
@@ -167,7 +167,7 @@ export function SidebarUser({ user, initials, onSignOut }: SidebarUserProps) {
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem className="text-destructive" onClick={onSignOut}>
-            <SignOutIcon className="mr-2 size-4" />
+            <IconLogout className="mr-2 size-4" />
             Sign out
           </DropdownMenuItem>
         </DropdownMenuContent>

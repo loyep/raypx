@@ -1,4 +1,3 @@
-import { PencilSimpleIcon, PlusIcon, TrashIcon } from "@phosphor-icons/react";
 import { Badge } from "@raypx/design-system/components/ui/badge";
 import { Button } from "@raypx/design-system/components/ui/button";
 import {
@@ -18,6 +17,7 @@ import { Input } from "@raypx/design-system/components/ui/input";
 import { Label } from "@raypx/design-system/components/ui/label";
 import { toast } from "@raypx/design-system/components/ui/toast";
 import { AI_PROVIDER_DRIVERS, type AIProviderDriver } from "@raypx/shared/ai";
+import { IconPencil, IconPlus, IconTrash } from "@tabler/icons-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { client } from "@/utils/orpc";
@@ -151,7 +151,7 @@ export function AdminAIProvidersPage() {
           <p className="text-muted-foreground">Manage system-level providers for all users.</p>
         </div>
         <Button className="gap-2" onClick={openCreateDialog}>
-          <PlusIcon className="size-4" />
+          <IconPlus className="size-4" />
           Add Provider
         </Button>
       </div>
@@ -187,7 +187,7 @@ export function AdminAIProvidersPage() {
                   </div>
                   <div className="flex flex-wrap gap-2">
                     <Button onClick={() => openEditDialog(provider)} size="sm" variant="outline">
-                      <PencilSimpleIcon className="size-4" />
+                      <IconPencil className="size-4" />
                     </Button>
                     <Button
                       onClick={() =>
@@ -238,7 +238,7 @@ export function AdminAIProvidersPage() {
                       size="sm"
                       variant="destructive"
                     >
-                      <TrashIcon className="size-4" />
+                      <IconTrash className="size-4" />
                     </Button>
                   </div>
                 </div>

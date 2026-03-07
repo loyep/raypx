@@ -1,10 +1,3 @@
-import {
-  CheckCircleIcon,
-  PencilSimpleIcon,
-  PlusIcon,
-  TrashIcon,
-  WarningCircleIcon,
-} from "@phosphor-icons/react";
 import { Badge } from "@raypx/design-system/components/ui/badge";
 import { Button } from "@raypx/design-system/components/ui/button";
 import {
@@ -26,6 +19,13 @@ import { Label } from "@raypx/design-system/components/ui/label";
 import { toast } from "@raypx/design-system/components/ui/toast";
 import { generatePageHead } from "@raypx/seo";
 import { AI_PROVIDER_DRIVERS, type AIProviderDriver } from "@raypx/shared/ai";
+import {
+  IconAlertTriangle,
+  IconCircleCheck,
+  IconPencil,
+  IconPlus,
+  IconTrash,
+} from "@tabler/icons-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
@@ -213,7 +213,7 @@ function AIProviderSettingsPage() {
             </CardDescription>
           </div>
           <Button onClick={openCreateDialog}>
-            <PlusIcon className="mr-2 size-4" />
+            <IconPlus className="mr-2 size-4" />
             Add Provider
           </Button>
         </CardHeader>
@@ -225,9 +225,9 @@ function AIProviderSettingsPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-base">
                 {provider.isEnabled ? (
-                  <CheckCircleIcon className="size-4 text-green-600" />
+                  <IconCircleCheck className="size-4 text-green-600" />
                 ) : (
-                  <WarningCircleIcon className="size-4 text-amber-500" />
+                  <IconAlertTriangle className="size-4 text-amber-500" />
                 )}
                 {provider.name}
                 <Badge variant="outline">{provider.driver}</Badge>
@@ -251,7 +251,7 @@ function AIProviderSettingsPage() {
 
               <div className="flex flex-wrap gap-2">
                 <Button onClick={() => openEditDialog(provider)} size="sm" variant="secondary">
-                  <PencilSimpleIcon className="mr-2 size-4" />
+                  <IconPencil className="mr-2 size-4" />
                   Configure
                 </Button>
                 <Button
@@ -286,7 +286,7 @@ function AIProviderSettingsPage() {
                   size="sm"
                   variant="ghost"
                 >
-                  <TrashIcon className="mr-2 size-4" />
+                  <IconTrash className="mr-2 size-4" />
                   Delete
                 </Button>
               </div>

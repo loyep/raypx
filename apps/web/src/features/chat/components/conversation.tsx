@@ -1,4 +1,3 @@
-import { PaperPlaneTiltIcon } from "@phosphor-icons/react";
 import { Button } from "@raypx/design-system/components/ui/button";
 import {
   Card,
@@ -10,6 +9,7 @@ import {
 import { Skeleton } from "@raypx/design-system/components/ui/skeleton";
 import { Textarea } from "@raypx/design-system/components/ui/textarea";
 import { cn } from "@raypx/design-system/lib/utils";
+import { IconSend } from "@tabler/icons-react";
 import type { RefObject } from "react";
 
 type MessageItem = {
@@ -162,7 +162,7 @@ export function ConversationPanel({
               disabled={!prompt.trim() || isLoading || !canSend}
               onClick={() => void onSendPrompt()}
             >
-              <PaperPlaneTiltIcon className="mr-2 size-4" />
+              <IconSend className="mr-2 size-4" />
               {isLoading ? "Generating..." : "Send"}
             </Button>
           </div>

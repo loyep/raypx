@@ -1,6 +1,5 @@
 import { mergeProps } from "@base-ui/react/merge-props";
 import { useRender } from "@base-ui/react/use-render";
-import { SidebarIcon } from "@phosphor-icons/react";
 import { Button } from "@raypx/design-system/components/ui/button";
 import { Input } from "@raypx/design-system/components/ui/input";
 import { Separator } from "@raypx/design-system/components/ui/separator";
@@ -19,6 +18,7 @@ import {
 } from "@raypx/design-system/components/ui/tooltip";
 import { useIsMobile } from "@raypx/design-system/hooks/use-mobile";
 import { cn } from "@raypx/design-system/lib/utils";
+import { IconLayoutSidebarLeftExpand } from "@tabler/icons-react";
 import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
 
@@ -261,7 +261,7 @@ function SidebarTrigger({ className, onClick, ...props }: React.ComponentProps<t
       variant="ghost"
       {...props}
     >
-      <SidebarIcon />
+      <IconLayoutSidebarLeftExpand />
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   );

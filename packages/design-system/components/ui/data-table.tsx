@@ -1,5 +1,5 @@
-import { ColumnsIcon } from "@phosphor-icons/react";
 import { cn } from "@raypx/design-system/lib/utils";
+import { IconColumns } from "@tabler/icons-react";
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -141,7 +141,7 @@ export function DataTableColumnVisibility<TData>({ table }: DataTableColumnVisib
       <DropdownMenuTrigger
         render={(props) => (
           <Button size="sm" variant="outline" {...props}>
-            <ColumnsIcon className="mr-2 h-4 w-4" />
+            <IconColumns className="mr-2 h-4 w-4" />
             Columns
           </Button>
         )}

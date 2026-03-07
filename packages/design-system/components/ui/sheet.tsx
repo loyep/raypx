@@ -1,7 +1,7 @@
 import { Dialog as SheetPrimitive } from "@base-ui/react/dialog";
-import { XIcon } from "@phosphor-icons/react";
 import { Button } from "@raypx/design-system/components/ui/button";
 import { cn } from "@raypx/design-system/lib/utils";
+import { IconX } from "@tabler/icons-react";
 import type * as React from "react";
 
 function Sheet({ ...props }: SheetPrimitive.Root.Props) {
@@ -61,7 +61,7 @@ function SheetContent({
             data-slot="sheet-close"
             render={<Button className="absolute top-3 right-3" size="icon-sm" variant="ghost" />}
           >
-            <XIcon />
+            <IconX />
             <span className="sr-only">Close</span>
           </SheetPrimitive.Close>
         )}

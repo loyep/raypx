@@ -1,6 +1,5 @@
 import { Menu as MenuPrimitive } from "@base-ui/react/menu";
 import { Menubar as MenubarPrimitive } from "@base-ui/react/menubar";
-import { CheckIcon } from "@phosphor-icons/react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@raypx/design-system/components/ui/dropdown-menu";
 import { cn } from "@raypx/design-system/lib/utils";
+import { IconCheck } from "@tabler/icons-react";
 import type * as React from "react";
 
 function Menubar({ className, ...props }: MenubarPrimitive.Props) {
@@ -121,7 +121,7 @@ function MenubarCheckboxItem({
     >
       <span className="pointer-events-none absolute left-1.5 flex size-4 items-center justify-center [&_svg:not([class*='size-'])]:size-4">
         <MenuPrimitive.CheckboxItemIndicator>
-          <CheckIcon />
+          <IconCheck />
         </MenuPrimitive.CheckboxItemIndicator>
       </span>
       {children}
@@ -153,7 +153,7 @@ function MenubarRadioItem({
     >
       <span className="pointer-events-none absolute left-1.5 flex size-4 items-center justify-center [&_svg:not([class*='size-'])]:size-4">
         <MenuPrimitive.RadioItemIndicator>
-          <CheckIcon />
+          <IconCheck />
         </MenuPrimitive.RadioItemIndicator>
       </span>
       {children}

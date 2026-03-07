@@ -1,6 +1,6 @@
-import { ListIcon } from "@phosphor-icons/react";
 import { ThemeSwitcher } from "@raypx/design-system/components/theme-switcher";
 import { Button } from "@raypx/design-system/components/ui/button";
+import { IconList } from "@tabler/icons-react";
 import { Link } from "@tanstack/react-router";
 import { siteConfig } from "@/config/site";
 import { CommandPaletteTrigger } from "./command-palette";
@@ -31,7 +31,7 @@ export function DashboardHeader({
         <div className="flex items-center gap-2">
           {/* Mobile Menu Button */}
           <Button className="lg:hidden" onClick={onMobileMenuOpen} size="icon" variant="ghost">
-            <ListIcon className="size-5" />
+            <IconList className="size-5" />
             <span className="sr-only">Open menu</span>
           </Button>
 

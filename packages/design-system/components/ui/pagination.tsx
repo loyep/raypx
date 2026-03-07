@@ -1,6 +1,6 @@
-import { CaretLeftIcon, CaretRightIcon, DotsThreeIcon } from "@phosphor-icons/react";
 import { Button } from "@raypx/design-system/components/ui/button";
 import { cn } from "@raypx/design-system/lib/utils";
+import { IconChevronLeft, IconChevronRight, IconDots } from "@tabler/icons-react";
 import type * as React from "react";
 
 function Pagination({ className, ...props }: React.ComponentProps<"nav">) {
@@ -65,7 +65,7 @@ function PaginationPrevious({
       size="default"
       {...props}
     >
-      <CaretLeftIcon data-icon="inline-start" />
+      <IconChevronLeft data-icon="inline-start" />
       <span className="hidden sm:block">{text}</span>
     </PaginationLink>
   );
@@ -84,7 +84,7 @@ function PaginationNext({
       {...props}
     >
       <span className="hidden sm:block">{text}</span>
-      <CaretRightIcon data-icon="inline-end" />
+      <IconChevronRight data-icon="inline-end" />
     </PaginationLink>
   );
 }
@@ -100,7 +100,7 @@ function PaginationEllipsis({ className, ...props }: React.ComponentProps<"span"
       data-slot="pagination-ellipsis"
       {...props}
     >
-      <DotsThreeIcon />
+      <IconDots />
       <span className="sr-only">More pages</span>
     </span>
   );

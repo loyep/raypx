@@ -1,14 +1,4 @@
 import {
-  ChatCircleDotsIcon,
-  GearIcon,
-  LightningIcon,
-  MagnifyingGlassIcon,
-  MoonIcon,
-  PersonIcon,
-  SignOutIcon,
-  SunIcon,
-} from "@phosphor-icons/react";
-import {
   Command,
   CommandDialog,
   CommandEmpty,
@@ -19,6 +9,16 @@ import {
   CommandSeparator,
 } from "@raypx/design-system/components/ui/command";
 import { useTheme } from "@raypx/design-system/hooks/use-theme";
+import {
+  IconBolt,
+  IconLogout,
+  IconMessageCircle,
+  IconMoon,
+  IconSearch,
+  IconSettings,
+  IconSun,
+  IconUser,
+} from "@tabler/icons-react";
 import { useNavigate } from "@tanstack/react-router";
 import { type FC, useCallback, useEffect, useState } from "react";
 import { signOut } from "@/lib/auth";
@@ -75,22 +75,22 @@ export const CommandPalette: FC<CommandPaletteProps> = ({ open: controlledOpen, 
           <CommandEmpty>No results found.</CommandEmpty>
           <CommandGroup heading="Navigation">
             <CommandItem onSelect={() => handleNavigate("/dashboard")}>
-              <LightningIcon className="size-4" />
+              <IconBolt className="size-4" />
               Dashboard
             </CommandItem>
             <CommandItem onSelect={() => handleNavigate("/chat")}>
-              <ChatCircleDotsIcon className="size-4" />
+              <IconMessageCircle className="size-4" />
               AI Chat
             </CommandItem>
           </CommandGroup>
           <CommandSeparator />
           <CommandGroup heading="Quick Links">
             <CommandItem disabled>
-              <PersonIcon className="size-4" />
+              <IconUser className="size-4" />
               Projects (Coming Soon)
             </CommandItem>
             <CommandItem disabled>
-              <GearIcon className="size-4" />
+              <IconSettings className="size-4" />
               Settings (Coming Soon)
             </CommandItem>
           </CommandGroup>
@@ -98,14 +98,14 @@ export const CommandPalette: FC<CommandPaletteProps> = ({ open: controlledOpen, 
           <CommandGroup heading="Actions">
             <CommandItem onSelect={handleThemeToggle}>
               {resolvedTheme === "light" ? (
-                <MoonIcon className="size-4" />
+                <IconMoon className="size-4" />
               ) : (
-                <SunIcon className="size-4" />
+                <IconSun className="size-4" />
               )}
               {resolvedTheme === "light" ? "Switch to Dark Mode" : "Switch to Light Mode"}
             </CommandItem>
             <CommandItem className="text-destructive" onSelect={handleSignOut}>
-              <SignOutIcon className="size-4" />
+              <IconLogout className="size-4" />
               Sign out
             </CommandItem>
           </CommandGroup>
@@ -128,7 +128,7 @@ export function CommandPaletteTrigger({
       onClick={onClick}
       type="button"
     >
-      <MagnifyingGlassIcon className="size-4" />
+      <IconSearch className="size-4" />
       <span className="hidden md:inline">Search...</span>
       <kbd className="pointer-events-none ml-auto hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-medium font-mono text-[10px] sm:flex">
         <span className="text-xs">⌘</span>K

@@ -1,26 +1,26 @@
-import { LockKeyIcon, SparkleIcon, StackIcon } from "@phosphor-icons/react";
 import {
   Card,
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@raypx/design-system/components/ui/card";
+import { IconLock, IconSparkles, IconStack } from "@tabler/icons-react";
 
 const capabilities = [
   {
     title: "Type-safe API",
     description: "oRPC keeps request and response types aligned from server to UI.",
-    icon: SparkleIcon,
+    icon: IconSparkles,
   },
   {
     title: "Auth out of the box",
     description: "Better Auth with session handling and extensible provider workflows.",
-    icon: LockKeyIcon,
+    icon: IconLock,
   },
   {
     title: "Monorepo ready",
     description: "Turborepo package boundaries and shared tooling for teams.",
-    icon: StackIcon,
+    icon: IconStack,
   },
 ] as const;
 
@@ -42,7 +42,7 @@ export function HomeCapabilities() {
             <Card className="border-border/80 bg-card/70" key={capability.title}>
               <CardHeader>
                 <div className="mb-2 inline-flex size-10 items-center justify-center rounded-lg border bg-gradient-to-br from-primary/20 to-cyan-500/10 text-primary">
-                  <capability.icon className="size-5" weight="fill" />
+                  <capability.icon className="size-5" />
                 </div>
                 <CardTitle>{capability.title}</CardTitle>
                 <CardDescription>{capability.description}</CardDescription>

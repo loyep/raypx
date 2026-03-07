@@ -1,7 +1,7 @@
-import { GearIcon, LockKeyIcon, PersonIcon, SparkleIcon } from "@phosphor-icons/react";
 import { Button } from "@raypx/design-system/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@raypx/design-system/components/ui/card";
 import { cn } from "@raypx/design-system/lib/utils";
+import { IconLock, IconSettings, IconSparkles, IconUser } from "@tabler/icons-react";
 import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/(app)/settings")({
@@ -14,10 +14,10 @@ function SettingsLayout() {
   });
 
   const navItems = [
-    { label: "General", to: "/settings" as const, icon: GearIcon },
-    { label: "Profile", to: "/settings/profile" as const, icon: PersonIcon },
-    { label: "API Keys", to: "/settings/api-keys" as const, icon: LockKeyIcon },
-    { label: "AI Providers", to: "/settings/ai-providers" as const, icon: SparkleIcon },
+    { label: "General", to: "/settings" as const, icon: IconSettings },
+    { label: "Profile", to: "/settings/profile" as const, icon: IconUser },
+    { label: "API Keys", to: "/settings/api-keys" as const, icon: IconLock },
+    { label: "AI Providers", to: "/settings/ai-providers" as const, icon: IconSparkles },
   ];
 
   return (

@@ -1,6 +1,6 @@
-import { ArrowRightIcon, GithubLogoIcon } from "@phosphor-icons/react";
 import { Button } from "@raypx/design-system/components/ui/button";
 import type { SiteConfig } from "@raypx/seo";
+import { IconArrowRight, IconBrandGithub } from "@tabler/icons-react";
 import { Link } from "@tanstack/react-router";
 
 type HomeCtaProps = {
@@ -21,14 +21,14 @@ export function HomeCta({ siteConfig }: HomeCtaProps) {
         <div className="flex flex-wrap items-center justify-center gap-3">
           <Button render={<Link to="/signup" />} size="lg">
             Create Account
-            <ArrowRightIcon className="ml-2 size-4" />
+            <IconArrowRight className="ml-2 size-4" />
           </Button>
           <Button
             render={<a href={siteConfig.github} rel="noopener noreferrer" target="_blank" />}
             size="lg"
             variant="outline"
           >
-            <GithubLogoIcon className="mr-2 size-4" />
+            <IconBrandGithub className="mr-2 size-4" />
             Explore GitHub
           </Button>
         </div>

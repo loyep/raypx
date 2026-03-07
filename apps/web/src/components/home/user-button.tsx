@@ -1,4 +1,3 @@
-import { CaretDownIcon, GaugeIcon, GearIcon, PersonIcon, SignOutIcon } from "@phosphor-icons/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@raypx/design-system/components/ui/avatar";
 import { Button } from "@raypx/design-system/components/ui/button";
 import {
@@ -10,6 +9,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@raypx/design-system/components/ui/dropdown-menu";
+import {
+  IconChevronDown,
+  IconGauge,
+  IconLogout,
+  IconSettings,
+  IconUser,
+} from "@tabler/icons-react";
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { LoginDialog } from "@/components/auth";
@@ -36,7 +42,7 @@ export function UserButton() {
               <span className="hidden max-w-[120px] truncate sm:inline">
                 {user.name || "Account"}
               </span>
-              <CaretDownIcon className="size-3.5 text-muted-foreground" />
+              <IconChevronDown className="size-3.5 text-muted-foreground" />
             </Button>
           }
         />
@@ -51,15 +57,15 @@ export function UserButton() {
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuItem render={<Link to="/dashboard" />}>
-            <GaugeIcon className="mr-2 size-4" />
+            <IconGauge className="mr-2 size-4" />
             Dashboard
           </DropdownMenuItem>
           <DropdownMenuItem render={<Link to="/settings/profile" />}>
-            <PersonIcon className="mr-2 size-4" />
+            <IconUser className="mr-2 size-4" />
             Profile
           </DropdownMenuItem>
           <DropdownMenuItem render={<Link to="/settings" />}>
-            <GearIcon className="mr-2 size-4" />
+            <IconSettings className="mr-2 size-4" />
             Settings
           </DropdownMenuItem>
           <DropdownMenuSeparator />
@@ -69,7 +75,7 @@ export function UserButton() {
               await signOut();
             }}
           >
-            <SignOutIcon className="mr-2 size-4" />
+            <IconLogout className="mr-2 size-4" />
             Sign out
           </DropdownMenuItem>
         </DropdownMenuContent>

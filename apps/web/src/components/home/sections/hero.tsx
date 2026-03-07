@@ -1,4 +1,3 @@
-import { ArrowRightIcon, CheckCircleIcon } from "@phosphor-icons/react";
 import { Badge } from "@raypx/design-system/components/ui/badge";
 import { Button } from "@raypx/design-system/components/ui/button";
 import {
@@ -8,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@raypx/design-system/components/ui/card";
+import { IconArrowRight, IconCircleCheck } from "@tabler/icons-react";
 import { Link } from "@tanstack/react-router";
 
 const trustItems = ["MIT Licensed", "React 19 + TanStack Start", "Postgres + Drizzle"] as const;
@@ -48,7 +48,7 @@ export function HomeHero() {
           <div className="flex flex-wrap items-center gap-3">
             <Button render={<Link to="/signup" />} size="lg">
               Start Building
-              <ArrowRightIcon className="ml-2 size-4" />
+              <IconArrowRight className="ml-2 size-4" />
             </Button>
             <Button render={<a href="/docs" />} size="lg" variant="outline">
               View Docs
@@ -113,7 +113,7 @@ export function HomeHero() {
             <div className="rounded-lg border bg-background p-4">
               <div className="mb-2 flex items-center justify-between">
                 <span className="font-medium text-sm">Health checks</span>
-                <CheckCircleIcon className="size-4 text-emerald-500" weight="fill" />
+                <IconCircleCheck className="size-4 text-emerald-500" />
               </div>
               <div className="space-y-2 text-xs">
                 <div className="flex items-center justify-between rounded border px-2 py-1.5">

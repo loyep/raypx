@@ -1,9 +1,8 @@
 "use client";
 
-import { CaretDownIcon, CaretLeftIcon, CaretRightIcon } from "@phosphor-icons/react";
 import { Button, buttonVariants } from "@raypx/design-system/components/ui/button";
-
 import { cn } from "@raypx/design-system/lib/utils";
+import { IconChevronDown, IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 import * as React from "react";
 import { type DayButton, DayPicker, getDefaultClassNames, type Locale } from "react-day-picker";
 
@@ -112,14 +111,14 @@ function Calendar({
         },
         Chevron: ({ className, orientation, ...props }) => {
           if (orientation === "left") {
-            return <CaretLeftIcon className={cn("size-4", className)} {...props} />;
+            return <IconChevronLeft className={cn("size-4", className)} {...props} />;
           }
 
           if (orientation === "right") {
-            return <CaretRightIcon className={cn("size-4", className)} {...props} />;
+            return <IconChevronRight className={cn("size-4", className)} {...props} />;
           }
 
-          return <CaretDownIcon className={cn("size-4", className)} {...props} />;
+          return <IconChevronDown className={cn("size-4", className)} {...props} />;
         },
         DayButton: ({ ...props }) => <CalendarDayButton locale={locale} {...props} />,
         WeekNumber: ({ children, ...props }) => {

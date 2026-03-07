@@ -1,7 +1,7 @@
-import { GithubLogoIcon } from "@phosphor-icons/react";
 import { ThemeSwitcher } from "@raypx/design-system/components/theme-switcher";
 import { Button } from "@raypx/design-system/components/ui/button";
 import type { SiteConfig } from "@raypx/seo";
+import { IconBrandGithub } from "@tabler/icons-react";
 import { Link } from "@tanstack/react-router";
 import { UserButton } from "@/components/home/user-button";
 
@@ -37,7 +37,7 @@ export function HomeHeader({ siteConfig }: HomeHeaderProps) {
             size="sm"
             variant="ghost"
           >
-            <GithubLogoIcon className="size-4" />
+            <IconBrandGithub className="size-4" />
           </Button>
           <ThemeSwitcher />
           <UserButton />

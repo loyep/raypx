@@ -1,6 +1,6 @@
 import { Accordion as AccordionPrimitive } from "@base-ui/react/accordion";
-import { CaretDownIcon, CaretUpIcon } from "@phosphor-icons/react";
 import { cn } from "@raypx/design-system/lib/utils";
+import { IconChevronDown, IconChevronUp } from "@tabler/icons-react";
 
 function Accordion({ className, ...props }: AccordionPrimitive.Root.Props) {
   return (
@@ -34,11 +34,11 @@ function AccordionTrigger({ className, children, ...props }: AccordionPrimitive.
         {...props}
       >
         {children}
-        <CaretDownIcon
+        <IconChevronDown
           className="pointer-events-none shrink-0 group-aria-expanded/accordion-trigger:hidden"
           data-slot="accordion-trigger-icon"
         />
-        <CaretUpIcon
+        <IconChevronUp
           className="pointer-events-none hidden shrink-0 group-aria-expanded/accordion-trigger:inline"
           data-slot="accordion-trigger-icon"
         />

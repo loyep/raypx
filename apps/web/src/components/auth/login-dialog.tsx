@@ -1,4 +1,3 @@
-import { EyeIcon, EyeSlashIcon } from "@phosphor-icons/react";
 import { Button } from "@raypx/design-system/components/ui/button";
 import { Checkbox } from "@raypx/design-system/components/ui/checkbox";
 import {
@@ -12,6 +11,7 @@ import { Input } from "@raypx/design-system/components/ui/input";
 import { Label } from "@raypx/design-system/components/ui/label";
 import { Separator } from "@raypx/design-system/components/ui/separator";
 import { Spinner } from "@raypx/design-system/components/ui/spinner";
+import { IconEye, IconEyeOff } from "@tabler/icons-react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { signIn } from "@/lib/auth";
@@ -192,9 +192,9 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
                   type="button"
                 >
                   {showPassword ? (
-                    <EyeSlashIcon className="size-4" />
+                    <IconEyeOff className="size-4" />
                   ) : (
-                    <EyeIcon className="size-4" />
+                    <IconEye className="size-4" />
                   )}
                 </button>
               </div>

@@ -19,8 +19,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@phosphor-icons/react": "^2.1.10",
     "@raypx/database": "workspace:*",
+    "@tabler/icons-react": "^3.39.0",
     "@raypx/design-system": "workspace:*",
     "@tanstack/react-table": "^8.21.3",
     "react": "catalog:react19",

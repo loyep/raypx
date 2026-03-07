@@ -1,4 +1,3 @@
-import { MagnifyingGlassIcon } from "@phosphor-icons/react";
 import { type AdminUser, UserEditDialog, UsersTable } from "@raypx/admin";
 import { getUserStats, listUsers, updateUser } from "@raypx/admin/api";
 import {
@@ -19,6 +18,7 @@ import {
 import { Spinner } from "@raypx/design-system/components/ui/spinner";
 import { toast } from "@raypx/design-system/components/ui/toast";
 import { cn } from "@raypx/design-system/lib/utils";
+import { IconSearch } from "@tabler/icons-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { VisibilityState } from "@tanstack/react-table";
 import { useEffect, useState } from "react";
@@ -179,7 +179,7 @@ export function AdminUsersPage() {
           <CardContent>
             <div className="mb-4 flex flex-col gap-4 sm:flex-row">
               <div className="relative flex-1">
-                <MagnifyingGlassIcon className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <IconSearch className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   className="pl-9"
                   onChange={(e) => {

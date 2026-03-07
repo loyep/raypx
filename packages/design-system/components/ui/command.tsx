@@ -1,4 +1,3 @@
-import { CheckIcon, MagnifyingGlassIcon } from "@phosphor-icons/react";
 import {
   Dialog,
   DialogContent,
@@ -8,6 +7,7 @@ import {
 } from "@raypx/design-system/components/ui/dialog";
 import { InputGroup, InputGroupAddon } from "@raypx/design-system/components/ui/input-group";
 import { cn } from "@raypx/design-system/lib/utils";
+import { IconCheck, IconSearch } from "@tabler/icons-react";
 import { Command as CommandPrimitive } from "cmdk-base";
 import type * as React from "react";
 
@@ -70,7 +70,7 @@ function CommandInput({
           {...props}
         />
         <InputGroupAddon>
-          <MagnifyingGlassIcon className="size-4 shrink-0 opacity-50" />
+          <IconSearch className="size-4 shrink-0 opacity-50" />
         </InputGroupAddon>
       </InputGroup>
     </div>
@@ -147,7 +147,7 @@ function CommandItem({
       {...props}
     >
       {children}
-      <CheckIcon className="ml-auto opacity-0 group-has-data-[slot=command-shortcut]/command-item:hidden group-data-[checked=true]/command-item:opacity-100" />
+      <IconCheck className="ml-auto opacity-0 group-has-data-[slot=command-shortcut]/command-item:hidden group-data-[checked=true]/command-item:opacity-100" />
     </CommandPrimitive.Item>
   );
 }

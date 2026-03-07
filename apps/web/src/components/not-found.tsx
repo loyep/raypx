@@ -1,5 +1,5 @@
-import { CompassIcon, HouseLineIcon } from "@phosphor-icons/react";
 import { Button } from "@raypx/design-system/components/ui/button";
+import { IconCompass, IconHome } from "@tabler/icons-react";
 import { Link } from "@tanstack/react-router";
 
 export function NotFound() {
@@ -14,7 +14,7 @@ export function NotFound() {
         {/* Icon */}
         <div className="mb-8 flex items-center justify-center">
           <div className="rounded-full bg-muted/50 p-4 ring-1 ring-border/50">
-            <CompassIcon className="size-10 text-muted-foreground" weight="duotone" />
+            <IconCompass className="size-10 text-muted-foreground" />
           </div>
         </div>
 
@@ -33,7 +33,7 @@ export function NotFound() {
         {/* Action Buttons */}
         <div className="mt-10 flex items-center justify-center gap-x-4">
           <Button render={<Link to="/" />} size="lg">
-            <HouseLineIcon className="mr-2 size-5" />
+            <IconHome className="mr-2 size-5" />
             Back to home
           </Button>
         </div>

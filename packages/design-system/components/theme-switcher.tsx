@@ -1,5 +1,4 @@
-import { Check } from "@phosphor-icons/react";
-import { TablerIcon } from "@raypx/design-system/components/tabler-icon";
+import { Icon } from "@raypx/design-system/components/icon";
 import { Button } from "@raypx/design-system/components/ui/button";
 import {
   DropdownMenu,
@@ -11,6 +10,7 @@ import { Skeleton } from "@raypx/design-system/components/ui/skeleton";
 import { useTheme } from "@raypx/design-system/hooks/use-theme";
 import { type ThemeKey, themeConfig, themeIcons } from "@raypx/design-system/lib/theme-config";
 import { cn } from "@raypx/design-system/lib/utils";
+import { IconCheck } from "@tabler/icons-react";
 import { memo, useEffect, useMemo, useState } from "react";
 
 type ThemeConfig = {
@@ -137,7 +137,7 @@ export const ThemeSwitcher = memo(({ mode = "light-dark-system", variant }: Them
         size="sm"
         variant="ghost"
       >
-        <TablerIcon className={ICON_SIZE} icon={icon} />
+        <Icon className={ICON_SIZE} icon={icon} />
         <span className="sr-only">Toggle theme</span>
       </Button>
     );
@@ -160,7 +160,7 @@ export const ThemeSwitcher = memo(({ mode = "light-dark-system", variant }: Them
               size="icon"
               variant="ghost"
             >
-              <TablerIcon className={ICON_SIZE} icon={theme.icon} />
+              <Icon className={ICON_SIZE} icon={theme.icon} />
             </Button>
           );
         })}
@@ -180,7 +180,7 @@ export const ThemeSwitcher = memo(({ mode = "light-dark-system", variant }: Them
             size="sm"
             variant="ghost"
           >
-            <TablerIcon className={ICON_SIZE} icon={triggerIcon} />
+            <Icon className={ICON_SIZE} icon={triggerIcon} />
             <span className="sr-only">Toggle theme</span>
           </Button>
         }
@@ -197,10 +197,10 @@ export const ThemeSwitcher = memo(({ mode = "light-dark-system", variant }: Them
               onClick={() => setTheme(theme.key)}
             >
               <div className="flex items-center gap-3">
-                <TablerIcon className={ICON_SIZE} icon={theme.icon} />
+                <Icon className={ICON_SIZE} icon={theme.icon} />
                 <span className="text-sm">{theme.label}</span>
               </div>
-              {themeMode === theme.key && <Check className="size-4 text-primary" weight="bold" />}
+              {themeMode === theme.key && <IconCheck className="size-4 text-primary" />}
             </DropdownMenuItem>
           );
         })}

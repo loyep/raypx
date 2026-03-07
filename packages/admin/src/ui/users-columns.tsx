@@ -1,7 +1,7 @@
-import { ArrowDownIcon, ArrowsDownUpIcon, ArrowUpIcon, PencilIcon } from "@phosphor-icons/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@raypx/design-system/components/ui/avatar";
 import { Badge } from "@raypx/design-system/components/ui/badge";
 import { Button } from "@raypx/design-system/components/ui/button";
+import { IconArrowsSort, IconChevronDown, IconChevronUp, IconPencil } from "@tabler/icons-react";
 import type { Column, ColumnDef } from "@tanstack/react-table";
 import type { FC } from "react";
 import type { AdminUser } from "../types";
@@ -41,11 +41,11 @@ const SortableHeader: FC<{ column: Column<AdminUser>; title: string }> = ({ colu
     >
       {title}
       {isSorted === "asc" ? (
-        <ArrowUpIcon className="ml-2 h-4 w-4" />
+        <IconChevronUp className="ml-2 h-4 w-4" />
       ) : isSorted === "desc" ? (
-        <ArrowDownIcon className="ml-2 h-4 w-4" />
+        <IconChevronDown className="ml-2 h-4 w-4" />
       ) : (
-        <ArrowsDownUpIcon className="ml-2 h-4 w-4 opacity-50" />
+        <IconArrowsSort className="ml-2 h-4 w-4 opacity-50" />
       )}
     </Button>
   );
@@ -124,7 +124,7 @@ export function getUsersColumns({ onEditUser }: ColumnOptions): ColumnDef<AdminU
         const user = row.original;
         return (
           <Button onClick={() => onEditUser(user)} size="icon" variant="ghost">
-            <PencilIcon className="h-4 w-4" />
+            <IconPencil className="h-4 w-4" />
           </Button>
         );
       },

@@ -1,5 +1,5 @@
 import { IconDeviceLaptop, IconMoon, IconSun } from "@tabler/icons-react";
-import type { TablerIconComponent } from "../components/tabler-icon";
+import type { TablerIconComponent } from "../components/icon";
 
 export type ThemeKey = "light" | "dark" | "system";
 

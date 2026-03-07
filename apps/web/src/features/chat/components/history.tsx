@@ -1,4 +1,3 @@
-import { DotsThreeIcon } from "@phosphor-icons/react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -33,6 +32,7 @@ import {
 } from "@raypx/design-system/components/ui/dropdown-menu";
 import { Input } from "@raypx/design-system/components/ui/input";
 import { Skeleton } from "@raypx/design-system/components/ui/skeleton";
+import { IconDots } from "@tabler/icons-react";
 import { useMemo, useState } from "react";
 
 type ConversationListItem = {
@@ -132,7 +132,7 @@ export function HistoryPanel({
                           size="icon"
                           variant="ghost"
                         >
-                          <DotsThreeIcon className="size-4" />
+                          <IconDots className="size-4" />
                         </Button>
                       }
                     />

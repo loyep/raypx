@@ -31,7 +31,7 @@ export default defineConfig(async ({ command, isSsrBuild }) => {
       include: [
         "@tanstack/react-query",
         "@tanstack/react-router",
-        "@phosphor-icons/react",
+        "@tabler/icons-react",
         "recharts",
       ],
       exclude: ["@tanstack/react-start"],

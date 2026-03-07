@@ -13,8 +13,8 @@
   },
   "dependencies": {
     "@fumadocs/base-ui": "^16.6.10",
-    "@phosphor-icons/react": "^2.1.10",
     "@raypx/admin": "workspace:*",
+    "@tabler/icons-react": "^3.39.0",
     "@raypx/auth": "workspace:*",
     "@raypx/config": "workspace:*",
     "@raypx/database": "workspace:*",

@@ -25,7 +25,7 @@
     "build:web": "turbo build --filter=web",
     "bump-ui": "npx shadcn@latest add --all --overwrite -c packages/design-system && pnpm -w format",
     "changeset": "changeset",
-    "clean": "turbo clean && rimraf '**/node_modules/.vite'",
+    "clean": "turbo clean && rimraf '**/node_modules/.vite' '**/.turbo'",
     "db": "forge db",
     "db:check-ai": "forge db check-ai",
     "db:generate": "forge db generate",
