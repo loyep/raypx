@@ -16,6 +16,8 @@ import { defaultRoles } from "better-auth/plugins/admin/access";
 import { env } from "../envs";
 import type { AuthConfig } from "../types";
 
+const DEFAULT_ORG_NAME = "Default Workspace";
+
 /**
  * Default session expiration (7 days in seconds)
  */
@@ -74,9 +76,42 @@ export function createAuth(config: AuthConfig = {}) {
       provider: "pg",
       schema,
     }),
+    databaseHooks: {
+      user: {
+        create: {
+          after: async (user) => {
+            const slug = `org-${uuidv7().replace(/-/g, "").slice(0, 12)}`;
+            await auth.api.createOrganization({
+              body: {
+                userId: user.id,
+                name: user.name ? `${user.name}'s Workspace` : DEFAULT_ORG_NAME,
+                slug,
+              },
+            });
+          },
+        },
+      },
+      session: {
+        create: {
+          before: async (session) => {
+            const firstMember = await db.query.member.findFirst({
+              where: { userId: session.userId },
+              columns: { organizationId: true },
+            });
+            return {
+              data: {
+                ...session,
+                activeOrganizationId: firstMember?.organizationId ?? undefined,
+              },
+            };
+          },
+        },
+      },
+    },
     session: {
       expiresIn: sessionExpiresIn,
       updateAge: 60 * 60 * 24, // Update session once per day
+      freshAge: 0, // Allow OAuth users to delete with simple confirmation (no email)
     },
     emailAndPassword: {
       enabled: enableCredentials,
@@ -87,6 +122,9 @@ export function createAuth(config: AuthConfig = {}) {
     },
     twoFactor: {
       enabled: enable2FA,
+    },
+    user: {
+      deleteUser: { enabled: true },
     },
     plugins: [
       organization(),

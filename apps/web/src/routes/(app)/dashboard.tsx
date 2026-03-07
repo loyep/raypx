@@ -11,7 +11,9 @@ import { IconBolt, IconSettings, IconUser } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link, useLoaderData } from "@tanstack/react-router";
 import { lazy, Suspense } from "react";
+import { CreateWorkspaceDialog } from "@/components/dashboard/workspace";
 import { siteConfig } from "@/config/site";
+import { authClient } from "@/lib/auth";
 import type { ExtendedUser } from "@/types/auth";
 import { client } from "@/utils/orpc";
 
@@ -28,6 +30,8 @@ export const Route = createFileRoute("/(app)/dashboard")({
 
 function DashboardPage() {
   const { session } = useLoaderData({ from: "/(app)" });
+  const { data: organizations, isPending: orgsLoading } = authClient.useListOrganizations();
+  const hasNoWorkspace = !orgsLoading && (!organizations || organizations.length === 0);
 
   // Fetch dashboard data
   const { data: stats } = useQuery({
@@ -49,6 +53,10 @@ function DashboardPage() {
     if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   };
+
+  if (hasNoWorkspace) {
+    return <CreateWorkspaceDialog isFirst open />;
+  }
 
   return (
     <div className="mx-auto max-w-6xl space-y-6">

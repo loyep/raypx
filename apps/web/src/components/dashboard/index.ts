@@ -8,3 +8,4 @@ export {
   SidebarUser,
 } from "./sidebar";
 export { UserButton } from "./user-button";
+export { CreateWorkspaceDialog, WorkspaceSwitcher } from "./workspace";

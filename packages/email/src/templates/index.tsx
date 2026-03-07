@@ -215,10 +215,52 @@ export function PasswordResetEmail({
 }
 
 /**
+ * Delete account verification email template
+ */
+interface DeleteAccountEmailProps {
+  name: string;
+  deleteUrl: string;
+  expiresIn?: string;
+  companyName?: string;
+  logoUrl?: string;
+}
+
+export function DeleteAccountEmail({
+  name,
+  deleteUrl,
+  expiresIn = "24 hours",
+  companyName = "Raypx",
+  logoUrl,
+}: DeleteAccountEmailProps): ReactElement {
+  return (
+    <BaseEmail preview="Confirm account deletion">
+      <EmailHeader companyName={companyName} logoUrl={logoUrl} />
+      <Heading className="font-semibold text-gray-900 text-xl">Delete your account</Heading>
+      <Text className="mt-4 text-gray-600">Hi {name},</Text>
+      <Text className="text-gray-600">
+        We received a request to permanently delete your account. Click the button below to confirm
+        and complete the deletion:
+      </Text>
+      <Section className="my-6 text-center">
+        <Button className="rounded-lg bg-red-600 px-6 py-3 text-white" href={deleteUrl}>
+          Delete Account
+        </Button>
+      </Section>
+      <Text className="text-gray-500 text-sm">
+        This link will expire in {expiresIn}. If you didn't request this, you can safely ignore this
+        email and your account will remain active.
+      </Text>
+      <EmailFooter companyName={companyName} />
+    </BaseEmail>
+  );
+}
+
+/**
  * Export all templates
  */
 export const emailTemplates = {
   welcome: WelcomeEmail,
   verification: VerificationEmail,
   passwordReset: PasswordResetEmail,
+  deleteAccount: DeleteAccountEmail,
 };

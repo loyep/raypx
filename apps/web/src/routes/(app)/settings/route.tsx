@@ -1,7 +1,7 @@
 import { Button } from "@raypx/design-system/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@raypx/design-system/components/ui/card";
 import { cn } from "@raypx/design-system/lib/utils";
-import { IconLock, IconSettings, IconSparkles, IconUser } from "@tabler/icons-react";
+import { IconLock, IconSettings, IconSparkles, IconTrash, IconUser } from "@tabler/icons-react";
 import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/(app)/settings")({
@@ -18,6 +18,7 @@ function SettingsLayout() {
     { label: "Profile", to: "/settings/profile" as const, icon: IconUser },
     { label: "API Keys", to: "/settings/api-keys" as const, icon: IconLock },
     { label: "AI Providers", to: "/settings/ai-providers" as const, icon: IconSparkles },
+    { label: "Account", to: "/settings/account" as const, icon: IconTrash },
   ];
 
   return (

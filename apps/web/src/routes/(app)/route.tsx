@@ -34,6 +34,7 @@ export const Route = createFileRoute("/(app)")({
     }
     return {
       session,
+      activeOrganizationId: session.session?.activeOrganizationId ?? null,
       navigationItems: getDashboardNavigationItems(session.user.role),
     };
   },
@@ -41,7 +42,7 @@ export const Route = createFileRoute("/(app)")({
 });
 
 function AppLayout() {
-  const { session, navigationItems } = Route.useLoaderData();
+  const { session, activeOrganizationId, navigationItems } = Route.useLoaderData();
   const navigate = useNavigate();
   const activeNavKey = useRouterState({
     select: (state) => {
@@ -70,6 +71,7 @@ function AppLayout() {
     <div className="flex h-screen overflow-hidden">
       <DashboardSidebar
         activeNavKey={activeNavKey}
+        activeOrganizationId={activeOrganizationId}
         initials={initials}
         navigationItems={navigationItems}
         onSignOut={handleSignOut}
@@ -77,6 +79,7 @@ function AppLayout() {
       />
       <MobileSidebar
         activeNavKey={activeNavKey}
+        activeOrganizationId={activeOrganizationId}
         initials={initials}
         navigationItems={navigationItems}
         onOpenChange={setMobileMenuOpen}

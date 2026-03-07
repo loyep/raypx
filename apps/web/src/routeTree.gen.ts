@@ -38,6 +38,7 @@ import { Route as appSettingsProfileRouteImport } from './routes/(app)/settings/
 import { Route as appSettingsApiKeysRouteImport } from './routes/(app)/settings/api-keys'
 import { Route as appSettingsAiProvidersRouteImport } from './routes/(app)/settings/ai-providers'
 import { Route as appSettingsAiProviderRouteImport } from './routes/(app)/settings/ai-provider'
+import { Route as appSettingsAccountRouteImport } from './routes/(app)/settings/account'
 import { Route as appChatIdRouteImport } from './routes/(app)/chat/$id'
 import { Route as appAdminSlugRouteImport } from './routes/(app)/admin/$slug'
 
@@ -182,6 +183,11 @@ const appSettingsAiProviderRoute = appSettingsAiProviderRouteImport.update({
   path: '/ai-provider',
   getParentRoute: () => appSettingsRouteRoute,
 } as any)
+const appSettingsAccountRoute = appSettingsAccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => appSettingsRouteRoute,
+} as any)
 const appChatIdRoute = appChatIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -212,6 +218,7 @@ export interface FileRoutesByFullPath {
   '/api/': typeof ApiIndexRoute
   '/admin/$slug': typeof appAdminSlugRoute
   '/chat/$id': typeof appChatIdRoute
+  '/settings/account': typeof appSettingsAccountRoute
   '/settings/ai-provider': typeof appSettingsAiProviderRoute
   '/settings/ai-providers': typeof appSettingsAiProvidersRoute
   '/settings/api-keys': typeof appSettingsApiKeysRoute
@@ -239,6 +246,7 @@ export interface FileRoutesByTo {
   '/api': typeof ApiIndexRoute
   '/admin/$slug': typeof appAdminSlugRoute
   '/chat/$id': typeof appChatIdRoute
+  '/settings/account': typeof appSettingsAccountRoute
   '/settings/ai-provider': typeof appSettingsAiProviderRoute
   '/settings/ai-providers': typeof appSettingsAiProvidersRoute
   '/settings/api-keys': typeof appSettingsApiKeysRoute
@@ -273,6 +281,7 @@ export interface FileRoutesById {
   '/api/': typeof ApiIndexRoute
   '/(app)/admin/$slug': typeof appAdminSlugRoute
   '/(app)/chat/$id': typeof appChatIdRoute
+  '/(app)/settings/account': typeof appSettingsAccountRoute
   '/(app)/settings/ai-provider': typeof appSettingsAiProviderRoute
   '/(app)/settings/ai-providers': typeof appSettingsAiProvidersRoute
   '/(app)/settings/api-keys': typeof appSettingsApiKeysRoute
@@ -304,6 +313,7 @@ export interface FileRouteTypes {
     | '/api/'
     | '/admin/$slug'
     | '/chat/$id'
+    | '/settings/account'
     | '/settings/ai-provider'
     | '/settings/ai-providers'
     | '/settings/api-keys'
@@ -331,6 +341,7 @@ export interface FileRouteTypes {
     | '/api'
     | '/admin/$slug'
     | '/chat/$id'
+    | '/settings/account'
     | '/settings/ai-provider'
     | '/settings/ai-providers'
     | '/settings/api-keys'
@@ -364,6 +375,7 @@ export interface FileRouteTypes {
     | '/api/'
     | '/(app)/admin/$slug'
     | '/(app)/chat/$id'
+    | '/(app)/settings/account'
     | '/(app)/settings/ai-provider'
     | '/(app)/settings/ai-providers'
     | '/(app)/settings/api-keys'
@@ -596,6 +608,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof appSettingsAiProviderRouteImport
       parentRoute: typeof appSettingsRouteRoute
     }
+    '/(app)/settings/account': {
+      id: '/(app)/settings/account'
+      path: '/account'
+      fullPath: '/settings/account'
+      preLoaderRoute: typeof appSettingsAccountRouteImport
+      parentRoute: typeof appSettingsRouteRoute
+    }
     '/(app)/chat/$id': {
       id: '/(app)/chat/$id'
       path: '/$id'
@@ -628,6 +647,7 @@ const appChatRouteRouteWithChildren = appChatRouteRoute._addFileChildren(
 )
 
 interface appSettingsRouteRouteChildren {
+  appSettingsAccountRoute: typeof appSettingsAccountRoute
   appSettingsAiProviderRoute: typeof appSettingsAiProviderRoute
   appSettingsAiProvidersRoute: typeof appSettingsAiProvidersRoute
   appSettingsApiKeysRoute: typeof appSettingsApiKeysRoute
@@ -636,6 +656,7 @@ interface appSettingsRouteRouteChildren {
 }
 
 const appSettingsRouteRouteChildren: appSettingsRouteRouteChildren = {
+  appSettingsAccountRoute: appSettingsAccountRoute,
   appSettingsAiProviderRoute: appSettingsAiProviderRoute,
   appSettingsAiProvidersRoute: appSettingsAiProvidersRoute,
   appSettingsApiKeysRoute: appSettingsApiKeysRoute,

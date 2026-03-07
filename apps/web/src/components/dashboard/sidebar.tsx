@@ -39,6 +39,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import type { FC } from "react";
 import { Logo } from "@/components/logo";
 import { siteConfig } from "@/config/site";
+import { WorkspaceSwitcher } from "./workspace";
 
 type SidebarNavigationProps = {
   onNavigate?: () => void;
@@ -179,15 +180,18 @@ export function SidebarUser({ user, initials, onSignOut }: SidebarUserProps) {
 
 type SidebarLogoProps = {
   onNavigate?: () => void;
+  activeOrganizationId?: string | null;
+  userId?: string;
 };
 
-export function SidebarLogo({ onNavigate }: SidebarLogoProps) {
+export function SidebarLogo({ onNavigate, activeOrganizationId, userId }: SidebarLogoProps) {
   return (
-    <SidebarHeader className="flex h-16 flex-row items-center justify-start gap-2 border-b px-6">
+    <SidebarHeader className="flex flex-col gap-2 border-b px-4 py-4">
       <Link className="flex items-center gap-2" onClick={onNavigate} to="/">
         <Logo />
         <span className="font-semibold">{siteConfig.name}</span>
       </Link>
+      <WorkspaceSwitcher activeOrganizationId={activeOrganizationId} userId={userId} />
     </SidebarHeader>
   );
 }
@@ -197,6 +201,7 @@ type DashboardSidebarProps = {
   initials: string;
   navigationItems: NavigationItem[];
   activeNavKey?: string | null;
+  activeOrganizationId?: string | null;
   onSignOut: () => void;
 };
 
@@ -205,13 +210,14 @@ export const DashboardSidebar: FC<DashboardSidebarProps> = ({
   initials,
   navigationItems,
   activeNavKey,
+  activeOrganizationId,
   onSignOut,
 }) => {
   return (
     <aside className="sticky top-0 hidden h-screen shrink-0 lg:block">
       <SidebarProvider className="min-h-screen">
         <Sidebar className="h-screen border-r bg-muted/30" collapsible="none">
-          <SidebarLogo />
+          <SidebarLogo activeOrganizationId={activeOrganizationId} userId={user.id} />
           <SidebarNavigation activeNavKey={activeNavKey} items={navigationItems} />
           <SidebarUser initials={initials} onSignOut={onSignOut} user={user} />
         </Sidebar>
@@ -227,6 +233,7 @@ type MobileSidebarProps = {
   initials: string;
   navigationItems: NavigationItem[];
   activeNavKey?: string | null;
+  activeOrganizationId?: string | null;
   onSignOut: () => void;
 };
 
@@ -237,6 +244,7 @@ export const MobileSidebar: FC<MobileSidebarProps> = ({
   initials,
   navigationItems,
   activeNavKey,
+  activeOrganizationId,
   onSignOut,
 }) => {
   return (
@@ -247,7 +255,11 @@ export const MobileSidebar: FC<MobileSidebarProps> = ({
         </SheetHeader>
         <SidebarProvider className="h-full">
           <Sidebar className="h-full" collapsible="none">
-            <SidebarLogo onNavigate={() => onOpenChange(false)} />
+            <SidebarLogo
+              activeOrganizationId={activeOrganizationId}
+              onNavigate={() => onOpenChange(false)}
+              userId={user.id}
+            />
             <SidebarNavigation
               activeNavKey={activeNavKey}
               items={navigationItems}

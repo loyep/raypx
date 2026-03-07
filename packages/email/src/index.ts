@@ -5,6 +5,7 @@ export { createSMTPClient, SMTPEmailClient } from "./smtp";
 // Email templates
 export {
   BaseEmail,
+  DeleteAccountEmail,
   EmailFooter,
   EmailHeader,
   emailTemplates,
