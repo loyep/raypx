@@ -4,9 +4,8 @@
   "type": "module",
   "exports": {
     "./base.json": "./base.json",
-    "./react-library.json": "./react-library.json",
-    "./package-library.json": "./package-library.json",
-    "./vite.json": "./vite.json"
+    "./react.json": "./react.json",
+    "./node.json": "./node.json"
   },
   "devDependencies": {
     "@types/node": "catalog:",

@@ -1,5 +1,5 @@
 {
-  "extends": "@raypx/tsconfig/vite.json",
+  "extends": "@raypx/tsconfig/react.json",
   "include": ["src/**/*.ts", "src/**/*.tsx", "*.ts", "*.tsx"],
   "exclude": ["node_modules"],
   "compilerOptions": {

@@ -7,6 +7,8 @@ commit-msg:
   jobs:
     - name: remove co-author
       run: sed -i '' '/Co-Authored-By:/d' {1}
+    - name: remove made-with-cursor
+      run: sed -i '' '/Made-with/d' {1}
     - name: commitlint
       run: pnpm exec commitlint --edit {1}
 

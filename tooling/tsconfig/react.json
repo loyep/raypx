@@ -1,10 +1,10 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "display": "Vite Application",
+  "display": "React (JSX + Vite)",
   "extends": "./base.json",
   "compilerOptions": {
     "jsx": "react-jsx",
-    "types": ["vite/client"],
+    "types": ["vite/client", "node"],
     "useDefineForClassFields": true,
     "verbatimModuleSyntax": false,
     "noUnusedLocals": true,

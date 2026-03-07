@@ -1,9 +1,9 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "display": "React Library (with JSX + Vite)",
+  "display": "Node.js Package (Non-React)",
   "extends": "./base.json",
   "compilerOptions": {
-    "jsx": "react-jsx",
+    "baseUrl": ".",
     "types": ["vite/client", "node"]
   }
 }
