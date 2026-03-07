@@ -7,7 +7,7 @@
     "clean": "rimraf dist .turbo .tanstack .nitro .output .netlify",
     "dev": "forge run vite dev",
     "serve": "forge run vite preview",
-    "shadcn": "shadcn add --overwrite",
+    "shadcn": "pnpm dlx shadcn add --overwrite",
     "test": "vitest run"
   },
   "dependencies": {
@@ -23,7 +23,6 @@
     "fumadocs-mdx": "^14.2.9",
     "react": "catalog:react19",
     "react-dom": "catalog:react19",
-    "shadcn": "^3.8.5",
     "zod": "catalog:"
   },
   "devDependencies": {

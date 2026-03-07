@@ -291,8 +291,6 @@ const value = env.MY_NEW_VAR
 | `pnpm test` | Run all tests |
 | `pnpm test:watch` | Run tests in watch mode |
 | `pnpm test:coverage` | Run tests with coverage |
-| `pnpm knip` | Find unused code |
-| `pnpm knip:fix` | Find and remove unused exports |
 
 ### Database Commands
 
