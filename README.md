@@ -68,18 +68,62 @@ raypx/
 | Monorepo | Turborepo + pnpm workspaces |
 | Tooling | Biome + Vitest + Changesets |
 
-## Common Commands
+## Commands
+
+### Development
 
 | Command | Description |
 | --- | --- |
-| `pnpm dev` | Start default dev workflow (`web`) |
-| `pnpm dev:api` | Start `apps/api` |
+| `pnpm dev` | Start the default app workflow (`apps/web`) |
 | `pnpm dev:web` | Start `apps/web` |
+| `pnpm dev:api` | Start `apps/api` |
+| `pnpm dev:docs` | Start `apps/docs` |
+| `pnpm dev:full` | Start `web`, `api`, and `docs` together |
 | `pnpm build` | Build all workspaces |
-| `pnpm typecheck` | Run TypeScript checks |
+| `pnpm build:web` | Build `apps/web` |
+| `pnpm build:api` | Build `apps/api` |
+| `pnpm build:docs` | Build `apps/docs` |
 | `pnpm lint` | Run Biome checks |
+| `pnpm lint:fix` | Apply Biome fixes |
+| `pnpm typecheck` | Run TypeScript checks |
 | `pnpm test` | Run test tasks |
-| `pnpm db:migrate` | Run DB migrations |
+| `pnpm test:watch` | Run Vitest in watch mode |
+| `pnpm test:coverage` | Run coverage locally |
+| `pnpm boundaries` | Validate workspace dependency boundaries |
+
+### Platform
+
+| Command | Description |
+| --- | --- |
+| `pnpm setup` | Run initial local setup |
+| `pnpm doctor` | Run workspace health checks |
+| `pnpm db` | Open the database command group |
+| `pnpm db:generate` | Generate Drizzle migrations |
+| `pnpm db:migrate` | Run database migrations |
+| `pnpm db:push` | Push schema changes directly |
+| `pnpm db:pull` | Pull schema from the database |
+| `pnpm db:seed` | Run database seeds |
+| `pnpm db:studio` | Open Drizzle Studio |
+
+### Maintenance
+
+| Command | Description |
+| --- | --- |
+| `pnpm clean` | Remove Turbo caches and Vite workspace caches |
+| `pnpm bump-deps` | Update dependency versions with `taze` |
+| `pnpm deps:bump` | Alias for `pnpm bump-deps` |
+| `pnpm bump-ui` | Refresh design-system primitives from `shadcn` |
+| `pnpm ui:bump` | Alias for `pnpm bump-ui` |
+| `pnpm changeset` | Create or manage changesets |
+| `pnpm release` | Apply changeset version updates |
+
+Tooling commands provided by `forge` are also discoverable directly:
+
+```bash
+forge --help
+forge db --help
+forge doctor --help
+```
 
 ## License
 

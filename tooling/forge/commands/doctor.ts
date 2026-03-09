@@ -2,8 +2,11 @@ import { spawn } from "node:child_process";
 import { access, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import fg from "fast-glob";
-import { logger, PROJECT_ROOT } from "../utils";
+import { logger, PROJECT_ROOT } from "../libs/utils";
 
+/**
+ * Doctor check section names
+ */
 export type DoctorSectionName = "env" | "db" | "deps";
 
 interface DoctorCheck {
@@ -299,6 +302,9 @@ function printTextReport(sections: DoctorSection[], summary: DoctorSummary): voi
   }
 }
 
+/**
+ * Run health checks for the workspace
+ */
 export async function runDoctor(options: DoctorOptions = {}): Promise<void> {
   const sectionNames: DoctorSectionName[] = options.section
     ? [options.section]

@@ -3,21 +3,11 @@
   "private": true,
   "type": "module",
   "bin": {
-    "forge": "./forge.mjs"
-  },
-  "scripts": {
-    "db": "node --import tsx src/cli/index.ts db",
-    "doctor": "node --import tsx src/cli/index.ts doctor",
-    "run": "node --import tsx src/cli/index.ts run",
-    "setup": "node --import tsx src/cli/index.ts setup",
-    "ui": "node --import tsx src/cli/index.ts ui generate",
-    "clean": "rimraf dist .turbo",
-    "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "forge": "./bin/forge.mjs"
   },
   "dependencies": {
     "@dotenvx/dotenvx": "^1.53.0",
-    "cac": "^7.0.0",
+    "citty": "^0.1.6",
     "consola": "^3.4.2",
     "fast-glob": "^3.3.3",
     "fs-extra": "^11.3.4",

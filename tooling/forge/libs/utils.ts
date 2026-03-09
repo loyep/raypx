@@ -8,10 +8,6 @@ import { consola } from "consola";
 import fg from "fast-glob";
 import fs from "fs-extra";
 
-// ============================================================================
-// Paths
-// ============================================================================
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -32,25 +28,13 @@ function findWorkspaceRoot(startDir: string): string {
 /** Project root directory (monorepo root) */
 export const PROJECT_ROOT = findWorkspaceRoot(__dirname);
 
-// ============================================================================
-// Environment
-// ============================================================================
-
 // Load environment variables from project root .env file
 dotenvx.config({ path: join(PROJECT_ROOT, ".env"), quiet: true });
 
 /** Cache directory for build artifacts */
 export const CACHE_DIR = resolve(PROJECT_ROOT, "node_modules/.cache");
 
-// ============================================================================
-// Logger
-// ============================================================================
-
 export const logger = consola;
-
-// ============================================================================
-// Time Utilities
-// ============================================================================
 
 /**
  * Formats duration in milliseconds to human-readable string
@@ -66,10 +50,6 @@ export function formatDuration(ms: number): string {
   const seconds = Math.floor((ms % 60_000) / 1000);
   return `${minutes}m ${seconds}s`;
 }
-
-// ============================================================================
-// Command Execution
-// ============================================================================
 
 /**
  * Options for command execution
@@ -124,10 +104,6 @@ export async function execCommand(
     });
   });
 }
-
-// ============================================================================
-// Component Exports Generator
-// ============================================================================
 
 /**
  * Get cache file path (computed lazily to avoid module initialization issues)

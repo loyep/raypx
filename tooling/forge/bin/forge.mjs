@@ -17,7 +17,7 @@ function writeLog(message) {
   appendFileSync(logFile, `${new Date().toISOString()} ${message}\n`);
 }
 
-const entry = resolve(__dirname, "src/cli/index.ts");
+const entry = resolve(__dirname, "../index.ts");
 
 writeLog(`START cwd="${cwd}" args="${args.join(" ")}"`);
 

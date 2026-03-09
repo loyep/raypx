@@ -56,7 +56,7 @@ catalog:
 catalogs:
   beta:
     nitro: ^3.0.1-alpha.2
-    tsdown: ^0.21.0
+    tsdown: ^0.21.1
     vite: ^8.0.0-beta.18
     drizzle-kit: beta
     drizzle-orm: beta

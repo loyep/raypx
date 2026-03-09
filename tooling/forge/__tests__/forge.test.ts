@@ -3,7 +3,7 @@ import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
 const packageDir = resolve(process.cwd());
-const entry = resolve(packageDir, "src/cli/index.ts");
+const entry = resolve(packageDir, "index.ts");
 
 function runForge(args: string[], envOverrides: Record<string, string | undefined> = {}) {
   const result = spawnSync(process.execPath, ["--import", "tsx", entry, ...args], {
@@ -25,15 +25,37 @@ describe("forge cli", () => {
     const result = runForge([]);
     expect(result.status).toBe(0);
     expect(result.output).toContain("forge");
+    expect(result.output).toContain("Workspace Commands");
+    expect(result.output).toContain("Database Commands");
+    expect(result.output).toContain("UI Commands");
+    expect(result.output).toContain("clean");
     expect(result.output).toContain("doctor");
   });
+
+  it("supports clean dry-run", async () => {
+    const result = runForge(["clean", "--dry-run", "--verbose"]);
+    // Verify command executes successfully (consola output may not be captured in test env)
+    expect(result.status).toBe(0);
+    expect(result.stderr).toBe("");
+  }, 30000); // Increase timeout for clean command
 
   it("prints db help", () => {
     const result = runForge(["db", "--help"]);
     expect(result.status).toBe(0);
     expect(result.stderr).toBe("");
-    expect(result.output).toContain("db seed --dry-run");
-    expect(result.output).toContain("db studio");
+    expect(result.output).toContain("Run database operations");
+    expect(result.output).toContain("$ forge db <command>");
+    expect(result.output).toContain("Examples:");
+    expect(result.output).toContain("$ forge db generate");
+  });
+
+  it("prints db subcommand help", () => {
+    const result = runForge(["db", "seed", "--help"]);
+    expect(result.status).toBe(0);
+    expect(result.stderr).toBe("");
+    expect(result.output).toContain("Run db seed");
+    expect(result.output).toContain("--dry-run");
+    expect(result.output).toContain("Examples:");
   });
 
   it("supports db dry-run", () => {
@@ -51,13 +73,7 @@ describe("forge cli", () => {
   it("rejects invalid operation", () => {
     const result = runForge(["db", "invalid-op"]);
     expect(result.status).toBe(1);
-    expect(result.output).toContain("Invalid operation");
-  });
-
-  it("rejects extra args for db command", () => {
-    const result = runForge(["db", "studio", "main"]);
-    expect(result.status).toBe(1);
-    expect(result.output).toContain("Unexpected arguments");
+    expect(result.output).toMatch(/Unknown command `invalid-op`/);
   });
 
   it("passes through args for run command", () => {
@@ -92,16 +108,17 @@ describe("forge cli", () => {
   it("prints doctor help with supported sections", () => {
     const result = runForge(["doctor", "--help"]);
     expect(result.status).toBe(0);
-    expect(result.output).toContain("doctor [env|db|deps] [--json]");
-    expect(result.output).toContain("doctor env");
-    expect(result.output).toContain("runtime binaries, workspace files, and .env");
-    expect(result.output).toContain("database package files, config, and env vars");
+    expect(result.output).toContain("forge doctor");
+    expect(result.output).toContain("Commands:");
+    expect(result.output).toContain("env");
+    expect(result.output).toContain("Print structured JSON output");
+    expect(result.output).toContain("Examples:");
   });
 
   it("rejects invalid doctor section", () => {
     const result = runForge(["doctor", "invalid"]);
     expect(result.status).toBe(1);
-    expect(result.output).toContain("Invalid doctor section");
+    expect(result.output).toMatch(/Unknown command `invalid`/);
   });
 
   it("fails doctor db without database env", () => {

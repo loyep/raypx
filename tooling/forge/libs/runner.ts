@@ -1,6 +1,9 @@
 import { spawn } from "node:child_process";
 import { logger, PROJECT_ROOT } from "./utils";
 
+/**
+ * Command specification for execution
+ */
 export interface CommandSpec {
   command: string;
   args?: string[];
@@ -8,11 +11,17 @@ export interface CommandSpec {
   env?: Record<string, string>;
 }
 
+/**
+ * Options for command execution
+ */
 export interface RunOptions {
   dryRun?: boolean;
   verbose?: boolean;
 }
 
+/**
+ * Execute a command with optional dry-run and verbose logging
+ */
 export async function runCommand(spec: CommandSpec, options: RunOptions = {}): Promise<void> {
   const { command, args = [], cwd = PROJECT_ROOT, env } = spec;
 
