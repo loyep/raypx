@@ -7,10 +7,7 @@ autoInstallPeers: false
 preferWorkspacePackages: true
 
 onlyBuiltDependencies:
-  - esbuild
   - lefthook
-  - msw
-  - sharp
 
 peerDependencyRules:
   allowAny:
@@ -35,15 +32,16 @@ overrides:
   srvx: 0.11.8
   vite: "catalog:beta"
   '@vitejs/plugin-react': "catalog:"
+  lightningcss: ^1.32.0
 
 catalog:
   '@tanstack/devtools-vite': ^0.5.3
   '@tanstack/react-devtools': ^0.9.10
   '@tanstack/react-query': ^5.90.21
   '@tanstack/react-query-devtools': ^5.91.3
-  '@tanstack/react-router': ^1.166.2
-  '@tanstack/react-router-devtools': ^1.166.2
-  '@tanstack/react-start': ^1.166.2
+  '@tanstack/react-router': ^1.166.3
+  '@tanstack/react-router-devtools': ^1.166.3
+  '@tanstack/react-start': ^1.166.3
   '@types/node': 24.10.4
   '@vitest/coverage-v8': ^4.0.18
   '@vitejs/plugin-react': ^5.1.4
@@ -59,7 +57,7 @@ catalogs:
   beta:
     nitro: ^3.0.1-alpha.2
     tsdown: ^0.21.0
-    vite: ^8.0.0-beta.16
+    vite: ^8.0.0-beta.18
     drizzle-kit: beta
     drizzle-orm: beta
     drizzle-seed: beta

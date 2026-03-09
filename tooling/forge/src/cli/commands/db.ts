@@ -1,10 +1,10 @@
 import { type RunOptions, runCommand } from "../runner";
 import { logger, PROJECT_ROOT } from "../utils";
 
-export type DbOperation = "generate" | "push" | "migrate" | "studio" | "pull" | "check-ai";
+export type DbOperation = "generate" | "push" | "migrate" | "studio" | "pull" | "seed";
 
 const DRIZZLE_OPERATIONS = ["generate", "push", "migrate", "studio", "pull"] as const;
-const CUSTOM_OPERATIONS = ["check-ai"] as const;
+const CUSTOM_OPERATIONS = ["seed"] as const;
 const DB_OPERATIONS: readonly DbOperation[] = [...DRIZZLE_OPERATIONS];
 
 const DB_DIR = `${PROJECT_ROOT}/packages/database`;
@@ -19,10 +19,10 @@ function validateDbInput(operation: string): asserts operation is DbOperation {
 }
 
 function buildDbCommand(operation: DbOperation) {
-  if (operation === "check-ai") {
+  if (operation === "seed") {
     return {
       command: "node",
-      args: ["--import", "tsx", "scripts/check-ai-consistency.ts"],
+      args: ["--import", "tsx", "seed/seed.ts"],
       cwd: DB_DIR,
     };
   }

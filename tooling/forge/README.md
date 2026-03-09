@@ -5,7 +5,7 @@ Unified monorepo command entrypoint.
 ## Usage
 
 ```bash
-forge db <operation> [--parallel] [--dry-run] [--verbose]
+forge db <operation> [--dry-run] [--verbose]
 forge ui generate
 forge doctor [--json]
 forge run <command> [...args]
@@ -20,7 +20,7 @@ forge run <command> [...args]
 - `migrate`
 - `studio`
 - `pull`
-- `check-ai`
+- `seed`
 
 ## Examples
 
@@ -29,7 +29,7 @@ forge db generate
 forge db push
 forge db migrate
 forge db studio
-forge db check-ai
+forge db seed
 forge doctor --json
 forge run vite dev
 ```

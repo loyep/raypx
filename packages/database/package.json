@@ -9,12 +9,11 @@
   },
   "scripts": {
     "clean": "rimraf dist .turbo",
-    "check-ai": "forge db check-ai",
     "generate": "forge db generate",
     "migrate": "forge db migrate",
     "pull": "forge db pull",
     "push": "forge db push",
-    "seed": "forge run node --import tsx seed/seed.ts",
+    "seed": "forge db seed",
     "studio": "forge db studio",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
