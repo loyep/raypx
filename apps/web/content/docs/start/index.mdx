@@ -57,7 +57,7 @@ pnpm --filter @raypx/database migrate
 ```bash title="4. Start the development server"
 pnpm dev
 # Web app: http://localhost:3000
-# Docs: http://localhost:3001
+# Docs routes: http://localhost:3000/docs
 ```
 
 The web app runs at `http://localhost:3000` with hot-module reloading and TanStack's file-based routing enabled.
@@ -66,14 +66,13 @@ The web app runs at `http://localhost:3000` with hot-module reloading and TanSta
 
 | Task | Command | Notes |
 | ---- | ------- | ----- |
-| **Development** | `pnpm dev` | Starts all apps (web + docs) with hot reload |
+| **Development** | `pnpm dev` | Starts web app with hot reload |
 | **Web app only** | `pnpm dev:web` | Just the main TanStack Start app |
-| **Docs only** | `pnpm dev:docs` | Just the Fumadocs site |
-| **Email preview** | `pnpm dev:email` | Preview email templates |
+| **Alt dev alias** | `pnpm dev:full` | Same workflow as `pnpm dev:web` |
 | **Format & lint** | `pnpm format` / `pnpm check` | Biome for formatting and linting |
 | **Type check** | `pnpm typecheck` | TypeScript across entire workspace |
 | **Tests** | `pnpm test` | Vitest unit tests |
-| **Coverage** | `pnpm coverage` | HTML coverage reports |
+| **Coverage** | `pnpm test:coverage` | Coverage reports |
 | **Build** | `pnpm build` | Full Turborepo production build |
 | **Clean** | `pnpm clean` | Remove build artifacts and caches |
 | **Database** | `pnpm db` | Database commands (migrate, studio, etc.) |

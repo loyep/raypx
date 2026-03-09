@@ -1,61 +1,32 @@
 import { type ConsolaInstance, createConsola } from "consola";
 
-/**
- * Log levels for the logger
- * 0: silent (fatal only)
- * 1: error
- * 2: warn
- * 3: info (default for production)
- * 4: debug (default for development)
- * 5: trace
- */
 export type LogLevel = 0 | 1 | 2 | 3 | 4 | 5;
-
-/**
- * Log level names
- */
 export type LogLevelName = "silent" | "error" | "warn" | "info" | "debug" | "trace";
 
-/**
- * Logger context for structured logging
- */
 export interface LoggerContext {
   [key: string]: unknown;
 }
 
-/**
- * Logger configuration options
- */
+export interface LoggerPort {
+  level: number;
+  trace: (message: unknown, ...args: unknown[]) => void;
+  debug: (message: unknown, ...args: unknown[]) => void;
+  info: (message: unknown, ...args: unknown[]) => void;
+  warn: (message: unknown, ...args: unknown[]) => void;
+  error: (message: unknown, ...args: unknown[]) => void;
+  success: (message: unknown, ...args: unknown[]) => void;
+  log: (message: unknown, ...args: unknown[]) => void;
+  withTag: (tag: string) => LoggerPort;
+}
+
 export interface LoggerOptions {
-  /**
-   * Log level (0-5 or name)
-   */
   level?: LogLevel | LogLevelName;
-
-  /**
-   * Enable colors in output
-   */
   colors?: boolean;
-
-  /**
-   * Show timestamp
-   */
   timestamp?: boolean;
-
-  /**
-   * Compact output mode
-   */
   compact?: boolean;
-
-  /**
-   * Tag for the logger
-   */
   tag?: string;
 }
 
-/**
- * Map log level name to number
- */
 function parseLevel(level: LogLevel | LogLevelName): number {
   if (typeof level === "number") return level;
 
@@ -71,9 +42,6 @@ function parseLevel(level: LogLevel | LogLevelName): number {
   return levels[level] ?? 3;
 }
 
-/**
- * Get default log level based on environment
- */
 function getDefaultLevel(): number {
   const envLevel = process.env.LOG_LEVEL;
   if (envLevel) {
@@ -83,10 +51,6 @@ function getDefaultLevel(): number {
   return process.env.NODE_ENV === "production" ? 3 : 4;
 }
 
-/**
- * Internal logger instance
- * Can be replaced via setLogger() for testing or custom configurations
- */
 let _logger: ConsolaInstance = createConsola({
   level: getDefaultLevel(),
   formatOptions: {
@@ -96,24 +60,14 @@ let _logger: ConsolaInstance = createConsola({
   },
 });
 
-/**
- * Get the current logger instance
- */
 export function getLogger(): ConsolaInstance {
   return _logger;
 }
 
-/**
- * Replace the logger instance
- * Useful for testing or providing custom logger configurations
- */
 export function setLogger(newLogger: ConsolaInstance): void {
   _logger = newLogger;
 }
 
-/**
- * Create a new logger instance with custom options
- */
 export function createLogger(options: LoggerOptions = {}): ConsolaInstance {
   const level = options.level !== undefined ? parseLevel(options.level) : getDefaultLevel();
 
@@ -133,30 +87,22 @@ export function createLogger(options: LoggerOptions = {}): ConsolaInstance {
   return logger;
 }
 
-/**
- * Global logger instance with backward compatibility
- * Uses Proxy to delegate all calls to the current logger instance
- */
 export const logger = new Proxy({} as ConsolaInstance, {
   get(_, prop) {
     return _logger[prop as keyof ConsolaInstance];
   },
 });
 
-/**
- * Set logger to silent mode (only error messages will be shown)
- */
 export function setSilentMode(silent: boolean): void {
   _logger.level = silent ? 0 : getDefaultLevel();
 }
 
-/**
- * Create a child logger with a tag
- */
 export function withTag(tag: string): ConsolaInstance {
   return _logger.withTag(tag);
 }
 
+const _loggerPortContractCheck: LoggerPort = _logger as unknown as LoggerPort;
+void _loggerPortContractCheck;
+
 export type { ConsolaInstance } from "consola";
-// Re-export consola types and utilities
 export { createConsola } from "consola";

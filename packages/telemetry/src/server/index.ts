@@ -6,7 +6,7 @@ import {
   SEMRESATTRS_DEPLOYMENT_ENVIRONMENT,
   SEMRESATTRS_SERVICE_NAME,
 } from "@opentelemetry/semantic-conventions";
-import { createLogger } from "@raypx/logger";
+import { createLogger } from "@raypx/core/logger";
 
 const log = createLogger({ tag: "telemetry" });
 

@@ -23,7 +23,7 @@ export function HomeHeader({ siteConfig }: HomeHeaderProps) {
         </Link>
 
         <div className="flex items-center gap-2">
-          <Button render={<a href="/docs" />} size="sm" variant="ghost">
+          <Button render={<Link to="/docs" />} size="sm" variant="ghost">
             Docs
           </Button>
           <Button

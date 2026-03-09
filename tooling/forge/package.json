@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "@dotenvx/dotenvx": "^1.53.0",
-    "citty": "^0.1.6",
+    "citty": "^0.2.1",
     "consola": "^3.4.2",
     "fast-glob": "^3.3.3",
     "fs-extra": "^11.3.4",

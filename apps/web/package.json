@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.2.0",
-    "@fumadocs/base-ui": "^16.6.10",
+    "@fumadocs/base-ui": "^16.6.13",
     "@raypx/admin": "workspace:*",
     "@raypx/ai": "workspace:*",
     "@raypx/auth": "workspace:*",
@@ -31,11 +31,11 @@
     "@tanstack/react-start": "catalog:",
     "@tanstack/react-table": "^8.21.3",
     "ai": "^6.0.116",
-    "fumadocs-core": "^16.6.10",
+    "fumadocs-core": "^16.6.13",
     "fumadocs-mdx": "^14.2.9",
-    "recharts": "catalog:",
     "react": "catalog:react19",
     "react-dom": "catalog:react19",
+    "recharts": "catalog:",
     "zod": "catalog:",
     "zustand": "^5.0.11"
   },
@@ -57,7 +57,7 @@
     "rollup-plugin-visualizer": "^7.0.1",
     "tailwindcss": "catalog:tailwindv4",
     "typescript": "catalog:",
-    "vite": "^8.0.0-beta.16",
+    "vite": "^8.0.0-beta.18",
     "vite-tsconfig-paths": "^6.1.1",
     "vitest": "catalog:"
   }

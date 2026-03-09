@@ -58,13 +58,12 @@ Each milestone should satisfy:
 
 1. `pnpm -w typecheck` passes.
 2. Core package tests pass.
-3. Critical E2E smoke tests pass (`app`, `web`, `docs`, auth, chat).
+3. Critical E2E smoke tests pass (`web`, auth, chat).
 4. Migration and rollback notes are documented.
 
 ## Deployment Topology
 
 - `raypx.com` -> `apps/web`
-- `app.raypx.com` -> `apps/app`
-- `docs.raypx.com` -> `apps/docs`
+- `docs.raypx.com` -> `apps/web` (`/docs` routes)
 
-All three are independently deployable but share auth/session strategy.
+Both are served from the web app surface with shared auth/session strategy.

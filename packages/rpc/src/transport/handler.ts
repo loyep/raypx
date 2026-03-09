@@ -5,7 +5,7 @@ import { RPCHandler } from "@orpc/server/fetch";
 import { CORSPlugin } from "@orpc/server/plugins";
 import { ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
 import { authEnv, createEnv } from "@raypx/config/envs";
-import { createLogger } from "@raypx/logger";
+import { createLogger } from "@raypx/core/logger";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 

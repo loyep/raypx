@@ -23,8 +23,8 @@
     "@raypx/ai": "workspace:*",
     "@raypx/auth": "workspace:*",
     "@raypx/config": "workspace:*",
+    "@raypx/core": "workspace:*",
     "@raypx/database": "workspace:*",
-    "@raypx/logger": "workspace:*",
     "@raypx/shared": "workspace:*",
     "@raypx/stripe": "workspace:*",
     "zod": "catalog:"

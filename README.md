@@ -8,8 +8,7 @@ Raypx is an open-source SaaS template monorepo. It is built for fast product shi
 ## Product Shape
 
 - `apps/web`: main web app (dashboard + app routes + chat + settings)
-- `apps/docs`: docs content is served via `apps/web` docs routes
-- `apps/api`: API app/runtime entry for backend surface
+- API routes are served from `apps/web/src/routes/api/*`
 
 ## Architecture Principles
 
@@ -38,8 +37,7 @@ pnpm dev
 ```text
 raypx/
 ├── apps/
-│   ├── web/     # Main app (dashboard, chat, settings, docs routes)
-│   └── api/     # API app/runtime entry
+│   └── web/     # Main app (dashboard, chat, settings, docs routes, api routes)
 ├── packages/
 │   ├── admin/           # Admin plugin (UI/API helpers)
 │   ├── ai/              # AI domain services (providers, stream, logs)
@@ -76,13 +74,9 @@ raypx/
 | --- | --- |
 | `pnpm dev` | Start the default app workflow (`apps/web`) |
 | `pnpm dev:web` | Start `apps/web` |
-| `pnpm dev:api` | Start `apps/api` |
-| `pnpm dev:docs` | Start `apps/docs` |
-| `pnpm dev:full` | Start `web`, `api`, and `docs` together |
+| `pnpm dev:full` | Start the same workflow as `dev:web` |
 | `pnpm build` | Build all workspaces |
 | `pnpm build:web` | Build `apps/web` |
-| `pnpm build:api` | Build `apps/api` |
-| `pnpm build:docs` | Build `apps/docs` |
 | `pnpm lint` | Run Biome checks |
 | `pnpm lint:fix` | Apply Biome fixes |
 | `pnpm typecheck` | Run TypeScript checks |

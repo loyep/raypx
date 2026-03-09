@@ -7,12 +7,12 @@ A modern fullstack monorepo built with TanStack Start, Better Auth, and oRPC.
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                         Apps Layer                               │
-│  ┌─────────┐  ┌─────────┐  ┌─────────┐                          │
-│  │   web   │  │   app   │  │  docs   │                          │
-│  └────┬────┘  └────┬────┘  └────┬────┘                          │
-└───────┼────────────┼────────────┼───────────────────────────────┘
-        │            │            │
-┌───────┼────────────┼────────────┼───────────────────────────────┐
+│  ┌─────────┐                                                   │
+│  │   web   │                                                   │
+│  └────┬────┘                                                   │
+└───────┼────────────────────────────────────────────────────────┘
+        │
+┌───────┼────────────────────────────────────────────────────────┐
 │       │    Packages Layer       │                               │
 │  ┌────┴────┐       │       ┌────┴────┐                          │
 │  │   RPC   │       │       │  Design │                          │
@@ -61,8 +61,7 @@ raypx/
 │   │   │   ├── types/          # App-specific types
 │   │   │   └── utils/          # Utility functions
 │   │   └── ...
-│   ├── app/                    # App with auth (port 3001, same auth as web)
-│   └── docs/                   # Documentation site
+│   └── (api routes in web)     # src/routes/api/*
 ├── packages/
 │   ├── tsconfig/               # Shared TypeScript configs
 │   ├── config/                 # Environment validation & app config
@@ -91,8 +90,8 @@ Packages must only depend on packages at the same layer or lower layers:
 |-------|---------|--------------|
 | 0 | `@raypx/tsconfig` | - |
 | 1 | `@raypx/config` | - |
-| 2 | `@raypx/logger` | - |
-| 2 | `@raypx/shared` | config, logger |
+| 2 | `@raypx/core` | - |
+| 2 | `@raypx/shared` | - |
 | 3 | `@raypx/database` | config, shared |
 | 3 | `@raypx/email` | config |
 | 3 | `@raypx/storage` | config |
@@ -264,9 +263,7 @@ const value = env.MY_NEW_VAR
 |---------|-------------|
 | `pnpm dev` | Start web app in development mode |
 | `pnpm dev:web` | Start web app in development mode |
-| `pnpm dev:app` | Start app in development mode (port 3001, with auth) |
-| `pnpm dev:docs` | Start docs site in development mode |
-| `pnpm dev:email` | Start email preview server |
+| `pnpm dev:full` | Start the same workflow as `dev:web` |
 
 ### Build & Start
 
@@ -274,11 +271,7 @@ const value = env.MY_NEW_VAR
 |---------|-------------|
 | `pnpm build` | Build all apps and packages |
 | `pnpm build:web` | Build web app only |
-| `pnpm build:docs` | Build docs site only |
-| `pnpm build:pkg` | Build packages only (skip apps) |
 | `pnpm start` | Start all apps in production mode |
-| `pnpm start:web` | Start web app in production mode |
-| `pnpm start:docs` | Start docs site in production mode |
 
 ### Code Quality
 

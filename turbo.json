@@ -19,9 +19,6 @@
     "app#build": {
       "outputs": [".tanstack/**", ".output/**", ".nitro/**", ".netlify/**"]
     },
-    "docs#build": {
-      "outputs": [".tanstack/**", ".output/**", ".nitro/**", ".netlify/**", ".source/**"]
-    },
     "start": {
       "cache": true,
       "dependsOn": ["build", "^build"],

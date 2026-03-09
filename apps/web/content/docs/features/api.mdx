@@ -266,7 +266,7 @@ export const authMiddleware = middleware(async ({ context, next }) => {
 ```typescript
 // packages/rpc/middleware/logging.ts
 import { middleware } from "@orpc/server";
-import { logger } from "@raypx/logger";
+import { logger } from "@raypx/core/logger";
 
 export const loggingMiddleware = middleware(async ({ path, input, next }) => {
   const start = Date.now();

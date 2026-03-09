@@ -55,7 +55,7 @@ Follow the dependency hierarchy (only depend downward):
 ```
 Layer 0: @raypx/tsconfig
 Layer 1: @raypx/config
-Layer 2: @raypx/logger, @raypx/shared
+Layer 2: @raypx/core, @raypx/shared
 Layer 3: @raypx/database, @raypx/email, @raypx/storage, @raypx/seo
 Layer 4: @raypx/auth, @raypx/ai
 Layer 5: @raypx/rpc

@@ -21,8 +21,8 @@
     "react": "catalog:react19",
     "@ai-sdk/openai-compatible": "^2.0.35",
     "@raypx/config": "workspace:*",
+    "@raypx/core": "workspace:*",
     "@raypx/database": "workspace:*",
-    "@raypx/logger": "workspace:*",
     "@raypx/shared": "workspace:*",
     "ai": "^6.0.116"
   },

@@ -21,7 +21,7 @@
     "@opentelemetry/sdk-trace-node": "^2.6.0",
     "@opentelemetry/semantic-conventions": "^1.40.0",
     "@raypx/config": "workspace:*",
-    "@raypx/logger": "workspace:*"
+    "@raypx/core": "workspace:*"
   },
   "devDependencies": {
     "@raypx/tsconfig": "workspace:*",

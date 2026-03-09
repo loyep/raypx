@@ -5,7 +5,7 @@ description: Understand how the Raypx Turborepo is structured and what each pack
 
 ## Monorepo at a Glance
 
-Raypx is a pnpm monorepo orchestrated by Turborepo. It contains **3 applications** and **12 shared packages** that work together to provide a complete full-stack development platform.
+Raypx is a pnpm monorepo orchestrated by Turborepo. It contains **1 application** and **12 shared packages** that work together to provide a complete full-stack development platform.
 
 ```files
 raypx/
@@ -14,8 +14,6 @@ raypx/
 │   │   ├── src/routes/     # File-based routing
 │   │   ├── src/components/ # React components
 │   │   └── public/         # Static assets
-│   ├── app/                # Secondary application
-│   └── docs/               # Fumadocs documentation site
 ├── packages/               # Shared runtime packages (see below)
 ├── tooling/                # Workspace tooling packages
 │   ├── forge/              # Unified monorepo CLI (forge)
@@ -30,8 +28,6 @@ All packages use the `@raypx/*` namespace and are consumed as TypeScript source 
 | App | Description | Port | Tech |
 |-----|-------------|------|------|
 | **web** | Main TanStack Start app with auth, UI, and API | 3000 | TanStack Start, React 19 |
-| **app** | Secondary application | 3000 | TanStack Start, React 19 |
-| **docs** | Documentation site powered by Fumadocs | 3001 | Fumadocs, TanStack Start |
 
 ## Packages
 
@@ -50,7 +46,7 @@ All packages use the `@raypx/*` namespace and are consumed as TypeScript source 
 | ------- | ----------- | ------------ |
 | **@raypx/email** | Email service | Resend, Nodemailer, React Email templates |
 | **@raypx/storage** | File storage | S3, R2, local filesystem, Sharp image processing |
-| **@raypx/logger** | Logging utilities | Consola-based logging, structured output |
+| **@raypx/core** | Core runtime utilities | Logger, core contracts, base utilities |
 | **@raypx/observability** | Observability tools | Sentry error tracking, OpenTelemetry tracing |
 
 ### UI & Frontend
@@ -93,7 +89,7 @@ Packages can depend on each other, but follow these rules:
 
 **IMPORTANT**: Only `apps/` have build scripts. All `packages/` are consumed as TypeScript source.
 
-- ✅ `apps/web`, `apps/app`, `apps/docs` – Have build scripts (deployable)
+- ✅ `apps/web` – Has build scripts (deployable)
 - ❌ `packages/*` – NO build scripts (consumed as TS source by apps)
 
 This approach:
@@ -114,7 +110,6 @@ turbo test                  # Run all tests
 
 # App-specific commands
 turbo dev --filter=web      # Just web app
-turbo dev --filter=docs     # Just docs
 
 # Package-specific commands (still use pnpm for non-turbo tasks)
 pnpm --filter @raypx/database studio       # Drizzle Studio
@@ -165,7 +160,7 @@ Reference in package.json:
 
 ## Generated Files
 
-- `apps/docs/source.generated.ts` – Fumadocs metadata (auto-generated)
+- `apps/web/.source/*` – Fumadocs metadata (auto-generated)
 - `apps/web/.vinxi/` – TanStack Start build cache (gitignored)
 - `.turbo/` – Turborepo cache (gitignored)
 

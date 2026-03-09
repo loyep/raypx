@@ -1,8 +1,8 @@
-import { createLogger } from "@raypx/logger";
+import { withTag } from "@raypx/core/logger";
 import type { AIErrorCode, AIUsage, ChatProvider } from "@raypx/shared/ai";
 import type { StreamTrace } from "../types";
 
-const log = createLogger({ tag: "ai:chat" });
+const log = withTag("ai:chat");
 
 function traceMetrics(trace: StreamTrace) {
   const now = trace.finishedAt ?? Date.now();
