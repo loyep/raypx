@@ -6,7 +6,7 @@ WORKDIR /app
 ENV LEFTHOOK=0 CI=true TURBO_TELEMETRY_DISABLED=1
 
 # Enable pnpm
-RUN corepack enable && corepack prepare pnpm@10.30.3 --activate
+RUN corepack enable && corepack prepare pnpm@10.31.0 --activate
 
 # Pruner: Generate pruned monorepo for target app
 FROM base AS pruner
@@ -25,7 +25,6 @@ RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
 FROM base AS installer
 COPY --from=pruner /app/out/json/ .
 COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
-COPY --from=pruner /app/out/full/tooling/forge/forge.mjs ./tooling/forge/forge.mjs
 RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
     pnpm install --frozen-lockfile
 

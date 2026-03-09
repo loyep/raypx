@@ -9,7 +9,7 @@ ENV LEFTHOOK=0
 ENV CI=true
 
 # Enable pnpm using Corepack
-RUN corepack enable
+RUN corepack enable && corepack prepare pnpm@10.31.0 --activate
 
 # Stage 1: Builder
 FROM base AS builder
