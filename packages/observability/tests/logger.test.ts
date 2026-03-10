@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { createLogger, StructuredLogger } from "../src/logger";
+import { createStructuredLogger, StructuredLogger } from "../src/logger";
 
 describe("observability logger", () => {
   it("merges default and child context while preserving the service name", () => {
@@ -28,7 +28,7 @@ describe("observability logger", () => {
     vi.stubEnv("NODE_ENV", "production");
     vi.stubEnv("SERVICE_NAME", "worker");
 
-    const logger = createLogger(undefined, { feature: "queue" }) as StructuredLogger & {
+    const logger = createStructuredLogger(undefined, { feature: "queue" }) as StructuredLogger & {
       logger: { level: number; withTag: (tag: string) => unknown };
       defaultContext: Record<string, unknown>;
     };

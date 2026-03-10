@@ -96,7 +96,7 @@ export const SidebarNavigation: FC<SidebarNavigationProps> = ({
                   item.to.startsWith("/admin/") ? (
                     <Link params={{ slug: item.to.replace("/admin/", "") }} to="/admin/$slug" />
                   ) : (
-                    <Link to={item.to} />
+                    <Link to={item.to as "/dashboard" | "/chat"} />
                   )
                 }
               >
@@ -116,6 +116,7 @@ export const SidebarNavigation: FC<SidebarNavigationProps> = ({
 
 type SidebarUserProps = {
   user: {
+    id?: string;
     name?: string | null;
     email?: string | null;
     image?: string | null;

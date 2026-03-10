@@ -1,7 +1,13 @@
 // Sentry integration
 
 // Structured logging
-export { createLogger, logger, StructuredLogger } from "./logger";
+export {
+  createLogger,
+  createStructuredLogger,
+  logger,
+  StructuredLogger,
+  structuredLogger,
+} from "./logger";
 // Metrics and tracing
 export {
   createMetrics,

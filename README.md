@@ -16,6 +16,9 @@ Raypx is an open-source SaaS template monorepo. It is built for fast product shi
 - Browser-facing modules access backend capabilities through RPC or client-safe wrappers.
 - AI is provider-pluggable (default path: Qwen, optional Zhipu).
 - Package boundaries are enforced by dependency layers.
+- `@raypx/core/logger` is the shared logger entrypoint.
+- `@raypx/observability` adds structured logging, metrics, and Sentry-style integrations on top of core primitives.
+- `@raypx/telemetry` is reserved for trace/exporter setup, not a second logger layer.
 
 See [ROADMAP.md](./ROADMAP.md) for the execution plan.
 
@@ -127,6 +130,13 @@ forge doctor --help
 - Workspace tests live under `tests/`.
 - Each workspace with a `test` script must be classified in [`tooling/forge/repo-policy.ts`](./tooling/forge/repo-policy.ts) under `testing.required` or `testing.allowNoTests`.
 - `forge doctor` enforces both the layout and the policy classification.
+
+## Operability Policy
+
+- Every workspace is classified in [`tooling/forge/repo-policy.ts`](./tooling/forge/repo-policy.ts) as either `buildable` or `sourceOnly`.
+- `buildable` workspaces must provide `build`, `clean`, `typecheck`, and `test` coverage according to repo policy.
+- `sourceOnly` workspaces are expected to stay installable and testable, but they do not publish or emit standalone build artifacts.
+- `forge doctor` enforces both the workspace classification and the presence of build scripts for `buildable` workspaces.
 
 ## License
 

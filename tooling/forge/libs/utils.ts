@@ -4,7 +4,7 @@ import { existsSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import dotenvx from "@dotenvx/dotenvx";
-import { consola } from "consola";
+import { createLogger } from "@raypx/core/logger";
 import fg from "fast-glob";
 import fs from "fs-extra";
 
@@ -34,7 +34,11 @@ dotenvx.config({ path: join(PROJECT_ROOT, ".env"), quiet: true });
 /** Cache directory for build artifacts */
 export const CACHE_DIR = resolve(PROJECT_ROOT, "node_modules/.cache");
 
-export const logger = consola;
+export const logger = createLogger({
+  tag: "forge",
+  compact: true,
+  timestamp: false,
+});
 
 /**
  * Formats duration in milliseconds to human-readable string

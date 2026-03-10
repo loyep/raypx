@@ -20,8 +20,8 @@
   },
   "dependencies": {
     "@raypx/config": "workspace:*",
+    "@raypx/core": "workspace:*",
     "@raypx/shared": "workspace:*",
-    "consola": "^3.4.2",
     "drizzle-orm": "catalog:beta",
     "drizzle-zod": "catalog:beta",
     "effect": "^3.19.19",

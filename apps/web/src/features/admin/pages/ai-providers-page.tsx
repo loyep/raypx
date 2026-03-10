@@ -122,7 +122,9 @@ export function AdminAIProvidersPage() {
         });
 
         if (form.apiKey.trim()) {
-          const created = response.data.providers.find((item) => item.name === form.name.trim());
+          const created = response.data.providers.find(
+            (item: ProviderItem) => item.name === form.name.trim(),
+          );
           if (created) {
             await client.ai.system.providers.setSecret({
               providerId: created.id,

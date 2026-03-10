@@ -133,7 +133,7 @@ function AIProviderSettingsPage() {
         });
 
         const createdProvider = created.data.providers.find(
-          (item) => item.name === form.name.trim(),
+          (item: ProviderItem) => item.name === form.name.trim(),
         );
         if (createdProvider && form.apiKey.trim()) {
           await client.ai.providers.setSecret({

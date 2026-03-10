@@ -10,7 +10,8 @@
     "serve": "forge run vite preview",
     "shadcn": "pnpm dlx shadcn@latest",
     "start": "forge run node .output/server/index.mjs",
-    "test": "vitest run"
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@base-ui/react": "^1.2.0",

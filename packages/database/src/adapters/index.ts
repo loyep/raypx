@@ -1,4 +1,4 @@
-import { createConsola } from "consola";
+import { createLogger } from "@raypx/core/logger";
 import type { DrizzleConfig } from "drizzle-orm";
 import { env } from "../envs";
 import type { Relations, Schema } from "../schemas/types";
@@ -61,14 +61,13 @@ export const formatLogParams = (
 /**
  * Database-specific logger with [Database] tag
  */
-const dbLogger = createConsola({
-  level: process.env.NODE_ENV === "production" ? 3 : 4, // info in prod, debug in dev
-  formatOptions: {
-    colors: true,
-    date: false,
-    compact: true,
-  },
-}).withTag("Database");
+const dbLogger = createLogger({
+  level: process.env.NODE_ENV === "production" ? 3 : 4,
+  colors: true,
+  compact: true,
+  timestamp: false,
+  tag: "database",
+});
 
 /**
  * Custom logger that filters out queries for vector tables

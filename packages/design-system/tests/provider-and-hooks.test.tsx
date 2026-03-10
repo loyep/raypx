@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { act } from "react";
 import { createRoot } from "react-dom/client";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -10,10 +11,10 @@ const { useNextThemeMock, nextThemeProviderMock, tooltipProviderMock, toasterMoc
       resolvedTheme: "dark",
       setTheme: vi.fn(),
     })),
-    nextThemeProviderMock: vi.fn(({ children }: { children: unknown }) => (
+    nextThemeProviderMock: vi.fn(({ children }: { children: ReactNode }) => (
       <div data-theme-provider>{children}</div>
     )),
-    tooltipProviderMock: vi.fn(({ children }: { children: unknown }) => (
+    tooltipProviderMock: vi.fn(({ children }: { children: ReactNode }) => (
       <div data-tooltip-provider>{children}</div>
     )),
     toasterMock: vi.fn(() => <div data-toaster />),
@@ -42,7 +43,7 @@ afterEach(() => {
   vi.clearAllMocks();
 });
 
-globalThis.IS_REACT_ACT_ENVIRONMENT = true;
+Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
 
 function HookProbe() {
   const hydrated = useIsHydrated();

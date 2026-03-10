@@ -9,6 +9,7 @@
   },
   "main": "./src/index.ts",
   "scripts": {
+    "clean": "rimraf dist .turbo",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },

@@ -1,16 +1,10 @@
+import type { StreamTiming } from "@raypx/ai/client";
 import { Badge } from "@raypx/design-system/components/ui/badge";
 import { Button } from "@raypx/design-system/components/ui/button";
 
-type ChatTiming = {
-  startedAt: number;
-  firstDeltaAt?: number;
-  finishedAt?: number;
-  chunkCount: number;
-};
-
 type ChatHeaderProps = {
   activeTitle: string;
-  timing?: ChatTiming;
+  timing: StreamTiming | null;
   onStartNewConversation: () => void;
 };
 

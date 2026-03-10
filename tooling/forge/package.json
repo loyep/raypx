@@ -6,15 +6,17 @@
     "forge": "./bin/forge.mjs"
   },
   "scripts": {
+    "clean": "rimraf dist .turbo",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@dotenvx/dotenvx": "^1.53.0",
+    "@raypx/core": "workspace:*",
     "citty": "^0.2.1",
-    "consola": "^3.4.2",
     "fast-glob": "^3.3.3",
     "fs-extra": "^11.3.4",
+    "rimraf": "^6.1.3",
     "tsx": "^4.21.0"
   },
   "devDependencies": {

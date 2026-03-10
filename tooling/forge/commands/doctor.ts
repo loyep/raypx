@@ -50,6 +50,13 @@ interface RootManifest {
   scripts?: Record<string, string>;
 }
 
+interface OperabilityPolicy {
+  requiredScripts?: string[];
+  allowMissingScripts?: Record<string, string[]>;
+  buildable?: string[];
+  sourceOnly?: string[];
+}
+
 async function checkFile(path: string): Promise<boolean> {
   try {
     await access(path);
@@ -132,6 +139,17 @@ async function readWorkspacePackageManifests(): Promise<PackageManifest[]> {
 
 async function readRootManifest(): Promise<RootManifest> {
   return readJsonFile<RootManifest>(join(PROJECT_ROOT, "package.json"));
+}
+
+function readTurboBuildOutputs(content: string): string[] {
+  try {
+    const parsed = JSON.parse(content) as {
+      tasks?: Record<string, { outputs?: string[] }>;
+    };
+    return parsed.tasks?.build?.outputs ?? [];
+  } catch {
+    return [];
+  }
 }
 
 async function runEnvDoctor(): Promise<DoctorSection> {
@@ -295,12 +313,14 @@ async function runDepsDoctor(): Promise<DoctorSection> {
 }
 
 function extractPnpmRunReferences(content: string): string[] {
-  return [...content.matchAll(/pnpm run ([a-zA-Z0-9:_-]+)/g)].map((match) => match[1]);
+  return [...content.matchAll(/pnpm run ([a-zA-Z0-9:_-]+)/g)].flatMap((match) =>
+    match[1] ? [match[1]] : [],
+  );
 }
 
 function extractMarkdownLinks(content: string): string[] {
   return [...content.matchAll(/\]\(([^)]+)\)/g)]
-    .map((match) => match[1])
+    .flatMap((match) => (match[1] ? [match[1]] : []))
     .filter((target) => !target.startsWith("http") && !target.startsWith("#"))
     .map((target) => target.replace(/^\.\//, ""));
 }
@@ -475,6 +495,7 @@ async function runRepoDoctor(): Promise<DoctorSection> {
   );
 
   const testingPolicy = repoPolicy.testing ?? {};
+  const operabilityPolicy: OperabilityPolicy = repoPolicy.operability ?? {};
   const requiredTestRoots = testingPolicy.required ?? [];
   const allowNoTestsRoots = testingPolicy.allowNoTests ?? [];
   const classifiedTestRoots = new Set([...requiredTestRoots, ...allowNoTestsRoots]);
@@ -491,6 +512,47 @@ async function runRepoDoctor(): Promise<DoctorSection> {
   const unclassifiedTestRoots = workspaceRootsWithTestScripts.filter(
     (root) => !classifiedTestRoots.has(root),
   );
+  const operabilityRequiredScripts = operabilityPolicy.requiredScripts ?? [];
+  const operabilityAllowMissingScripts = operabilityPolicy.allowMissingScripts ?? {};
+  const buildableRoots = operabilityPolicy.buildable ?? [];
+  const sourceOnlyRoots = operabilityPolicy.sourceOnly ?? [];
+  const classifiedBuildRoots = new Set([...buildableRoots, ...sourceOnlyRoots]);
+  const turboBuildOutputs = readTurboBuildOutputs(
+    await readFile(join(PROJECT_ROOT, "turbo.json"), "utf-8"),
+  );
+  const workspaceRoots = manifests
+    .map((manifest) => manifest.path.replace(`${PROJECT_ROOT}/`, ""))
+    .map((manifestPath) => manifestPath.replace(/\/package\.json$/, ""));
+  const unknownOperabilityRoots = Object.keys(operabilityAllowMissingScripts).filter(
+    (root) => !workspaceRoots.includes(root),
+  );
+  const duplicateOperabilityScripts = Object.entries(operabilityAllowMissingScripts).flatMap(
+    ([root, scripts]) => ([...new Set(scripts)].length === scripts.length ? [] : [root]),
+  );
+  const duplicateBuildClassifications = [...new Set(buildableRoots)].filter((root) =>
+    sourceOnlyRoots.includes(root),
+  );
+  const unknownBuildRoots = [...classifiedBuildRoots].filter(
+    (root) => !workspaceRoots.includes(root),
+  );
+  const unclassifiedBuildRoots = workspaceRoots.filter((root) => !classifiedBuildRoots.has(root));
+  const missingOperabilityScripts = manifests.flatMap((manifest) => {
+    const root = manifest.path.replace(`${PROJECT_ROOT}/`, "").replace(/\/package\.json$/, "");
+    const allowedMissing = new Set(operabilityAllowMissingScripts[root] ?? []);
+    return operabilityRequiredScripts
+      .filter((script) => !allowedMissing.has(script))
+      .filter((script) => !manifest.scripts?.[script])
+      .map((script) => `${root} -> ${script}`);
+  });
+  const missingBuildScripts = manifests.flatMap((manifest) => {
+    const root = manifest.path.replace(`${PROJECT_ROOT}/`, "").replace(/\/package\.json$/, "");
+    if (!buildableRoots.includes(root)) return [];
+    return manifest.scripts?.build ? [] : [`${root} -> build`];
+  });
+  const invalidTurboBuildOutputs =
+    buildableRoots.length > 0 && turboBuildOutputs.length === 0
+      ? ["turbo.json -> tasks.build.outputs"]
+      : [];
   const missingRequiredTests: string[] = [];
   for (const root of requiredTestRoots) {
     const matches = await fg(["tests/**/*.{test,spec}.{ts,tsx}"], {
@@ -552,6 +614,52 @@ async function runRepoDoctor(): Promise<DoctorSection> {
               : `${unclassifiedTestRoots.length} workspaces with test scripts are missing from forge repo policy (${unclassifiedTestRoots[0]})`,
       fixHint:
         "Classify every workspace with a test script in tooling/forge/repo-policy.ts under testing.required or testing.allowNoTests.",
+    },
+    {
+      name: "operability-policy",
+      ok:
+        unknownOperabilityRoots.length === 0 &&
+        duplicateOperabilityScripts.length === 0 &&
+        missingOperabilityScripts.length === 0,
+      detail:
+        unknownOperabilityRoots.length === 0 &&
+        duplicateOperabilityScripts.length === 0 &&
+        missingOperabilityScripts.length === 0
+          ? `${workspaceRoots.length} workspaces satisfy required operability scripts`
+          : unknownOperabilityRoots.length > 0
+            ? `forge repo policy references unknown operability workspaces (${unknownOperabilityRoots[0]})`
+            : duplicateOperabilityScripts.length > 0
+              ? `duplicate allowed missing operability scripts (${duplicateOperabilityScripts[0]})`
+              : `${missingOperabilityScripts.length} required workspace scripts are missing (${missingOperabilityScripts[0]})`,
+      fixHint:
+        "Add the missing script or explicitly allow it in tooling/forge/repo-policy.ts operability.allowMissingScripts.",
+    },
+    {
+      name: "build-policy",
+      ok:
+        duplicateBuildClassifications.length === 0 &&
+        unknownBuildRoots.length === 0 &&
+        unclassifiedBuildRoots.length === 0 &&
+        missingBuildScripts.length === 0 &&
+        invalidTurboBuildOutputs.length === 0,
+      detail:
+        duplicateBuildClassifications.length === 0 &&
+        unknownBuildRoots.length === 0 &&
+        unclassifiedBuildRoots.length === 0 &&
+        missingBuildScripts.length === 0 &&
+        invalidTurboBuildOutputs.length === 0
+          ? `${buildableRoots.length} buildable workspaces and ${sourceOnlyRoots.length} source-only workspaces are classified`
+          : duplicateBuildClassifications.length > 0
+            ? `duplicate build classifications (${duplicateBuildClassifications[0]})`
+            : unknownBuildRoots.length > 0
+              ? `forge repo policy references unknown build workspaces (${unknownBuildRoots[0]})`
+              : unclassifiedBuildRoots.length > 0
+                ? `${unclassifiedBuildRoots.length} workspaces are missing build classification (${unclassifiedBuildRoots[0]})`
+                : missingBuildScripts.length > 0
+                  ? `${missingBuildScripts.length} buildable workspaces are missing build scripts (${missingBuildScripts[0]})`
+                  : `turbo build outputs are not declared (${invalidTurboBuildOutputs[0]})`,
+      fixHint:
+        "Classify every workspace in tooling/forge/repo-policy.ts as buildable or sourceOnly, add a build script to each buildable workspace, and keep turbo.json tasks.build.outputs declared.",
     },
     {
       name: "workspace-test-layout",
@@ -634,6 +742,22 @@ async function runArchDoctor(): Promise<DoctorSection> {
     }
   }
 
+  const loggerFiles = await fg(["packages/*/src/**/*.ts", "tooling/*/**/*.ts"], {
+    cwd: PROJECT_ROOT,
+    absolute: false,
+    onlyFiles: true,
+    ignore: ["packages/core/**", "tooling/*/node_modules/**", "**/*.test.ts", "**/*.spec.ts"],
+  });
+  const directConsolaImports: string[] = [];
+  for (const relativePath of loggerFiles) {
+    const content = await readFile(join(PROJECT_ROOT, relativePath), "utf-8");
+    for (const importPath of extractImportSpecifiers(content, relativePath)) {
+      if (importPath === "consola") {
+        directConsolaImports.push(relativePath);
+      }
+    }
+  }
+
   const checks: DoctorCheck[] = [
     {
       name: "web-runtime-boundaries",
@@ -644,6 +768,16 @@ async function runArchDoctor(): Promise<DoctorSection> {
           : `${violations.length} direct backend imports found in browser-facing modules (${violations[0]})`,
       fixHint:
         "Move the access behind @raypx/rpc or a client-safe wrapper instead of importing server/data packages directly.",
+    },
+    {
+      name: "logger-entrypoints",
+      ok: directConsolaImports.length === 0,
+      detail:
+        directConsolaImports.length === 0
+          ? "workspace logging uses @raypx/core/logger as the shared logger entrypoint"
+          : `${directConsolaImports.length} direct consola imports found outside core (${directConsolaImports[0]})`,
+      fixHint:
+        "Import logger helpers from @raypx/core/logger instead of depending on consola directly outside packages/core.",
     },
   ];
 

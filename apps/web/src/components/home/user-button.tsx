@@ -23,11 +23,10 @@ import { signOut, useSession } from "@/lib/auth";
 
 export function UserButton() {
   const { data: session } = useSession();
-  const isLoggedIn = Boolean(session?.user);
+  const user = session?.user;
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  if (isLoggedIn) {
-    const user = session.user;
+  if (user) {
     const initials = (user.name || user.email || "U")?.[0]?.toUpperCase() ?? "U";
 
     return (

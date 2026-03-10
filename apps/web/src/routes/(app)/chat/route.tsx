@@ -35,7 +35,7 @@ export const Route = createFileRoute("/(app)/chat")({
     activeNavKey: "chat",
   },
   loader: async ({ context }) => {
-    let conversations: Awaited<ReturnType<ReturnType<typeof conversationsQueryOptions>["queryFn"]>>;
+    let conversations: ConversationList;
     try {
       conversations = await context.queryClient.ensureQueryData(conversationsQueryOptions());
     } catch (error) {
@@ -92,9 +92,11 @@ function ChatRouteLayout() {
     onMutate: async ({ conversationId, title }) => {
       await queryClient.cancelQueries({ queryKey });
       const previous = queryClient.getQueryData<ConversationList>(queryKey);
-      queryClient.setQueryData<ConversationList>(queryKey, (current) => {
+      queryClient.setQueryData<ConversationList>(queryKey, (current?: ConversationList) => {
         if (!current) return current;
-        return current.map((item) => (item.id === conversationId ? { ...item, title } : item));
+        return current.map((item: ConversationList[number]) =>
+          item.id === conversationId ? { ...item, title } : item,
+        );
       });
       return { previous };
     },
@@ -117,9 +119,9 @@ function ChatRouteLayout() {
     onMutate: async (conversationId) => {
       await queryClient.cancelQueries({ queryKey });
       const previous = queryClient.getQueryData<ConversationList>(queryKey);
-      queryClient.setQueryData<ConversationList>(queryKey, (current) => {
+      queryClient.setQueryData<ConversationList>(queryKey, (current?: ConversationList) => {
         if (!current) return current;
-        return current.filter((item) => item.id !== conversationId);
+        return current.filter((item: ConversationList[number]) => item.id !== conversationId);
       });
       return { previous, conversationId };
     },

@@ -25,6 +25,32 @@ type ConversationCache = {
   messages: ConversationMessage[];
 };
 
+type PreferencesData = Awaited<ReturnType<typeof client.ai.getPreferences>>["data"];
+type ProviderItem = PreferencesData["providers"][number];
+type ConversationResponse = NonNullable<
+  Awaited<ReturnType<typeof client.ai.getConversation>>["data"]
+>;
+
+function normalizeConversationCache(data: ConversationResponse): ConversationCache {
+  return {
+    conversation: {
+      id: data.conversation.id,
+      title: data.conversation.title,
+      updatedAt: data.conversation.updatedAt,
+    },
+    messages: data.messages.flatMap((message: ConversationResponse["messages"][number]) => {
+      if (!message.id) return [];
+      return [
+        {
+          id: message.id,
+          role: message.role as ConversationMessage["role"],
+          content: message.content,
+        },
+      ];
+    }),
+  };
+}
+
 function isUuid(input: string) {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(input);
 }
@@ -164,9 +190,10 @@ export function useChatController({
           queryClient.setQueryData<ConversationCache>(
             ["ai", "conversation", pending.conversationCacheId],
             (current) => {
-              if (!current || !event.messageId) return current;
+              const messageId = event.messageId;
+              if (!current || !messageId) return current;
               const messages = current.messages.map((item) =>
-                item.id === pending.assistantMessageId ? { ...item, id: event.messageId } : item,
+                item.id === pending.assistantMessageId ? { ...item, id: messageId } : item,
               );
               return { ...current, messages };
             },
@@ -225,12 +252,15 @@ export function useChatController({
 
   useEffect(() => {
     if (!conversationId || !conversationTitle) return;
-    queryClient.setQueryData<ConversationList>(["ai", "conversations"], (current) => {
-      if (!current) return current;
-      return current.map((item) =>
-        item.id === conversationId ? { ...item, title: conversationTitle } : item,
-      );
-    });
+    queryClient.setQueryData<ConversationList>(
+      ["ai", "conversations"],
+      (current?: ConversationList) => {
+        if (!current) return current;
+        return current.map((item: ConversationList[number]) =>
+          item.id === conversationId ? { ...item, title: conversationTitle } : item,
+        );
+      },
+    );
   }, [conversationId, conversationTitle, queryClient]);
 
   const activeConversationCacheId =
@@ -241,7 +271,8 @@ export function useChatController({
     queryKey: ["ai", "conversation", routeConversationId ?? "draft"],
     queryFn: async () => {
       if (!routeConversationId || !isUuid(routeConversationId)) return null;
-      return (await client.ai.getConversation({ conversationId: routeConversationId })).data;
+      const data = (await client.ai.getConversation({ conversationId: routeConversationId })).data;
+      return data ? normalizeConversationCache(data) : null;
     },
     placeholderData: (previous) => {
       if (previous) return previous;
@@ -267,10 +298,13 @@ export function useChatController({
       : [];
     const source = conversationQuery.data?.messages ?? fallbackSource ?? [];
     const normalized = source
-      .filter((message) => message.role === "user" || message.role === "assistant")
+      .filter(
+        (message): message is ConversationMessage & { role: "user" | "assistant" } =>
+          message.role === "user" || message.role === "assistant",
+      )
       .map((message) => ({
         id: message.id,
-        role: message.role as "user" | "assistant",
+        role: message.role,
         text: message.content,
       }));
 
@@ -308,7 +342,7 @@ export function useChatController({
 
   const providers = preferencesQuery.data?.providers ?? [];
   const enabledProviders = useMemo(
-    () => providers.filter((provider) => provider.isEnabled),
+    () => providers.filter((provider: ProviderItem) => provider.isEnabled),
     [providers],
   );
   const hasEnabledProviders = enabledProviders.length > 0;
@@ -316,7 +350,10 @@ export function useChatController({
 
   const activeTitle = useMemo(() => {
     if (!routeConversationId) return "New conversation";
-    return conversations.find((item) => item.id === routeConversationId)?.title ?? "Conversation";
+    return (
+      conversations.find((item: ConversationList[number]) => item.id === routeConversationId)
+        ?.title ?? "Conversation"
+    );
   }, [conversations, routeConversationId]);
 
   const canSend = useMemo(() => {
@@ -326,17 +363,24 @@ export function useChatController({
       const defaultProviderId = preferencesQuery.data?.defaultProviderId;
       if (!defaultProviderId) return false;
       return Boolean(
-        providers.find((provider) => provider.id === defaultProviderId && provider.isEnabled),
+        providers.find(
+          (provider: ProviderItem) => provider.id === defaultProviderId && provider.isEnabled,
+        ),
       );
     }
 
-    return Boolean(providers.find((provider) => provider.id === providerId && provider.isEnabled));
+    return Boolean(
+      providers.find((provider: ProviderItem) => provider.id === providerId && provider.isEnabled),
+    );
   }, [hasEnabledProviders, preferencesQuery.data?.defaultProviderId, providerId, providers]);
 
   const effectiveProviderId =
     providerId === "default" ? preferencesQuery.data?.defaultProviderId : providerId;
   const activeProvider = useMemo(
-    () => providers.find((provider) => provider.id === effectiveProviderId && provider.isEnabled),
+    () =>
+      providers.find(
+        (provider: ProviderItem) => provider.id === effectiveProviderId && provider.isEnabled,
+      ),
     [effectiveProviderId, providers],
   );
   const availableModels = activeProvider?.models ?? [];
@@ -346,14 +390,16 @@ export function useChatController({
 
     setProviderId((currentProviderId) => {
       if (currentProviderId !== "default") {
-        const currentProvider = providers.find((provider) => provider.id === currentProviderId);
+        const currentProvider = providers.find(
+          (provider: ProviderItem) => provider.id === currentProviderId,
+        );
         if (currentProvider?.isEnabled) return currentProviderId;
       }
 
       const defaultProviderId = preferencesQuery.data?.defaultProviderId;
       if (defaultProviderId) {
         const defaultProvider = providers.find(
-          (provider) => provider.id === defaultProviderId && provider.isEnabled,
+          (provider: ProviderItem) => provider.id === defaultProviderId && provider.isEnabled,
         );
         if (defaultProvider) return defaultProvider.id;
       }

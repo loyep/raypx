@@ -83,6 +83,12 @@ References:
 - `docs/ARCHITECTURE.md`
 - `docs/RFC_PROCESS.md`
 
+Platform boundary notes:
+
+- Use `@raypx/core/logger` for shared logging.
+- Use `@raypx/observability` only when you need structured logging, metrics, or Sentry-style integrations.
+- Keep `@raypx/telemetry` focused on tracing/exporter setup rather than general logging concerns.
+
 ## Development Workflow
 
 ### Creating a New Feature
@@ -130,6 +136,12 @@ Workspace test policy:
 - Put test files under `tests/`.
 - If you add a workspace `test` script, classify that workspace in [`tooling/forge/repo-policy.ts`](./tooling/forge/repo-policy.ts).
 - `pnpm run doctor` will fail if test layout or policy classification drifts.
+
+Workspace operability policy:
+
+- Every workspace must be classified in [`tooling/forge/repo-policy.ts`](./tooling/forge/repo-policy.ts) as `buildable` or `sourceOnly`.
+- Only `buildable` workspaces should carry a `build` script.
+- `pnpm run doctor` will fail if a workspace is unclassified or a `buildable` workspace is missing its `build` script.
 
 ### Database Changes
 

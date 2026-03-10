@@ -1,4 +1,8 @@
-import { type ConsolaInstance, createConsola } from "consola";
+import {
+  type LogLevel as CoreLogLevel,
+  createLogger as createBaseLogger,
+  type LoggerPort,
+} from "@raypx/core/logger";
 
 import type { LogContext, LogEntry, LogLevel } from "./types";
 
@@ -6,7 +10,7 @@ import type { LogContext, LogEntry, LogLevel } from "./types";
  * Structured logger with context support
  */
 export class StructuredLogger {
-  private logger: ConsolaInstance;
+  private logger: LoggerPort;
   private defaultContext: LogContext;
   private serviceName: string;
 
@@ -18,23 +22,19 @@ export class StructuredLogger {
     this.serviceName = options.serviceName;
     this.defaultContext = options.context ?? {};
 
-    const consolaLevel = this.mapLogLevel(options.level ?? "info");
-
-    this.logger = createConsola({
-      level: consolaLevel,
-      formatOptions: {
-        colors: true,
-        date: true,
-        compact: false,
-      },
+    this.logger = createBaseLogger({
+      level: this.mapLogLevel(options.level ?? "info"),
+      compact: false,
+      timestamp: true,
+      colors: true,
     });
   }
 
   /**
    * Map log level to consola level
    */
-  private mapLogLevel(level: LogLevel): number {
-    const levels: Record<LogLevel, number> = {
+  private mapLogLevel(level: LogLevel): CoreLogLevel {
+    const levels: Record<LogLevel, CoreLogLevel> = {
       trace: 5,
       debug: 4,
       info: 3,
@@ -183,7 +183,7 @@ export class StructuredLogger {
   /**
    * Create a tagged sub-logger
    */
-  withTag(tag: string): ConsolaInstance {
+  withTag(tag: string): LoggerPort {
     return this.logger.withTag(tag);
   }
 }
@@ -191,7 +191,7 @@ export class StructuredLogger {
 /**
  * Create a logger from environment
  */
-export function createLogger(
+export function createStructuredLogger(
   serviceName: string = process.env.SERVICE_NAME ?? "raypx",
   context?: LogContext,
 ): StructuredLogger {
@@ -211,4 +211,8 @@ export function createLogger(
 /**
  * Default logger instance
  */
-export const logger = createLogger();
+export const structuredLogger = createStructuredLogger();
+
+// Backward-compatible aliases. Prefer the structured names from this package.
+export const logger = structuredLogger;
+export const createLogger = createStructuredLogger;
