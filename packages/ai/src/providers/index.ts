@@ -1,4 +1,6 @@
 import { createAlibaba } from "@ai-sdk/alibaba";
+import { createAnthropic } from "@ai-sdk/anthropic";
+import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import type { AIProviderDriver } from "@raypx/shared/ai";
 import { createAIServiceError } from "../errors";
@@ -11,13 +13,15 @@ const DEFAULT_GOOGLE_BASE_URL = "https://generativelanguage.googleapis.com/v1bet
 
 type OpenAICompatibleModel = ReturnType<ReturnType<typeof createOpenAICompatible>>;
 type AlibabaModel = ReturnType<ReturnType<typeof createAlibaba>>;
+type AnthropicModel = ReturnType<ReturnType<typeof createAnthropic>>;
+type GoogleModel = ReturnType<ReturnType<typeof createGoogleGenerativeAI>>;
 
 export type ChatRuntime = {
   providerId: string;
   providerName: string;
   providerDriver: AIProviderDriver;
   displayModel: string;
-  model: OpenAICompatibleModel | AlibabaModel;
+  model: OpenAICompatibleModel | AlibabaModel | AnthropicModel | GoogleModel;
 };
 
 export type ProviderRuntimeConfig = {
@@ -141,6 +145,38 @@ export function getChatRuntime(
     const client = createAlibaba({
       apiKey,
       baseURL: resolveBaseUrl(config),
+    });
+
+    return {
+      providerId: config.id,
+      providerName: config.name,
+      providerDriver: config.driver,
+      displayModel: `${config.driver}/${modelName}`,
+      model: client(modelName),
+    };
+  }
+
+  if (config.driver === "anthropic") {
+    const client = createAnthropic({
+      apiKey,
+      baseURL: resolveBaseUrl(config),
+      name: config.driver,
+    });
+
+    return {
+      providerId: config.id,
+      providerName: config.name,
+      providerDriver: config.driver,
+      displayModel: `${config.driver}/${modelName}`,
+      model: client(modelName),
+    };
+  }
+
+  if (config.driver === "google") {
+    const client = createGoogleGenerativeAI({
+      apiKey,
+      baseURL: resolveBaseUrl(config),
+      name: config.driver,
     });
 
     return {

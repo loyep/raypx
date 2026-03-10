@@ -30,9 +30,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@raypx/design-system/components/ui/dropdown-menu";
+import {
+  Field,
+  FieldContent,
+  FieldError,
+  FieldLabel,
+} from "@raypx/design-system/components/ui/field";
 import { Input } from "@raypx/design-system/components/ui/input";
 import { Skeleton } from "@raypx/design-system/components/ui/skeleton";
 import { IconDots } from "@tabler/icons-react";
+import { useForm } from "@tanstack/react-form";
 import { useMemo, useState } from "react";
 
 type ConversationListItem = {
@@ -64,7 +71,6 @@ export function HistoryPanel({
 }: HistoryPanelProps) {
   const [renamingConversationId, setRenamingConversationId] = useState<string | null>(null);
   const [deletingConversationId, setDeletingConversationId] = useState<string | null>(null);
-  const [renameTitle, setRenameTitle] = useState("");
   const renamingConversation = useMemo(
     () => conversations.find((item) => item.id === renamingConversationId) ?? null,
     [conversations, renamingConversationId],
@@ -73,6 +79,23 @@ export function HistoryPanel({
     () => conversations.find((item) => item.id === deletingConversationId) ?? null,
     [conversations, deletingConversationId],
   );
+  const renameForm = useForm({
+    defaultValues: {
+      title: "",
+    },
+    onSubmit: ({ value }) => {
+      if (!renamingConversation) return;
+      const title = value.title.trim();
+      if (!title || title === renamingConversation.title) {
+        setRenamingConversationId(null);
+        renameForm.reset();
+        return;
+      }
+      onRenameConversation(renamingConversation.id, title);
+      setRenamingConversationId(null);
+      renameForm.reset();
+    },
+  });
 
   return (
     <>
@@ -141,7 +164,7 @@ export function HistoryPanel({
                         disabled={isBusy}
                         onClick={() => {
                           setRenamingConversationId(item.id);
-                          setRenameTitle(item.title);
+                          renameForm.reset({ title: item.title });
                         }}
                       >
                         Rename
@@ -171,7 +194,7 @@ export function HistoryPanel({
         onOpenChange={(open) => {
           if (open) return;
           setRenamingConversationId(null);
-          setRenameTitle("");
+          renameForm.reset();
         }}
         open={Boolean(renamingConversationId)}
       >
@@ -184,41 +207,65 @@ export function HistoryPanel({
             className="space-y-4"
             onSubmit={(event) => {
               event.preventDefault();
-              if (!renamingConversation) return;
-              const title = renameTitle.trim();
-              if (!title || title === renamingConversation.title) {
-                setRenamingConversationId(null);
-                setRenameTitle("");
-                return;
-              }
-              onRenameConversation(renamingConversation.id, title);
-              setRenamingConversationId(null);
-              setRenameTitle("");
+              void renameForm.handleSubmit();
             }}
           >
-            <Input
-              autoFocus
-              maxLength={160}
-              onChange={(event) => {
-                setRenameTitle(event.target.value);
+            <renameForm.Field
+              name="title"
+              validators={{
+                onChange: ({ value }) =>
+                  value.trim() ? undefined : "Conversation title is required.",
               }}
-              placeholder="Conversation title"
-              value={renameTitle}
-            />
+            >
+              {(field) => {
+                const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+
+                return (
+                  <Field data-invalid={isInvalid}>
+                    <FieldLabel htmlFor="rename-conversation-title">Title</FieldLabel>
+                    <FieldContent>
+                      <Input
+                        aria-invalid={isInvalid}
+                        autoFocus
+                        id="rename-conversation-title"
+                        maxLength={160}
+                        onBlur={field.handleBlur}
+                        onChange={(event) => field.handleChange(event.target.value)}
+                        placeholder="Conversation title"
+                        value={field.state.value}
+                      />
+                      {isInvalid ? (
+                        <FieldError
+                          errors={field.state.meta.errors.map((error) =>
+                            typeof error === "string" ? { message: error } : undefined,
+                          )}
+                        />
+                      ) : null}
+                    </FieldContent>
+                  </Field>
+                );
+              }}
+            </renameForm.Field>
             <DialogFooter>
               <Button
                 onClick={() => {
                   setRenamingConversationId(null);
-                  setRenameTitle("");
+                  renameForm.reset();
                 }}
                 type="button"
                 variant="outline"
               >
                 Cancel
               </Button>
-              <Button disabled={!renameTitle.trim()} type="submit">
-                Save
-              </Button>
+              <renameForm.Subscribe
+                selector={(state) => [state.values.title.trim(), state.isSubmitting] as const}
+              >
+                {([title, isSubmitting]) => (
+                  <Button disabled={!title || isSubmitting} type="submit">
+                    Save
+                  </Button>
+                )}
+              </renameForm.Subscribe>
             </DialogFooter>
           </form>
         </DialogContent>

@@ -18,10 +18,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@raypx/design-system/components/ui/card";
+import {
+  Field,
+  FieldContent,
+  FieldError,
+  FieldLabel,
+} from "@raypx/design-system/components/ui/field";
 import { Input } from "@raypx/design-system/components/ui/input";
-import { Label } from "@raypx/design-system/components/ui/label";
 import { generatePageHead } from "@raypx/seo";
 import { IconEye, IconEyeOff, IconTrash } from "@tabler/icons-react";
+import { useForm } from "@tanstack/react-form";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
@@ -53,42 +59,44 @@ function SettingsAccountPage() {
   const navigate = useNavigate();
   const { hasPassword } = Route.useLoaderData();
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
+  const form = useForm({
+    defaultValues: {
+      password: "",
+    },
+    onSubmit: async ({ value }) => {
+      const password = value.password.trim();
+      if (hasPassword && !password) {
+        setSubmitError("Please enter your password to confirm");
+        return;
+      }
+
+      setSubmitError(null);
+      try {
+        const { error } = await authClient.deleteUser({
+          callbackURL: "/",
+          ...(hasPassword ? { password } : {}),
+        });
+        if (error) {
+          setSubmitError(error.message ?? "Failed to delete account");
+          return;
+        }
+        await signOut();
+        navigate({ to: "/" });
+      } catch (error) {
+        setSubmitError(error instanceof Error ? error.message : "An unexpected error occurred");
+      }
+    },
+  });
 
   function handleDialogOpenChange(open: boolean) {
     setDialogOpen(open);
     if (!open) {
-      setPassword("");
+      form.reset();
       setShowPassword(false);
-      setError(null);
-    }
-  }
-
-  async function handleDeleteAccount() {
-    if (hasPassword && !password.trim()) {
-      setError("Please enter your password to confirm");
-      return;
-    }
-    setIsDeleting(true);
-    setError(null);
-    try {
-      const { error: err } = await authClient.deleteUser({
-        callbackURL: "/",
-        ...(hasPassword && { password: password.trim() }),
-      });
-      if (err) {
-        setError(err.message ?? "Failed to delete account");
-        return;
-      }
-      await signOut();
-      navigate({ to: "/" });
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "An unexpected error occurred");
-    } finally {
-      setIsDeleting(false);
+      setSubmitError(null);
     }
   }
 
@@ -108,15 +116,15 @@ function SettingsAccountPage() {
           <AlertDialog onOpenChange={handleDialogOpenChange} open={dialogOpen}>
             <Button
               className="text-destructive"
-              disabled={isDeleting}
+              disabled={form.state.isSubmitting}
               onClick={() => setDialogOpen(true)}
               variant="outline"
             >
               <IconTrash className="mr-2 size-4" />
-              {isDeleting ? "Processing..." : "Delete account"}
+              {form.state.isSubmitting ? "Processing..." : "Delete account"}
             </Button>
             <AlertDialogContent className="max-w-md">
-              {error && <p className="text-destructive text-sm">{error}</p>}
+              {submitError ? <p className="text-destructive text-sm">{submitError}</p> : null}
               <AlertDialogHeader>
                 <AlertDialogTitle>Confirm account deletion?</AlertDialogTitle>
                 <AlertDialogDescription>
@@ -126,43 +134,78 @@ function SettingsAccountPage() {
                 </AlertDialogDescription>
               </AlertDialogHeader>
               {hasPassword && (
-                <div className="space-y-2 py-2">
-                  <Label htmlFor="delete-password">Password</Label>
-                  <div className="relative">
-                    <Input
-                      autoComplete="current-password"
-                      className="h-11 pr-10"
-                      id="delete-password"
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="Enter your password"
-                      type={showPassword ? "text" : "password"}
-                      value={password}
-                    />
-                    <button
-                      aria-label={showPassword ? "Hide password" : "Show password"}
-                      className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
-                      onClick={() => setShowPassword(!showPassword)}
-                      tabIndex={-1}
-                      type="button"
-                    >
-                      {showPassword ? (
-                        <IconEyeOff className="size-4" />
-                      ) : (
-                        <IconEye className="size-4" />
-                      )}
-                    </button>
-                  </div>
-                </div>
+                <form.Field
+                  name="password"
+                  validators={{
+                    onSubmit: ({ value }) =>
+                      value.trim() ? undefined : "Please enter your password to confirm",
+                  }}
+                >
+                  {(field) => {
+                    const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+                    const errors = field.state.meta.errors
+                      .map((error) => (typeof error === "string" ? { message: error } : undefined))
+                      .filter(Boolean);
+
+                    return (
+                      <Field className="py-2" data-invalid={isInvalid}>
+                        <FieldLabel htmlFor="delete-password">Password</FieldLabel>
+                        <FieldContent>
+                          <div className="relative">
+                            <Input
+                              aria-invalid={isInvalid}
+                              autoComplete="current-password"
+                              className="h-11 pr-10"
+                              id="delete-password"
+                              onBlur={field.handleBlur}
+                              onChange={(event) => {
+                                if (submitError) {
+                                  setSubmitError(null);
+                                }
+                                field.handleChange(event.target.value);
+                              }}
+                              placeholder="Enter your password"
+                              type={showPassword ? "text" : "password"}
+                              value={field.state.value}
+                            />
+                            <button
+                              aria-label={showPassword ? "Hide password" : "Show password"}
+                              className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
+                              onClick={() => setShowPassword((value) => !value)}
+                              tabIndex={-1}
+                              type="button"
+                            >
+                              {showPassword ? (
+                                <IconEyeOff className="size-4" />
+                              ) : (
+                                <IconEye className="size-4" />
+                              )}
+                            </button>
+                          </div>
+                          {isInvalid ? <FieldError errors={errors} /> : null}
+                        </FieldContent>
+                      </Field>
+                    );
+                  }}
+                </form.Field>
               )}
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <Button
-                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                  disabled={isDeleting || (hasPassword && !password.trim())}
-                  onClick={handleDeleteAccount}
+                <form.Subscribe
+                  selector={(state) =>
+                    [state.isSubmitting, hasPassword ? state.values.password.trim() : "ok"] as const
+                  }
                 >
-                  {isDeleting ? "Processing..." : "Confirm deletion"}
-                </Button>
+                  {([isSubmitting, password]) => (
+                    <Button
+                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                      disabled={isSubmitting || (hasPassword && !password)}
+                      onClick={() => void form.handleSubmit()}
+                    >
+                      {isSubmitting ? "Processing..." : "Confirm deletion"}
+                    </Button>
+                  )}
+                </form.Subscribe>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>

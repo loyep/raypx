@@ -59,12 +59,15 @@ export const auth = betterAuth({
 ## Client Setup
 
 ```typescript
-// apps/web/src/lib/auth-client.ts
-import { createAuthClient } from "better-auth/react"
-
-export const authClient = createAuthClient({
-  baseURL: import.meta.env.VITE_API_URL,
-})
+// apps/web/src/lib/auth.ts
+export {
+  authClient,
+  getSession,
+  signIn,
+  signOut,
+  signUp,
+  useSession,
+} from "@raypx/auth";
 ```
 
 ## Usage Examples

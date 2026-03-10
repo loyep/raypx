@@ -28,6 +28,7 @@
     "@raypx/stripe": "workspace:*",
     "@tabler/icons-react": "^3.39.0",
     "@tanstack/react-query": "catalog:",
+    "@tanstack/react-form": "^1.25.0",
     "@tanstack/react-router": "catalog:",
     "@tanstack/react-start": "catalog:",
     "@tanstack/react-table": "^8.21.3",

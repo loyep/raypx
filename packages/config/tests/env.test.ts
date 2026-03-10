@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import { z } from "zod";
 
 import { createEnv, DEFAULT_CLIENT_PREFIX } from "../src/env";
+import { aiEnv } from "../src/envs/ai";
 import { analyticsEnv } from "../src/envs/analytics";
 import { authEnv } from "../src/envs/auth";
 import { databaseEnv } from "../src/envs/database";
@@ -56,5 +57,13 @@ describe("config env schemas", () => {
     vi.stubEnv("DATABASE_URL", "postgres://db/raypx");
 
     expect(databaseEnv.server.VECTOR_URL.parse(undefined)).toBe("postgres://db/raypx");
+  });
+
+  it("keeps AI runtime env limited to shared runtime controls", () => {
+    expect(aiEnv.server.AI_CACHE_TTL.parse(undefined)).toBe(3600);
+    expect(aiEnv.server.AI_RATE_LIMIT_REQUESTS.parse(undefined)).toBe(60);
+    expect(aiEnv.server.AI_RATE_LIMIT_TOKENS.parse(undefined)).toBe(100000);
+    expect(aiEnv.server.AI_MAX_TOKENS.parse(undefined)).toBe(4096);
+    expect(aiEnv.server.AI_TEMPERATURE.parse(undefined)).toBe(0.7);
   });
 });

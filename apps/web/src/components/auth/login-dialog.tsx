@@ -1,5 +1,4 @@
 import { Button } from "@raypx/design-system/components/ui/button";
-import { Checkbox } from "@raypx/design-system/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -7,14 +6,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@raypx/design-system/components/ui/dialog";
-import { Input } from "@raypx/design-system/components/ui/input";
-import { Label } from "@raypx/design-system/components/ui/label";
 import { Separator } from "@raypx/design-system/components/ui/separator";
 import { Spinner } from "@raypx/design-system/components/ui/spinner";
-import { IconEye, IconEyeOff } from "@tabler/icons-react";
 import { Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { useState } from "react";
-import { OAuthButton, OAuthButtonGroup, signIn } from "@/lib/auth";
+import { EmailSignInForm } from "@/components/auth/email-sign-in-form";
+import { OAuthButton, OAuthButtonGroup } from "@/lib/auth";
 
 interface LoginDialogProps {
   open: boolean;
@@ -55,38 +52,7 @@ function GitHubBrandIcon({ className }: { className?: string }) {
 export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
   const navigate = useNavigate();
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-
-  async function handleEmailSignIn(e: React.FormEvent) {
-    e.preventDefault();
-    setError(null);
-    setIsLoading(true);
-
-    try {
-      const result = await signIn.email({
-        email,
-        password,
-        rememberMe,
-      });
-
-      if (result.error) {
-        setError(result.error.message || "Failed to sign in");
-        return;
-      }
-
-      onOpenChange(false);
-      navigate({ to: "/dashboard" });
-    } catch {
-      setError("An unexpected error occurred. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  }
+  const [, setError] = useState<string | null>(null);
 
   return (
     <Dialog onOpenChange={onOpenChange} open={open}>
@@ -153,76 +119,14 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
             </div>
           </div>
 
-          <form className="space-y-2.5" onSubmit={handleEmailSignIn}>
-            {error && (
-              <div className="rounded-lg bg-destructive/10 p-2 text-destructive text-sm">
-                {error}
-              </div>
-            )}
-
-            <div className="space-y-1">
-              <Label htmlFor="login-email">Email</Label>
-              <Input
-                autoComplete="email"
-                id="login-email"
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="name@example.com"
-                required
-                type="email"
-                value={email}
-              />
-            </div>
-
-            <div className="space-y-1">
-              <Label htmlFor="login-password">Password</Label>
-              <div className="relative">
-                <Input
-                  autoComplete="current-password"
-                  className="pr-10"
-                  id="login-password"
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter your password"
-                  required
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                />
-                <button
-                  className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
-                  onClick={() => setShowPassword((value) => !value)}
-                  tabIndex={-1}
-                  type="button"
-                >
-                  {showPassword ? (
-                    <IconEyeOff className="size-4" />
-                  ) : (
-                    <IconEye className="size-4" />
-                  )}
-                </button>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <Checkbox
-                checked={rememberMe}
-                id="login-remember"
-                onCheckedChange={(checked) => setRememberMe(checked === true)}
-              />
-              <Label className="cursor-pointer font-normal text-sm" htmlFor="login-remember">
-                Remember me
-              </Label>
-            </div>
-
-            <Button className="h-9 w-full text-sm" disabled={isLoading} type="submit">
-              {isLoading ? (
-                <>
-                  <Spinner className="mr-2" />
-                  Signing in...
-                </>
-              ) : (
-                "Sign in"
-              )}
-            </Button>
-          </form>
+          <EmailSignInForm
+            formId="login-dialog"
+            onSuccess={async () => {
+              onOpenChange(false);
+              await navigate({ to: "/dashboard" });
+            }}
+            submitButtonClassName="h-9 w-full text-sm"
+          />
 
           <p className="pt-0.5 text-center text-muted-foreground text-sm">
             Don't have an account?{" "}

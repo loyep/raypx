@@ -1,16 +1,14 @@
 import { Button } from "@raypx/design-system/components/ui/button";
-import { Checkbox } from "@raypx/design-system/components/ui/checkbox";
-import { Input } from "@raypx/design-system/components/ui/input";
-import { Label } from "@raypx/design-system/components/ui/label";
 import { Separator } from "@raypx/design-system/components/ui/separator";
 import { Spinner } from "@raypx/design-system/components/ui/spinner";
 import { generatePageHead } from "@raypx/seo";
-import { IconBrandGithub, IconBrandGoogle, IconEye, IconEyeOff } from "@tabler/icons-react";
+import { IconBrandGithub, IconBrandGoogle } from "@tabler/icons-react";
 import { createFileRoute, Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { useState } from "react";
 import { AuthLayout } from "@/components/auth";
+import { EmailSignInForm } from "@/components/auth/email-sign-in-form";
 import { siteConfig } from "@/config/site";
-import { OAuthButton, OAuthButtonGroup, signIn } from "@/lib/auth";
+import { OAuthButton, OAuthButtonGroup } from "@/lib/auth";
 
 export const Route = createFileRoute("/(auth)/login")({
   component: LoginPage,
@@ -20,36 +18,7 @@ export const Route = createFileRoute("/(auth)/login")({
 function LoginPage() {
   const navigate = useNavigate();
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-
-  async function handleEmailSignIn(e: React.FormEvent) {
-    e.preventDefault();
-    setError(null);
-    setIsLoading(true);
-
-    try {
-      const result = await signIn.email({
-        email,
-        password,
-        rememberMe,
-      });
-
-      if (result.error) {
-        setError(result.error.message || "Failed to sign in");
-      } else {
-        navigate({ to: "/dashboard" });
-      }
-    } catch {
-      setError("An unexpected error occurred. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  }
+  const [, setError] = useState<string | null>(null);
 
   return (
     <AuthLayout subtitle="Sign in to your account to continue" title="Welcome back">
@@ -112,75 +81,12 @@ function LoginPage() {
         </div>
 
         {/* Email/Password Form */}
-        <form className="space-y-4" onSubmit={handleEmailSignIn}>
-          {error && (
-            <div className="slide-in-from-top-2 animate-in rounded-lg bg-destructive/10 p-3 text-destructive text-sm duration-200">
-              {error}
-            </div>
-          )}
-
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              autoComplete="email"
-              className="h-11"
-              id="email"
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="name@example.com"
-              required
-              type="email"
-              value={email}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
-            <div className="relative">
-              <Input
-                autoComplete="current-password"
-                className="h-11 pr-10"
-                id="password"
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your password"
-                required
-                type={showPassword ? "text" : "password"}
-                value={password}
-              />
-              <button
-                className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
-                onClick={() => setShowPassword(!showPassword)}
-                tabIndex={-1}
-                type="button"
-              >
-                {showPassword ? <IconEyeOff className="size-4" /> : <IconEye className="size-4" />}
-              </button>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Checkbox
-                checked={rememberMe}
-                id="remember"
-                onCheckedChange={(checked) => setRememberMe(checked === true)}
-              />
-              <Label className="cursor-pointer font-normal text-sm" htmlFor="remember">
-                Remember me
-              </Label>
-            </div>
-          </div>
-
-          <Button className="h-11 w-full" disabled={isLoading} type="submit">
-            {isLoading ? (
-              <>
-                <Spinner className="mr-2" />
-                Signing in...
-              </>
-            ) : (
-              "Sign in"
-            )}
-          </Button>
-        </form>
+        <EmailSignInForm
+          formId="login-page"
+          inputClassName="h-11"
+          onSuccess={() => navigate({ to: "/dashboard" })}
+          submitButtonClassName="h-11 w-full"
+        />
 
         <div className="flex flex-col gap-4 border-t pt-6">
           <p className="text-center text-muted-foreground text-sm">

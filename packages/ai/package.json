@@ -18,6 +18,8 @@
   },
   "dependencies": {
     "@ai-sdk/alibaba": "^1.0.10",
+    "@ai-sdk/anthropic": "^2.0.0",
+    "@ai-sdk/google": "^2.0.0",
     "@ai-sdk/openai-compatible": "^2.0.35",
     "@raypx/config": "workspace:*",
     "@raypx/core": "workspace:*",

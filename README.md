@@ -14,7 +14,7 @@ Raypx is an open-source SaaS template monorepo. It is built for fast product shi
 
 - Single API layer: `oRPC` only.
 - Browser-facing modules access backend capabilities through RPC or client-safe wrappers.
-- AI is provider-pluggable (default path: Qwen, optional Zhipu).
+- AI is provider-pluggable through database-managed provider records and encrypted credentials.
 - Package boundaries are enforced by dependency layers.
 - `@raypx/core/logger` is the shared logger entrypoint.
 - `@raypx/observability` adds structured logging, metrics, and Sentry-style integrations on top of core primitives.

@@ -14,26 +14,23 @@ oRPC is a type-safe RPC framework for TypeScript. It provides end-to-end type sa
 ### Defining Procedures
 
 ```typescript
-// packages/rpc/src/routers/user.ts
+// packages/rpc/src/routers/dashboard.ts
 import { o } from "../orpc"
 import { z } from "zod"
 
-export const userRouter = {
+export const dashboardRouter = {
   // Query (read operation)
-  getById: o
-    .input(z.object({ id: z.string() }))
-    .output(z.object({ id: z.string(), name: z.string(), email: z.string() }))
+  getStats: o
+    .input(z.object({ range: z.enum(["7d", "30d"]).default("7d") }))
     .handler(async ({ input }) => {
-      const user = await db.user.findUnique({ where: { id: input.id } })
-      if (!user) throw new Error("User not found")
-      return user
+      return dashboardService.getStats(input)
     }),
 
   // Mutation (write operation)
-  create: o
-    .input(z.object({ name: z.string(), email: z.string().email() }))
+  refresh: o
+    .input(z.object({ scope: z.enum(["overview", "billing"]) }))
     .handler(async ({ input }) => {
-      return db.user.create({ data: input })
+      return dashboardService.refresh(input)
     }),
 }
 ```
@@ -41,13 +38,15 @@ export const userRouter = {
 ### Router Composition
 
 ```typescript
-// packages/rpc/src/index.ts
-import { userRouter } from "./routers/user"
-import { postRouter } from "./routers/post"
+// packages/rpc/src/routers/index.ts
+import { aiRouter } from "../modules/ai/router"
+import { sessionRouter } from "../modules/session/router"
+import { systemRouter } from "../modules/system/router"
 
 export const appRouter = {
-  user: userRouter,
-  post: postRouter,
+  system: systemRouter,
+  session: sessionRouter,
+  ai: aiRouter,
 }
 
 export type AppRouter = typeof appRouter
