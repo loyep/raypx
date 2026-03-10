@@ -7,54 +7,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@raypx/design-system/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@raypx/design-system/components/ui/dialog";
-import { Input } from "@raypx/design-system/components/ui/input";
-import { Label } from "@raypx/design-system/components/ui/label";
 import { toast } from "@raypx/design-system/components/ui/toast";
-import { AI_PROVIDER_DRIVERS, type AIProviderDriver } from "@raypx/shared/ai";
 import { IconPencil, IconPlus, IconTrash } from "@tabler/icons-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+import {
+  AIProviderFormDialog,
+  type AIProviderFormValues,
+  emptyAIProviderForm,
+} from "@/components/ai/provider-dialog";
 import { client } from "@/utils/orpc";
 
 type ProviderItem = Awaited<
   ReturnType<typeof client.ai.system.providers.list>
 >["data"]["providers"][number];
-
-type FormState = {
-  mode: "create" | "edit";
-  providerId?: string;
-  name: string;
-  driver: AIProviderDriver;
-  baseUrl: string;
-  defaultModel: string;
-  modelsText: string;
-  apiKey: string;
-};
-
-const emptyForm: FormState = {
-  mode: "create",
-  name: "",
-  driver: "openai",
-  baseUrl: "",
-  defaultModel: "",
-  modelsText: "",
-  apiKey: "",
-};
-
-const RECOMMENDED_MODELS: Record<AIProviderDriver, string[]> = {
-  openai: ["gpt-4o-mini", "gpt-4.1-mini", "gpt-4.1"],
-  anthropic: ["claude-3-5-haiku-latest", "claude-3-5-sonnet-latest"],
-  google: ["gemini-2.0-flash", "gemini-1.5-pro"],
-  alibaba: ["qwen-max", "qwen-plus", "qwen-turbo"],
-  zhipu: ["glm-4-plus", "glm-4-air", "glm-4-flash"],
-  "azure-openai": ["gpt-4o-mini", "gpt-4.1-mini", "gpt-4.1"],
-};
 
 function parseModels(modelsText: string): string[] {
   const seen = new Set<string>();
@@ -70,14 +36,10 @@ function parseModels(modelsText: string): string[] {
   return models;
 }
 
-function toRecommendedModelText(driver: AIProviderDriver): string {
-  return RECOMMENDED_MODELS[driver].join(", ");
-}
-
 export function AdminAIProvidersPage() {
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [form, setForm] = useState<FormState>(emptyForm);
+  const [form, setForm] = useState<AIProviderFormValues>(emptyAIProviderForm);
 
   const providersQuery = useQuery({
     queryKey: ["adminAiProviders", "list"],
@@ -89,19 +51,6 @@ export function AdminAIProvidersPage() {
     () => [...providers].sort((a, b) => Number(b.isDefault) - Number(a.isDefault)),
     [providers],
   );
-  const modelOptions = useMemo(() => {
-    const options = parseModels(form.modelsText);
-    const defaultModel = form.defaultModel.trim();
-    if (!defaultModel || options.includes(defaultModel)) {
-      return options;
-    }
-    return [defaultModel, ...options];
-  }, [form.defaultModel, form.modelsText]);
-
-  useEffect(() => {
-    if (form.defaultModel.trim() || modelOptions.length === 0) return;
-    setForm((prev) => ({ ...prev, defaultModel: modelOptions[0] ?? prev.defaultModel }));
-  }, [form.defaultModel, modelOptions]);
 
   const refresh = async () => {
     await queryClient.invalidateQueries({ queryKey: ["adminAiProviders"] });
@@ -109,26 +58,26 @@ export function AdminAIProvidersPage() {
   };
 
   const saveMutation = useMutation({
-    mutationFn: async () => {
-      if (form.mode === "create") {
+    mutationFn: async (values: AIProviderFormValues) => {
+      if (values.mode === "create") {
         const response = await client.ai.system.providers.create({
-          name: form.name.trim(),
-          driver: form.driver,
-          baseUrl: form.baseUrl.trim() || null,
-          defaultModel: form.defaultModel.trim(),
-          models: parseModels(form.modelsText),
+          name: values.name.trim(),
+          driver: values.driver,
+          baseUrl: values.baseUrl.trim() || null,
+          defaultModel: values.defaultModel.trim(),
+          models: parseModels(values.modelsText),
           isEnabled: true,
           setDefault: providers.length === 0,
         });
 
-        if (form.apiKey.trim()) {
+        if (values.apiKey.trim()) {
           const created = response.data.providers.find(
-            (item: ProviderItem) => item.name === form.name.trim(),
+            (item: ProviderItem) => item.name === values.name.trim(),
           );
           if (created) {
             await client.ai.system.providers.setSecret({
               providerId: created.id,
-              apiKey: form.apiKey.trim(),
+              apiKey: values.apiKey.trim(),
             });
           }
         }
@@ -136,28 +85,32 @@ export function AdminAIProvidersPage() {
         return;
       }
 
-      if (!form.providerId) throw new Error("providerId is required");
+      if (!values.providerId) {
+        throw new Error("providerId is required");
+      }
 
       await client.ai.system.providers.update({
-        providerId: form.providerId,
-        name: form.name.trim(),
-        driver: form.driver,
-        baseUrl: form.baseUrl.trim() || null,
-        defaultModel: form.defaultModel.trim(),
-        models: parseModels(form.modelsText),
+        providerId: values.providerId,
+        name: values.name.trim(),
+        driver: values.driver,
+        baseUrl: values.baseUrl.trim() || null,
+        defaultModel: values.defaultModel.trim(),
+        models: parseModels(values.modelsText),
       });
 
-      if (form.apiKey.trim()) {
+      if (values.apiKey.trim()) {
         await client.ai.system.providers.setSecret({
-          providerId: form.providerId,
-          apiKey: form.apiKey.trim(),
+          providerId: values.providerId,
+          apiKey: values.apiKey.trim(),
         });
       }
     },
-    onSuccess: async () => {
-      toast.success(form.mode === "create" ? "System provider created" : "System provider updated");
+    onSuccess: async (_, values) => {
+      toast.success(
+        values.mode === "create" ? "System provider created" : "System provider updated",
+      );
       setDialogOpen(false);
-      setForm(emptyForm);
+      setForm(emptyAIProviderForm);
       await refresh();
     },
     onError: (error) => {
@@ -172,7 +125,7 @@ export function AdminAIProvidersPage() {
   });
 
   const openCreateDialog = () => {
-    setForm(emptyForm);
+    setForm(emptyAIProviderForm);
     setDialogOpen(true);
   };
 
@@ -298,111 +251,15 @@ export function AdminAIProvidersPage() {
         </CardContent>
       </Card>
 
-      <Dialog onOpenChange={setDialogOpen} open={dialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{form.mode === "create" ? "Add Provider" : "Edit Provider"}</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-3">
-            <div className="space-y-1">
-              <Label>Name</Label>
-              <Input
-                onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))}
-                value={form.name}
-              />
-            </div>
-            <div className="space-y-1">
-              <Label>Driver</Label>
-              <select
-                className="h-9 w-full rounded-md border bg-background px-3 text-sm"
-                onChange={(e) =>
-                  setForm((prev) => ({ ...prev, driver: e.target.value as AIProviderDriver }))
-                }
-                value={form.driver}
-              >
-                {AI_PROVIDER_DRIVERS.map((driver) => (
-                  <option key={driver} value={driver}>
-                    {driver}
-                  </option>
-                ))}
-              </select>
-              <div className="pt-1">
-                <Button
-                  onClick={() =>
-                    setForm((prev) => {
-                      const modelsText = toRecommendedModelText(prev.driver);
-                      const models = parseModels(modelsText);
-                      return {
-                        ...prev,
-                        modelsText,
-                        defaultModel: prev.defaultModel.trim() || models[0] || prev.defaultModel,
-                      };
-                    })
-                  }
-                  size="sm"
-                  type="button"
-                  variant="outline"
-                >
-                  Load Recommended Models
-                </Button>
-              </div>
-            </div>
-            <div className="space-y-1">
-              <Label>Base URL</Label>
-              <Input
-                onChange={(e) => setForm((prev) => ({ ...prev, baseUrl: e.target.value }))}
-                placeholder="https://..."
-                value={form.baseUrl}
-              />
-            </div>
-            <div className="space-y-1">
-              <Label>Default Model</Label>
-              {modelOptions.length > 0 ? (
-                <select
-                  className="h-9 w-full rounded-md border bg-background px-3 text-sm"
-                  onChange={(e) => setForm((prev) => ({ ...prev, defaultModel: e.target.value }))}
-                  value={form.defaultModel}
-                >
-                  {modelOptions.map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
-              ) : (
-                <Input
-                  onChange={(e) => setForm((prev) => ({ ...prev, defaultModel: e.target.value }))}
-                  placeholder="Type a model or load recommended models first"
-                  value={form.defaultModel}
-                />
-              )}
-            </div>
-            <div className="space-y-1">
-              <Label>Models (comma separated)</Label>
-              <Input
-                onChange={(e) => setForm((prev) => ({ ...prev, modelsText: e.target.value }))}
-                placeholder="gpt-4o-mini, gpt-4.1-mini"
-                value={form.modelsText}
-              />
-            </div>
-            <div className="space-y-1">
-              <Label>API Key {form.mode === "edit" ? "(optional)" : ""}</Label>
-              <Input
-                onChange={(e) => setForm((prev) => ({ ...prev, apiKey: e.target.value }))}
-                type="password"
-                value={form.apiKey}
-              />
-            </div>
-            <Button
-              className="w-full"
-              disabled={saveMutation.isPending}
-              onClick={() => saveMutation.mutate()}
-            >
-              {saveMutation.isPending ? "Saving..." : "Save"}
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <AIProviderFormDialog
+        initialValues={form}
+        onOpenChange={setDialogOpen}
+        onSubmit={async (values) => {
+          await saveMutation.mutateAsync(values);
+        }}
+        open={dialogOpen}
+        title={form.mode === "create" ? "Add Provider" : "Edit Provider"}
+      />
     </div>
   );
 }

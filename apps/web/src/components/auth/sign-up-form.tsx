@@ -1,19 +1,20 @@
 import { Button } from "@raypx/design-system/components/ui/button";
 import { Checkbox } from "@raypx/design-system/components/ui/checkbox";
 import {
-  Field,
-  FieldContent,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from "@raypx/design-system/components/ui/field";
-import { Input } from "@raypx/design-system/components/ui/input";
+  FormControl,
+  FormFieldMessage,
+  FormGroup,
+  FormItem,
+  FormLabel,
+  FormPasswordField,
+  FormTextField,
+} from "@raypx/design-system/components/ui/form";
 import { Spinner } from "@raypx/design-system/components/ui/spinner";
-import { IconEye, IconEyeOff } from "@tabler/icons-react";
 import { useForm } from "@tanstack/react-form";
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { z } from "zod";
+import { FormErrorAlert } from "@/components/form/error-alert";
 import { signUp } from "@/lib/auth";
 
 type SignUpValues = {
@@ -47,27 +48,6 @@ type EmailSignUpFormProps = {
   onSuccess?: () => void | Promise<void>;
 };
 
-function normalizeFieldErrors(errors: unknown[]) {
-  return errors
-    .map((error) => {
-      if (typeof error === "string") {
-        return { message: error };
-      }
-
-      if (
-        typeof error === "object" &&
-        error !== null &&
-        "message" in error &&
-        typeof error.message === "string"
-      ) {
-        return { message: error.message };
-      }
-
-      return undefined;
-    })
-    .filter((error): error is { message: string } => Boolean(error));
-}
-
 function getPasswordStrength(password: string) {
   let score = 0;
   if (password.length >= 8) score++;
@@ -90,7 +70,6 @@ export function EmailSignUpForm({
   submitLabel = "Create account",
   submittingLabel = "Creating account...",
 }: EmailSignUpFormProps) {
-  const [showPassword, setShowPassword] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const form = useForm({
@@ -131,13 +110,9 @@ export function EmailSignUpForm({
         void form.handleSubmit();
       }}
     >
-      {submitError ? (
-        <div className="slide-in-from-top-2 animate-in rounded-lg bg-destructive/10 p-3 text-destructive text-sm duration-200">
-          {submitError}
-        </div>
-      ) : null}
+      <FormErrorAlert message={submitError} />
 
-      <FieldGroup>
+      <FormGroup>
         <form.Field
           name="name"
           validators={{
@@ -146,34 +121,22 @@ export function EmailSignUpForm({
           }}
         >
           {(field) => {
-            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
-
             return (
-              <Field data-invalid={isInvalid}>
-                <FieldLabel htmlFor={`${formId}-name`}>Full name</FieldLabel>
-                <FieldContent>
-                  <Input
-                    aria-invalid={isInvalid}
-                    autoComplete="name"
-                    className={inputClassName}
-                    id={`${formId}-name`}
-                    name={field.name}
-                    onBlur={field.handleBlur}
-                    onChange={(event) => {
-                      if (submitError) {
-                        setSubmitError(null);
-                      }
-                      field.handleChange(event.target.value);
-                    }}
-                    placeholder="John Doe"
-                    type="text"
-                    value={field.state.value}
-                  />
-                  {isInvalid ? (
-                    <FieldError errors={normalizeFieldErrors(field.state.meta.errors)} />
-                  ) : null}
-                </FieldContent>
-              </Field>
+              <FormTextField
+                field={field}
+                id={`${formId}-name`}
+                inputClassName={inputClassName}
+                inputProps={{
+                  autoComplete: "name",
+                  placeholder: "John Doe",
+                }}
+                label="Full name"
+                onValueChange={() => {
+                  if (submitError) {
+                    setSubmitError(null);
+                  }
+                }}
+              />
             );
           }}
         </form.Field>
@@ -188,34 +151,23 @@ export function EmailSignUpForm({
           }}
         >
           {(field) => {
-            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
-
             return (
-              <Field data-invalid={isInvalid}>
-                <FieldLabel htmlFor={`${formId}-email`}>Email</FieldLabel>
-                <FieldContent>
-                  <Input
-                    aria-invalid={isInvalid}
-                    autoComplete="email"
-                    className={inputClassName}
-                    id={`${formId}-email`}
-                    name={field.name}
-                    onBlur={field.handleBlur}
-                    onChange={(event) => {
-                      if (submitError) {
-                        setSubmitError(null);
-                      }
-                      field.handleChange(event.target.value);
-                    }}
-                    placeholder="name@example.com"
-                    type="email"
-                    value={field.state.value}
-                  />
-                  {isInvalid ? (
-                    <FieldError errors={normalizeFieldErrors(field.state.meta.errors)} />
-                  ) : null}
-                </FieldContent>
-              </Field>
+              <FormTextField
+                field={field}
+                id={`${formId}-email`}
+                inputClassName={inputClassName}
+                inputProps={{
+                  autoComplete: "email",
+                  placeholder: "name@example.com",
+                }}
+                label="Email"
+                onValueChange={() => {
+                  if (submitError) {
+                    setSubmitError(null);
+                  }
+                }}
+                type="email"
+              />
             );
           }}
         </form.Field>
@@ -230,46 +182,23 @@ export function EmailSignUpForm({
           }}
         >
           {(field) => {
-            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
             const passwordStrength = getPasswordStrength(field.state.value);
 
             return (
-              <Field data-invalid={isInvalid}>
-                <FieldLabel htmlFor={`${formId}-password`}>Password</FieldLabel>
-                <FieldContent>
-                  <div className="relative">
-                    <Input
-                      aria-invalid={isInvalid}
-                      autoComplete="new-password"
-                      className={`${inputClassName ?? ""} pr-10`.trim()}
-                      id={`${formId}-password`}
-                      name={field.name}
-                      onBlur={field.handleBlur}
-                      onChange={(event) => {
-                        if (submitError) {
-                          setSubmitError(null);
-                        }
-                        field.handleChange(event.target.value);
-                      }}
-                      placeholder="Create a password"
-                      type={showPassword ? "text" : "password"}
-                      value={field.state.value}
-                    />
-                    <button
-                      aria-label={showPassword ? "Hide password" : "Show password"}
-                      className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
-                      onClick={() => setShowPassword((value) => !value)}
-                      tabIndex={-1}
-                      type="button"
-                    >
-                      {showPassword ? (
-                        <IconEyeOff className="size-4" />
-                      ) : (
-                        <IconEye className="size-4" />
-                      )}
-                    </button>
-                  </div>
-                  {field.state.value ? (
+              <FormPasswordField
+                autoComplete="new-password"
+                field={field}
+                id={`${formId}-password`}
+                inputClassName={inputClassName}
+                inputProps={{ placeholder: "Create a password" }}
+                label="Password"
+                onValueChange={() => {
+                  if (submitError) {
+                    setSubmitError(null);
+                  }
+                }}
+                renderAfterInput={(value) =>
+                  value ? (
                     <div className="space-y-2">
                       <div className="flex gap-1">
                         {[1, 2, 3, 4].map((level) => (
@@ -285,12 +214,9 @@ export function EmailSignUpForm({
                         Password strength: {passwordStrength.label}
                       </p>
                     </div>
-                  ) : null}
-                  {isInvalid ? (
-                    <FieldError errors={normalizeFieldErrors(field.state.meta.errors)} />
-                  ) : null}
-                </FieldContent>
-              </Field>
+                  ) : null
+                }
+              />
             );
           }}
         </form.Field>
@@ -303,17 +229,18 @@ export function EmailSignUpForm({
           }}
         >
           {(field) => {
-            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
-
             return (
-              <Field data-invalid={isInvalid} orientation="horizontal">
+              <FormItem
+                data-invalid={field.state.meta.isTouched && !field.state.meta.isValid}
+                orientation="horizontal"
+              >
                 <Checkbox
                   checked={field.state.value}
                   id={`${formId}-terms`}
                   onCheckedChange={(checked) => field.handleChange(checked === true)}
                 />
-                <FieldContent>
-                  <FieldLabel
+                <FormControl>
+                  <FormLabel
                     className="cursor-pointer font-normal text-sm leading-tight"
                     htmlFor={`${formId}-terms`}
                   >
@@ -331,16 +258,14 @@ export function EmailSignUpForm({
                     >
                       Privacy Policy
                     </Link>
-                  </FieldLabel>
-                  {isInvalid ? (
-                    <FieldError errors={normalizeFieldErrors(field.state.meta.errors)} />
-                  ) : null}
-                </FieldContent>
-              </Field>
+                  </FormLabel>
+                  <FormFieldMessage meta={field.state.meta} />
+                </FormControl>
+              </FormItem>
             );
           }}
         </form.Field>
-      </FieldGroup>
+      </FormGroup>
 
       <form.Subscribe
         selector={(state) =>

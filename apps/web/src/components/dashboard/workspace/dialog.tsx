@@ -8,13 +8,14 @@ import {
   DialogTitle,
 } from "@raypx/design-system/components/ui/dialog";
 import {
-  Field,
-  FieldContent,
-  FieldDescription,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from "@raypx/design-system/components/ui/field";
+  FormControl,
+  FormDescription,
+  FormGroup,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  FormTextField,
+} from "@raypx/design-system/components/ui/form";
 import { Input } from "@raypx/design-system/components/ui/input";
 import { IconLayoutGrid } from "@tabler/icons-react";
 import { useForm } from "@tanstack/react-form";
@@ -116,7 +117,7 @@ export function CreateWorkspaceDialog({
           }}
         >
           {submitError ? <p className="text-destructive text-sm">{submitError}</p> : null}
-          <FieldGroup>
+          <FormGroup>
             <form.Field
               name="name"
               validators={{
@@ -141,34 +142,18 @@ export function CreateWorkspaceDialog({
               }}
             >
               {(field) => {
-                const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
-
                 return (
-                  <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor="workspace-name">Workspace name</FieldLabel>
-                    <FieldContent>
-                      <Input
-                        aria-invalid={isInvalid}
-                        id="workspace-name"
-                        onBlur={field.handleBlur}
-                        onChange={(event) => {
-                          if (submitError) {
-                            setSubmitError(null);
-                          }
-                          field.handleChange(event.target.value);
-                        }}
-                        placeholder="e.g. My Team"
-                        value={field.state.value}
-                      />
-                      {isInvalid ? (
-                        <FieldError
-                          errors={field.state.meta.errors.map((message) =>
-                            typeof message === "string" ? { message } : undefined,
-                          )}
-                        />
-                      ) : null}
-                    </FieldContent>
-                  </Field>
+                  <FormTextField
+                    field={field}
+                    id="workspace-name"
+                    inputProps={{ placeholder: "e.g. My Team" }}
+                    label="Workspace name"
+                    onValueChange={() => {
+                      if (submitError) {
+                        setSubmitError(null);
+                      }
+                    }}
+                  />
                 );
               }}
             </form.Field>
@@ -191,9 +176,9 @@ export function CreateWorkspaceDialog({
                 const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
                 return (
-                  <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor="workspace-slug">Workspace slug</FieldLabel>
-                    <FieldContent>
+                  <FormItem data-invalid={isInvalid}>
+                    <FormLabel htmlFor="workspace-slug">Workspace slug</FormLabel>
+                    <FormControl>
                       <Input
                         aria-invalid={isInvalid}
                         id="workspace-slug"
@@ -207,22 +192,22 @@ export function CreateWorkspaceDialog({
                         placeholder="e.g. my-team"
                         value={field.state.value}
                       />
-                      <FieldDescription>
+                      <FormDescription>
                         For URLs, lowercase letters, numbers and hyphens only
-                      </FieldDescription>
+                      </FormDescription>
                       {isInvalid ? (
-                        <FieldError
+                        <FormMessage
                           errors={field.state.meta.errors.map((message) =>
                             typeof message === "string" ? { message } : undefined,
                           )}
                         />
                       ) : null}
-                    </FieldContent>
-                  </Field>
+                    </FormControl>
+                  </FormItem>
                 );
               }}
             </form.Field>
-          </FieldGroup>
+          </FormGroup>
         </form>
         <DialogFooter>
           <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting] as const}>

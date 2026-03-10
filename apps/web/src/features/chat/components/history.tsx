@@ -30,13 +30,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@raypx/design-system/components/ui/dropdown-menu";
-import {
-  Field,
-  FieldContent,
-  FieldError,
-  FieldLabel,
-} from "@raypx/design-system/components/ui/field";
-import { Input } from "@raypx/design-system/components/ui/input";
+import { FormTextField } from "@raypx/design-system/components/ui/form";
 import { Skeleton } from "@raypx/design-system/components/ui/skeleton";
 import { IconDots } from "@tabler/icons-react";
 import { useForm } from "@tanstack/react-form";
@@ -218,31 +212,17 @@ export function HistoryPanel({
               }}
             >
               {(field) => {
-                const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
-
                 return (
-                  <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor="rename-conversation-title">Title</FieldLabel>
-                    <FieldContent>
-                      <Input
-                        aria-invalid={isInvalid}
-                        autoFocus
-                        id="rename-conversation-title"
-                        maxLength={160}
-                        onBlur={field.handleBlur}
-                        onChange={(event) => field.handleChange(event.target.value)}
-                        placeholder="Conversation title"
-                        value={field.state.value}
-                      />
-                      {isInvalid ? (
-                        <FieldError
-                          errors={field.state.meta.errors.map((error) =>
-                            typeof error === "string" ? { message: error } : undefined,
-                          )}
-                        />
-                      ) : null}
-                    </FieldContent>
-                  </Field>
+                  <FormTextField
+                    field={field}
+                    id="rename-conversation-title"
+                    inputProps={{
+                      autoFocus: true,
+                      maxLength: 160,
+                      placeholder: "Conversation title",
+                    }}
+                    label="Title"
+                  />
                 );
               }}
             </renameForm.Field>

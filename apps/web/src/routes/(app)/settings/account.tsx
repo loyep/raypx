@@ -18,20 +18,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@raypx/design-system/components/ui/card";
-import {
-  Field,
-  FieldContent,
-  FieldError,
-  FieldLabel,
-} from "@raypx/design-system/components/ui/field";
-import { Input } from "@raypx/design-system/components/ui/input";
+import { FormPasswordField } from "@raypx/design-system/components/ui/form";
 import { generatePageHead } from "@raypx/seo";
-import { IconEye, IconEyeOff, IconTrash } from "@tabler/icons-react";
+import { IconTrash } from "@tabler/icons-react";
 import { useForm } from "@tanstack/react-form";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 import { useState } from "react";
+import { FormErrorAlert } from "@/components/form/error-alert";
 import { siteConfig } from "@/config/site";
 import { authClient, signOut } from "@/lib/auth";
 
@@ -59,7 +54,6 @@ function SettingsAccountPage() {
   const navigate = useNavigate();
   const { hasPassword } = Route.useLoaderData();
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const form = useForm({
@@ -95,7 +89,6 @@ function SettingsAccountPage() {
     setDialogOpen(open);
     if (!open) {
       form.reset();
-      setShowPassword(false);
       setSubmitError(null);
     }
   }
@@ -124,7 +117,7 @@ function SettingsAccountPage() {
               {form.state.isSubmitting ? "Processing..." : "Delete account"}
             </Button>
             <AlertDialogContent className="max-w-md">
-              {submitError ? <p className="text-destructive text-sm">{submitError}</p> : null}
+              <FormErrorAlert message={submitError} />
               <AlertDialogHeader>
                 <AlertDialogTitle>Confirm account deletion?</AlertDialogTitle>
                 <AlertDialogDescription>
@@ -142,49 +135,20 @@ function SettingsAccountPage() {
                   }}
                 >
                   {(field) => {
-                    const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
-                    const errors = field.state.meta.errors
-                      .map((error) => (typeof error === "string" ? { message: error } : undefined))
-                      .filter(Boolean);
-
                     return (
-                      <Field className="py-2" data-invalid={isInvalid}>
-                        <FieldLabel htmlFor="delete-password">Password</FieldLabel>
-                        <FieldContent>
-                          <div className="relative">
-                            <Input
-                              aria-invalid={isInvalid}
-                              autoComplete="current-password"
-                              className="h-11 pr-10"
-                              id="delete-password"
-                              onBlur={field.handleBlur}
-                              onChange={(event) => {
-                                if (submitError) {
-                                  setSubmitError(null);
-                                }
-                                field.handleChange(event.target.value);
-                              }}
-                              placeholder="Enter your password"
-                              type={showPassword ? "text" : "password"}
-                              value={field.state.value}
-                            />
-                            <button
-                              aria-label={showPassword ? "Hide password" : "Show password"}
-                              className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
-                              onClick={() => setShowPassword((value) => !value)}
-                              tabIndex={-1}
-                              type="button"
-                            >
-                              {showPassword ? (
-                                <IconEyeOff className="size-4" />
-                              ) : (
-                                <IconEye className="size-4" />
-                              )}
-                            </button>
-                          </div>
-                          {isInvalid ? <FieldError errors={errors} /> : null}
-                        </FieldContent>
-                      </Field>
+                      <FormPasswordField
+                        className="py-2"
+                        field={field}
+                        id="delete-password"
+                        inputClassName="h-11"
+                        inputProps={{ placeholder: "Enter your password" }}
+                        label="Password"
+                        onValueChange={() => {
+                          if (submitError) {
+                            setSubmitError(null);
+                          }
+                        }}
+                      />
                     );
                   }}
                 </form.Field>

@@ -6,7 +6,7 @@ import { IconBrandGithub, IconBrandGoogle } from "@tabler/icons-react";
 import { createFileRoute, Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { useState } from "react";
 import { AuthLayout } from "@/components/auth";
-import { EmailSignInForm } from "@/components/auth/email-sign-in-form";
+import { EmailSignInForm } from "@/components/auth/sign-in-form";
 import { siteConfig } from "@/config/site";
 import { OAuthButton, OAuthButtonGroup } from "@/lib/auth";
 
