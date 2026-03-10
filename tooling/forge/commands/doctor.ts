@@ -303,20 +303,81 @@ function extractMarkdownLinks(content: string): string[] {
     .map((target) => target.replace(/^\.\//, ""));
 }
 
-function extractVitestProjects(content: string): string[] {
-  const projectsMatch = content.match(/projects:\s*\[([\s\S]*?)\]/m);
-  if (projectsMatch) {
-    return [...projectsMatch[1].matchAll(/"([^"]+)"/g)].map((match) => match[1]);
+function getObjectProperty(
+  object: ts.ObjectLiteralExpression,
+  propertyName: string,
+): ts.ObjectLiteralElementLike | undefined {
+  return object.properties.find((property) => {
+    if (
+      !ts.isPropertyAssignment(property) &&
+      !ts.isShorthandPropertyAssignment(property) &&
+      !ts.isMethodDeclaration(property)
+    ) {
+      return false;
+    }
+
+    if (!ts.isIdentifier(property.name) && !ts.isStringLiteral(property.name)) {
+      return false;
+    }
+
+    return property.name.text === propertyName;
+  });
+}
+
+function readStringArrayFromExpression(expression: ts.Expression | undefined): string[] {
+  if (!expression || !ts.isArrayLiteralExpression(expression)) {
+    return [];
   }
 
-  const workspaceMatch = content.match(/defineWorkspace\(\[([\s\S]*?)\]\)/m);
-  if (!workspaceMatch) return [];
-  return [...workspaceMatch[1].matchAll(/"([^"]+)"/g)].map((match) => match[1]);
+  return expression.elements.flatMap((element) =>
+    ts.isStringLiteral(element) || ts.isNoSubstitutionTemplateLiteral(element)
+      ? [element.text]
+      : [],
+  );
+}
+
+function findVitestConfigObject(sourceFile: ts.SourceFile): ts.ObjectLiteralExpression | null {
+  for (const statement of sourceFile.statements) {
+    if (!ts.isExportAssignment(statement)) continue;
+    if (!ts.isCallExpression(statement.expression)) continue;
+    if (!ts.isIdentifier(statement.expression.expression)) continue;
+    if (statement.expression.expression.text !== "defineConfig") continue;
+
+    const [configArg] = statement.expression.arguments;
+    if (configArg && ts.isObjectLiteralExpression(configArg)) {
+      return configArg;
+    }
+  }
+
+  return null;
+}
+
+function extractVitestTestStringArray(
+  content: string,
+  filePath: string,
+  propertyName: string,
+): string[] {
+  const sourceFile = ts.createSourceFile(filePath, content, ts.ScriptTarget.Latest, false);
+  const configObject = findVitestConfigObject(sourceFile);
+  if (!configObject) return [];
+
+  const testProperty = getObjectProperty(configObject, "test");
+  if (!testProperty || !ts.isPropertyAssignment(testProperty)) return [];
+  if (!ts.isObjectLiteralExpression(testProperty.initializer)) return [];
+
+  const targetProperty = getObjectProperty(testProperty.initializer, propertyName);
+  if (!targetProperty || !ts.isPropertyAssignment(targetProperty)) return [];
+
+  return readStringArrayFromExpression(targetProperty.initializer);
 }
 
 function resolveProjectBase(projectRef: string): string {
   const wildcardIndex = projectRef.search(/[*{[]/);
   return wildcardIndex === -1 ? projectRef : projectRef.slice(0, wildcardIndex).replace(/\/$/, "");
+}
+
+function isTestsOnlyIncludePattern(pattern: string): boolean {
+  return pattern === "tests" || pattern.startsWith("tests/");
 }
 
 function extractImportSpecifiers(content: string, filePath: string): string[] {
@@ -351,13 +412,74 @@ async function runRepoDoctor(): Promise<DoctorSection> {
 
   const vitestConfigPath = join(PROJECT_ROOT, "vitest.config.mts");
   const vitestProjects = (await checkFile(vitestConfigPath))
-    ? extractVitestProjects(await readFile(vitestConfigPath, "utf-8"))
+    ? extractVitestTestStringArray(
+        await readFile(vitestConfigPath, "utf-8"),
+        vitestConfigPath,
+        "projects",
+      )
     : [];
   const missingVitestProjects = [];
   for (const projectRef of vitestProjects) {
     const basePath = resolveProjectBase(projectRef);
     if (basePath && !(await checkFile(join(PROJECT_ROOT, basePath)))) {
       missingVitestProjects.push(projectRef);
+    }
+  }
+
+  const workspaceVitestConfigPaths = await fg(
+    [
+      "apps/*/vitest.config.{ts,mts}",
+      "packages/*/vitest.config.{ts,mts}",
+      "tooling/*/vitest.config.{ts,mts}",
+    ],
+    {
+      cwd: PROJECT_ROOT,
+      absolute: true,
+      onlyFiles: true,
+    },
+  );
+
+  const invalidVitestIncludes: string[] = [];
+  for (const configPath of workspaceVitestConfigPaths) {
+    const includePatterns = extractVitestTestStringArray(
+      await readFile(configPath, "utf-8"),
+      configPath,
+      "include",
+    );
+    if (includePatterns.length === 0 || includePatterns.every(isTestsOnlyIncludePattern)) {
+      continue;
+    }
+
+    invalidVitestIncludes.push(
+      `${configPath.replace(`${PROJECT_ROOT}/`, "")} -> ${includePatterns.join(", ")}`,
+    );
+  }
+
+  const testsOutsideTestsDirs = await fg(
+    [
+      "apps/*/src/**/*.{test,spec}.{ts,tsx}",
+      "apps/*/__tests__/**/*.{test,spec}.{ts,tsx}",
+      "packages/*/src/**/*.{test,spec}.{ts,tsx}",
+      "packages/*/__tests__/**/*.{test,spec}.{ts,tsx}",
+      "tooling/*/src/**/*.{test,spec}.{ts,tsx}",
+      "tooling/*/__tests__/**/*.{test,spec}.{ts,tsx}",
+    ],
+    {
+      cwd: PROJECT_ROOT,
+      absolute: false,
+      onlyFiles: true,
+    },
+  );
+
+  const requiredTestRoots = ["packages/core", "packages/rpc", "packages/auth", "packages/database"];
+  const missingRequiredTests: string[] = [];
+  for (const root of requiredTestRoots) {
+    const matches = await fg(["tests/**/*.{test,spec}.{ts,tsx}"], {
+      cwd: join(PROJECT_ROOT, root),
+      onlyFiles: true,
+    });
+    if (matches.length === 0) {
+      missingRequiredTests.push(root);
     }
   }
 
@@ -392,6 +514,35 @@ async function runRepoDoctor(): Promise<DoctorSection> {
           : `${missingVitestProjects.length} Vitest project roots are missing (${missingVitestProjects[0]})`,
       fixHint:
         "Remove stale entries from vitest.config.mts or restore the referenced workspace root.",
+    },
+    {
+      name: "workspace-test-layout",
+      ok: testsOutsideTestsDirs.length === 0,
+      detail:
+        testsOutsideTestsDirs.length === 0
+          ? "workspace tests live under tests/ directories"
+          : `${testsOutsideTestsDirs.length} test files are outside tests/ (${testsOutsideTestsDirs[0]})`,
+      fixHint:
+        "Move workspace test files into a top-level tests/ directory for each package or app.",
+    },
+    {
+      name: "vitest-include-patterns",
+      ok: invalidVitestIncludes.length === 0,
+      detail:
+        invalidVitestIncludes.length === 0
+          ? "workspace Vitest configs target tests/ directories"
+          : `${invalidVitestIncludes.length} Vitest configs still include non-tests paths (${invalidVitestIncludes[0]})`,
+      fixHint: "Change workspace vitest include patterns to tests/**/*.{test,spec}.{ts,tsx}.",
+    },
+    {
+      name: "core-package-tests",
+      ok: missingRequiredTests.length === 0,
+      detail:
+        missingRequiredTests.length === 0
+          ? "core packages have minimum regression coverage"
+          : `${missingRequiredTests.length} core packages are missing tests/ coverage (${missingRequiredTests[0]})`,
+      fixHint:
+        "Add at least one regression test under tests/ for each core package: core, rpc, auth, database.",
     },
     {
       name: "doc-links",
