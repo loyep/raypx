@@ -72,13 +72,13 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
               <OAuthButton
                 provider="google"
                 render={({ disabled, isLoading, onClick }) => (
-                  <Button
-                    className="h-9 w-full text-sm"
-                    disabled={disabled}
-                    onClick={onClick}
-                    type="button"
-                    variant="outline"
-                  >
+                    <Button
+                      className="w-full"
+                      disabled={disabled}
+                      onClick={onClick}
+                      type="button"
+                      variant="default"
+                    >
                     {isLoading ? (
                       <Spinner className="mr-2" />
                     ) : (
@@ -91,13 +91,13 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
               <OAuthButton
                 provider="github"
                 render={({ disabled, isLoading, onClick }) => (
-                  <Button
-                    className="h-9 w-full text-sm"
-                    disabled={disabled}
-                    onClick={onClick}
-                    type="button"
-                    variant="outline"
-                  >
+                    <Button
+                      className="w-full"
+                      disabled={disabled}
+                      onClick={onClick}
+                      type="button"
+                      variant="default"
+                    >
                     {isLoading ? (
                       <Spinner className="mr-2" />
                     ) : (
@@ -125,7 +125,7 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
               onOpenChange(false);
               await navigate({ to: "/dashboard" });
             }}
-            submitButtonClassName="h-9 w-full text-sm"
+            submitButtonClassName="w-full"
           />
 
           <p className="pt-0.5 text-center text-muted-foreground text-sm">

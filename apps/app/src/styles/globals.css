@@ -1,0 +1,5 @@
+@import "@raypx/design-system/styles/globals.css";
+
+@theme {
+  --max-width-7xl: 90rem;
+}

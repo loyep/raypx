@@ -1,0 +1,52 @@
+{
+  "name": "app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "analyze": "BUNDLE_ANALYZE=true pnpm run build",
+    "build": "forge run vite build",
+    "clean": "rimraf .turbo .tanstack .nitro .output .cache .tmp-*",
+    "dev": "forge run vite dev",
+    "serve": "forge run vite preview",
+    "start": "forge run node .output/server/index.mjs",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@raypx/ai": "workspace:*",
+    "@raypx/auth": "workspace:*",
+    "@raypx/config": "workspace:*",
+    "@raypx/design-system": "workspace:*",
+    "@raypx/rpc": "workspace:*",
+    "@raypx/seo": "workspace:*",
+    "@raypx/shared": "workspace:*",
+    "@tabler/icons-react": "^3.39.0",
+    "@tanstack/react-form": "^1.25.0",
+    "@tanstack/react-query": "catalog:",
+    "@tanstack/react-router": "catalog:",
+    "@tanstack/react-start": "catalog:",
+    "react": "catalog:react19",
+    "react-dom": "catalog:react19",
+    "zod": "catalog:",
+    "zustand": "^5.0.11"
+  },
+  "devDependencies": {
+    "@raypx/forge": "workspace:*",
+    "@raypx/tsconfig": "workspace:*",
+    "@tailwindcss/vite": "catalog:tailwindv4",
+    "@tanstack/devtools-vite": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:react19",
+    "@types/react-dom": "catalog:react19",
+    "@vitejs/plugin-react": "^5.1.4",
+    "babel-plugin-react-compiler": "catalog:",
+    "jiti": "catalog:",
+    "nitro": "catalog:beta",
+    "rollup-plugin-visualizer": "^7.0.1",
+    "tailwindcss": "catalog:tailwindv4",
+    "typescript": "catalog:",
+    "vite": "^8.0.0-beta.18",
+    "vite-tsconfig-paths": "^6.1.1",
+    "vitest": "catalog:"
+  }
+}

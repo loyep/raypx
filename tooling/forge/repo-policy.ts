@@ -33,14 +33,14 @@ export const repoPolicy: RepoPolicy = {
       "packages/telemetry",
       "tooling/forge",
     ],
-    allowNoTests: [],
+    allowNoTests: ["apps/app"],
   },
   operability: {
     requiredScripts: ["clean", "typecheck", "test"],
     allowMissingScripts: {
       "tooling/tsconfig": ["clean", "typecheck", "test"],
     },
-    buildable: ["apps/web"],
+    buildable: ["apps/app", "apps/web"],
     sourceOnly: [
       "packages/admin",
       "packages/ai",

@@ -12,7 +12,7 @@ import { OAuthButton, OAuthButtonGroup } from "@/lib/auth";
 
 export const Route = createFileRoute("/(auth)/login")({
   component: LoginPage,
-  head: () => generatePageHead({ ...siteConfig, title: "Login - Raypx" }),
+  head: () => generatePageHead({ ...siteConfig, title: "Login - Raypx App" }),
 });
 
 function LoginPage() {
@@ -21,11 +21,10 @@ function LoginPage() {
   const [, setError] = useState<string | null>(null);
 
   return (
-    <AuthLayout subtitle="Sign in to your account to continue" title="Welcome back">
+    <AuthLayout subtitle="Sign in to continue your conversations" title="Welcome back">
       <div className="space-y-5">
-        {/* OAuth Buttons */}
         <OAuthButtonGroup
-          callbackURL="/dashboard"
+          callbackURL="/chat"
           onError={setError}
           onFocusReturn={() => router.invalidate()}
         >
@@ -33,13 +32,7 @@ function LoginPage() {
             <OAuthButton
               provider="google"
               render={({ disabled, isLoading, onClick }) => (
-                <Button
-                  className="w-full"
-                  disabled={disabled}
-                  onClick={onClick}
-                  type="button"
-                  variant="default"
-                >
+                <Button className="w-full" disabled={disabled} onClick={onClick} type="button">
                   {isLoading ? (
                     <Spinner className="mr-2" />
                   ) : (
@@ -52,13 +45,7 @@ function LoginPage() {
             <OAuthButton
               provider="github"
               render={({ disabled, isLoading, onClick }) => (
-                <Button
-                  className="w-full"
-                  disabled={disabled}
-                  onClick={onClick}
-                  type="button"
-                  variant="default"
-                >
+                <Button className="w-full" disabled={disabled} onClick={onClick} type="button">
                   {isLoading ? (
                     <Spinner className="mr-2" />
                   ) : (
@@ -80,24 +67,19 @@ function LoginPage() {
           </div>
         </div>
 
-        {/* Email/Password Form */}
         <EmailSignInForm
           formId="login-page"
-          onSuccess={() => navigate({ to: "/dashboard" })}
+          onSuccess={() => navigate({ to: "/chat" })}
           submitButtonClassName="w-full"
         />
 
-        <div className="flex flex-col gap-4 border-t pt-6">
-          <p className="text-center text-muted-foreground text-sm">
-            Don't have an account?{" "}
-            <Link className="font-medium text-primary hover:underline" to="/signup">
-              Sign up
-            </Link>
-          </p>
-        </div>
+        <p className="border-t pt-6 text-center text-muted-foreground text-sm">
+          Don't have an account?{" "}
+          <Link className="font-medium text-primary hover:underline" to="/signup">
+            Sign up
+          </Link>
+        </p>
       </div>
-
-      {/* Footer */}
       <p className="mt-6 text-center text-muted-foreground text-xs">
         By clicking continue, you agree to our{" "}
         <Link className="underline hover:text-foreground" to="/terms">
