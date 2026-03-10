@@ -50,7 +50,7 @@ export function HomeHero() {
               Start Building
               <IconArrowRight className="ml-2 size-4" />
             </Button>
-            <Button render={<a href="/docs" />} size="lg" variant="outline">
+            <Button render={<Link to="/docs" />} size="lg" variant="outline">
               View Docs
             </Button>
           </div>

@@ -43,8 +43,7 @@ COPY --from=pruner /app/out/full/apps ./apps
 COPY --from=pruner /app/out/full/packages ./packages
 COPY --from=pruner /app/out/full/tooling ./tooling
 COPY --from=pruner /app/.dockerignore /app/.gitignore /app/tsconfig.json ./
-RUN --mount=type=cache,id=turbo-cache,target=/app/.turbo \
-    pnpm turbo build --filter=web...
+RUN pnpm turbo build --filter=web... --summarize
 
 # Runner: Production runtime with build output only
 FROM base AS runner

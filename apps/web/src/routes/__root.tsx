@@ -4,6 +4,7 @@ import type { QueryClient } from "@tanstack/react-query";
 import { createRootRouteWithContext, Outlet, Scripts } from "@tanstack/react-router";
 import { siteConfig } from "@/config/site";
 import { Providers } from "@/providers";
+import docsCss from "@/styles/docs.css?url";
 import appCss from "@/styles/globals.css?url";
 
 type RootRouterContext = {
@@ -16,7 +17,11 @@ export const Route = createRootRouteWithContext<RootRouterContext>()({
 
     return {
       meta: seoHead.meta,
-      links: [{ rel: "stylesheet", fetchPriority: "high", href: appCss }, ...(seoHead.links ?? [])],
+      links: [
+        { rel: "stylesheet", fetchPriority: "high", href: appCss },
+        { rel: "preload", href: docsCss, as: "style" },
+        ...(seoHead.links ?? []),
+      ],
       scripts: seoHead.scripts,
     };
   },
