@@ -73,7 +73,7 @@ describe("forge cli", () => {
   it("rejects invalid operation", () => {
     const result = runForge(["db", "invalid-op"]);
     expect(result.status).toBe(1);
-    expect(result.output).toMatch(/Unknown command `invalid-op`/);
+    expect(result.output).toMatch(/\[error\] Unknown command invalid-op/);
   });
 
   it("passes through args for run command", () => {
@@ -122,7 +122,7 @@ describe("forge cli", () => {
   it("rejects invalid doctor section", () => {
     const result = runForge(["doctor", "invalid"]);
     expect(result.status).toBe(1);
-    expect(result.output).toMatch(/Unknown command `invalid`/);
+    expect(result.output).toMatch(/\[error\] Unknown command invalid/);
   });
 
   it("fails doctor db without database env", () => {

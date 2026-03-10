@@ -125,6 +125,12 @@ pnpm run test           # Run all tests
 pnpm run test:coverage  # Run with coverage
 ```
 
+Workspace test policy:
+
+- Put test files under `tests/`.
+- If you add a workspace `test` script, classify that workspace in [`tooling/forge/repo-policy.ts`](./tooling/forge/repo-policy.ts).
+- `pnpm run doctor` will fail if test layout or policy classification drifts.
+
 ### Database Changes
 
 1. **Modify schema** in `packages/database/src/schemas/pg/`

@@ -4,6 +4,7 @@ import { join } from "node:path";
 import fg from "fast-glob";
 import ts from "typescript";
 import { logger, PROJECT_ROOT } from "../libs/utils";
+import { repoPolicy } from "../repo-policy";
 
 /**
  * Doctor check section names
@@ -38,6 +39,7 @@ interface DoctorOptions {
 interface PackageManifest {
   path: string;
   name?: string;
+  scripts?: Record<string, string>;
   dependencies?: Record<string, string>;
   devDependencies?: Record<string, string>;
   peerDependencies?: Record<string, string>;
@@ -394,6 +396,7 @@ function extractImportSpecifiers(content: string, filePath: string): string[] {
 }
 
 async function runRepoDoctor(): Promise<DoctorSection> {
+  const manifests = await readWorkspacePackageManifests();
   const rootManifest = await readRootManifest();
   const rootScripts = new Set(Object.keys(rootManifest.scripts ?? {}));
   const rootScriptReferenceFiles = [".github/workflows/ci.yml", "README.md"];
@@ -471,7 +474,23 @@ async function runRepoDoctor(): Promise<DoctorSection> {
     },
   );
 
-  const requiredTestRoots = ["packages/core", "packages/rpc", "packages/auth", "packages/database"];
+  const testingPolicy = repoPolicy.testing ?? {};
+  const requiredTestRoots = testingPolicy.required ?? [];
+  const allowNoTestsRoots = testingPolicy.allowNoTests ?? [];
+  const classifiedTestRoots = new Set([...requiredTestRoots, ...allowNoTestsRoots]);
+  const duplicateClassifiedRoots = [...new Set(requiredTestRoots)].filter((root) =>
+    allowNoTestsRoots.includes(root),
+  );
+  const workspaceRootsWithTestScripts = manifests
+    .filter((manifest) => Boolean(manifest.scripts?.test))
+    .map((manifest) => manifest.path.replace(`${PROJECT_ROOT}/`, ""))
+    .map((manifestPath) => manifestPath.replace(/\/package\.json$/, ""));
+  const unknownPolicyRoots = [...classifiedTestRoots].filter(
+    (root) => !workspaceRootsWithTestScripts.includes(root),
+  );
+  const unclassifiedTestRoots = workspaceRootsWithTestScripts.filter(
+    (root) => !classifiedTestRoots.has(root),
+  );
   const missingRequiredTests: string[] = [];
   for (const root of requiredTestRoots) {
     const matches = await fg(["tests/**/*.{test,spec}.{ts,tsx}"], {
@@ -516,6 +535,25 @@ async function runRepoDoctor(): Promise<DoctorSection> {
         "Remove stale entries from vitest.config.mts or restore the referenced workspace root.",
     },
     {
+      name: "test-policy",
+      ok:
+        duplicateClassifiedRoots.length === 0 &&
+        unknownPolicyRoots.length === 0 &&
+        unclassifiedTestRoots.length === 0,
+      detail:
+        duplicateClassifiedRoots.length === 0 &&
+        unknownPolicyRoots.length === 0 &&
+        unclassifiedTestRoots.length === 0
+          ? `${workspaceRootsWithTestScripts.length} workspaces with test scripts are classified in forge repo policy`
+          : duplicateClassifiedRoots.length > 0
+            ? `duplicate test policy roots (${duplicateClassifiedRoots[0]})`
+            : unknownPolicyRoots.length > 0
+              ? `forge repo policy references unknown test workspaces (${unknownPolicyRoots[0]})`
+              : `${unclassifiedTestRoots.length} workspaces with test scripts are missing from forge repo policy (${unclassifiedTestRoots[0]})`,
+      fixHint:
+        "Classify every workspace with a test script in tooling/forge/repo-policy.ts under testing.required or testing.allowNoTests.",
+    },
+    {
       name: "workspace-test-layout",
       ok: testsOutsideTestsDirs.length === 0,
       detail:
@@ -535,14 +573,14 @@ async function runRepoDoctor(): Promise<DoctorSection> {
       fixHint: "Change workspace vitest include patterns to tests/**/*.{test,spec}.{ts,tsx}.",
     },
     {
-      name: "core-package-tests",
+      name: "required-workspace-tests",
       ok: missingRequiredTests.length === 0,
       detail:
         missingRequiredTests.length === 0
-          ? "core packages have minimum regression coverage"
-          : `${missingRequiredTests.length} core packages are missing tests/ coverage (${missingRequiredTests[0]})`,
+          ? "required workspaces have minimum regression coverage"
+          : `${missingRequiredTests.length} required workspaces are missing tests/ coverage (${missingRequiredTests[0]})`,
       fixHint:
-        "Add at least one regression test under tests/ for each core package: core, rpc, auth, database.",
+        "Add at least one regression test under tests/ for every workspace listed in tooling/forge/repo-policy.ts testing.required.",
     },
     {
       name: "doc-links",

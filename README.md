@@ -122,6 +122,12 @@ forge db --help
 forge doctor --help
 ```
 
+## Test Policy
+
+- Workspace tests live under `tests/`.
+- Each workspace with a `test` script must be classified in [`tooling/forge/repo-policy.ts`](./tooling/forge/repo-policy.ts) under `testing.required` or `testing.allowNoTests`.
+- `forge doctor` enforces both the layout and the policy classification.
+
 ## License
 
 Apache-2.0
