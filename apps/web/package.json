@@ -7,8 +7,8 @@
     "build": "forge run vite build",
     "clean": "rimraf .turbo .tanstack .nitro .output .cache .tmp-* .source",
     "dev": "forge run vite dev",
-    "shadcn": "pnpm dlx shadcn@latest",
     "serve": "forge run vite preview",
+    "shadcn": "pnpm dlx shadcn@latest",
     "start": "forge run node .output/server/index.mjs",
     "test": "vitest run"
   },

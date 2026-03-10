@@ -35,11 +35,8 @@ jobs:
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build Package Dependencies
-        run: pnpm run build:pkg
-
       - name: Lint
-        run: pnpm run check
+        run: pnpm run lint
 
       - name: Type Check
         run: pnpm run typecheck

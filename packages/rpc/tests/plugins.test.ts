@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { composeRpcPlugins, type RpcPlugin } from "../plugins/compose";
+import { composeRpcPlugins, type RpcPlugin } from "../src/plugins/compose";
 
 describe("composeRpcPlugins", () => {
   it("composes plugin routers onto base router", () => {

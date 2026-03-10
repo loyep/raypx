@@ -135,8 +135,14 @@ const doctorCommand = createForgeCommand({
   meta: {
     name: "doctor",
     description:
-      "Run health checks. env checks runtime and env files; db checks database config; deps checks workspace dependencies.",
-    examples: ["forge doctor", "forge doctor env", "forge doctor deps --json"],
+      "Run health checks. env checks runtime and env files; db checks database config; deps checks workspace dependencies; repo checks command/docs drift; arch checks browser-facing web boundaries.",
+    examples: [
+      "forge doctor",
+      "forge doctor env",
+      "forge doctor deps --json",
+      "forge doctor repo",
+      "forge doctor arch",
+    ],
   },
   usage: "forge doctor [command] [options]",
   args: {
@@ -149,6 +155,8 @@ const doctorCommand = createForgeCommand({
     env: createDoctorSectionCommand("env"),
     db: createDoctorSectionCommand("db"),
     deps: createDoctorSectionCommand("deps"),
+    repo: createDoctorSectionCommand("repo"),
+    arch: createDoctorSectionCommand("arch"),
   },
   async run({ args }) {
     await runDoctor({

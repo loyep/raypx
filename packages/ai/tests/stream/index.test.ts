@@ -1,6 +1,13 @@
 import { AI_EVENT_VERSION } from "@raypx/shared/ai";
 import { describe, expect, it } from "vitest";
-import { deltaEvent, doneEvent, errorEvent, metaEvent, statusEvent, usageEvent } from "./index";
+import {
+  deltaEvent,
+  doneEvent,
+  errorEvent,
+  metaEvent,
+  statusEvent,
+  usageEvent,
+} from "../../src/stream";
 
 describe("stream event builders", () => {
   it("builds versioned events with expected types", () => {

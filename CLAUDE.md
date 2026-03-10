@@ -27,10 +27,13 @@ A modern fullstack monorepo built with TanStack Start, Better Auth, and oRPC.
 │  │(Drizzle)│  │   (R2)  │  │(Resend) │  │         │            │
 │  └────┬────┘  └────┬────┘  └────┬────┘  └────┬────┘            │
 │       └───────┬────┴───────────┴──────────┴────┘                │
-│           ┌───┴───┐                                             │
-│           │Shared │     ┌────────┐                              │
-│           │       │─────│ Logger │                              │
-│           └───┬───┘     └────────┘                              │
+│           ┌───┴──────────────┐                                  │
+│           │ Shared / Core    │─────┐                            │
+│           └───┬──────────────┘     │                            │
+│               │                 ┌──┴──────────────┐             │
+│               │                 │ Observability   │             │
+│               │                 │ (logs/metrics)  │             │
+│               │                 └─────────────────┘             │
 │               │                                                  │
 │          ┌────┴────┐                                            │
 │          │ Config  │                                            │
@@ -65,7 +68,8 @@ raypx/
 ├── packages/
 │   ├── tsconfig/               # Shared TypeScript configs
 │   ├── config/                 # Environment validation & app config
-│   ├── logger/                 # Logging utilities (consola)
+│   ├── core/                   # Base runtime contracts and logger entrypoint
+│   ├── observability/          # Structured logging, metrics, Sentry helpers
 │   ├── shared/                 # Shared utilities and helpers
 │   ├── database/               # Database schema & queries (Drizzle)
 │   ├── email/                  # Email templates & sending (Resend)
@@ -302,9 +306,8 @@ const value = env.MY_NEW_VAR
 |---------|-------------|
 | `pnpm clean` | Clean build artifacts |
 | `pnpm setup` | Setup project dependencies |
-| `pnpm shadcn` | Add shadcn component to web app |
 | `pnpm bump-ui` | Update all design-system components |
-| `pnpm update:deps` | Update all dependencies |
+| `pnpm deps:bump` | Update all dependencies |
 | `pnpm changeset` | Create a changeset |
 | `pnpm release` | Version packages for release |
 
@@ -410,7 +413,7 @@ export const adminRouter = {
 Open Drizzle Studio:
 
 ```bash
-pnpm run studio
+pnpm run db:studio
 ```
 
 ## Admin Features
@@ -473,7 +476,7 @@ UPDATE "user" SET role = 'admin' WHERE email = 'admin@example.com';
 Or use Drizzle Studio:
 
 ```bash
-pnpm run studio
+pnpm run db:studio
 ```
 
 ## Key Points

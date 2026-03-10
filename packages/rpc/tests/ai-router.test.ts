@@ -1,7 +1,7 @@
 import { call } from "@orpc/server";
 import { AIServiceError, chatService } from "@raypx/ai/server";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { aiRouter } from "../routers/ai";
+import { aiRouter } from "../src/routers/ai";
 import { createMockContext } from "./test-utils";
 
 describe("aiRouter", () => {

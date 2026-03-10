@@ -1,11 +1,11 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 const mockCreateConversation = vi.fn();
 const mockAppendMessage = vi.fn();
 const mockPersistCallLog = vi.fn();
 const mockStreamText = vi.fn();
 
-vi.mock("./providers", () => ({
+vi.mock("../src/providers", () => ({
   getChatRuntime: vi.fn(() => ({
     providerId: "11111111-1111-4111-8111-111111111111",
     providerName: "Test Provider",
@@ -15,7 +15,7 @@ vi.mock("./providers", () => ({
   })),
 }));
 
-vi.mock("./persistence", () => ({
+vi.mock("../src/persistence", () => ({
   createConversation: (...args: unknown[]) => mockCreateConversation(...args),
   listConversations: vi.fn(),
   getConversationWithMessages: vi.fn().mockResolvedValue(null),
@@ -24,7 +24,7 @@ vi.mock("./persistence", () => ({
   persistCallLog: (...args: unknown[]) => mockPersistCallLog(...args),
 }));
 
-vi.mock("./persistence/preferences", () => ({
+vi.mock("../src/persistence/preferences", () => ({
   getUserBoundProfile: vi.fn().mockResolvedValue({
     profile: {
       providerId: "11111111-1111-4111-8111-111111111111",
@@ -84,7 +84,7 @@ vi.mock("./persistence/preferences", () => ({
   removeUserProviderSecret: vi.fn(),
 }));
 
-vi.mock("./security/credentials", () => ({
+vi.mock("../src/security/credentials", () => ({
   encryptCredential: vi.fn(),
   decryptCredential: vi.fn().mockReturnValue("sk-test"),
   getCredentialHint: vi.fn(),
@@ -95,7 +95,7 @@ vi.mock("ai", () => ({
   streamText: (...args: unknown[]) => mockStreamText(...args),
 }));
 
-import { chatService } from "./chat-service";
+let chatService: typeof import("../src/chat-service").chatService;
 
 describe("chatService.chatStream", () => {
   const createThrowingStream = (error: unknown): AsyncIterable<string> => ({
@@ -117,6 +117,38 @@ describe("chatService.chatStream", () => {
       id: "22222222-2222-4222-8222-222222222222",
     });
     mockPersistCallLog.mockResolvedValue(undefined);
+  });
+
+  beforeAll(async () => {
+    vi.resetModules();
+    vi.doMock("@raypx/core/logger", async () => {
+      const actual =
+        await vi.importActual<typeof import("@raypx/core/logger")>("@raypx/core/logger");
+      const silentLogger = {
+        level: 0,
+        trace: vi.fn(),
+        debug: vi.fn(),
+        info: vi.fn(),
+        warn: vi.fn(),
+        error: vi.fn(),
+        success: vi.fn(),
+        log: vi.fn(),
+        withTag: vi.fn(),
+      };
+      silentLogger.withTag.mockReturnValue(silentLogger);
+      return {
+        ...actual,
+        getLogger: () => silentLogger,
+        logger: silentLogger,
+        withTag: () => silentLogger,
+      };
+    });
+
+    ({ chatService } = await import("../src/chat-service"));
+  });
+
+  afterAll(() => {
+    vi.doUnmock("@raypx/core/logger");
   });
 
   it("emits error event and persists error call log on stream failure", async () => {

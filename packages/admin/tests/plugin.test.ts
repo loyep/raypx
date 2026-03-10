@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { adminConfigPlugin } from "../plugin/config";
-import { adminRpcPlugin } from "../plugin/rpc";
-import { adminWebPlugin } from "../plugin/web";
+import { adminConfigPlugin } from "../src/plugin/config";
+import { adminRpcPlugin } from "../src/plugin/rpc";
+import { adminWebPlugin } from "../src/plugin/web";
 
 describe("admin plugins", () => {
   it("exposes required plugin fields", () => {

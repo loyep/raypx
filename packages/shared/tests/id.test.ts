@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { generateLongId, generateShortId, nanoid } from "../utils/id";
+import { generateLongId, generateShortId, nanoid } from "../src/utils/id";
 
 describe("nanoid", () => {
   it("generates a 16-character ID by default", () => {

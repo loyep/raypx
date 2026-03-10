@@ -2,12 +2,13 @@ import { spawn } from "node:child_process";
 import { access, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import fg from "fast-glob";
+import ts from "typescript";
 import { logger, PROJECT_ROOT } from "../libs/utils";
 
 /**
  * Doctor check section names
  */
-export type DoctorSectionName = "env" | "db" | "deps";
+export type DoctorSectionName = "env" | "db" | "deps" | "repo" | "arch";
 
 interface DoctorCheck {
   name: string;
@@ -43,6 +44,10 @@ interface PackageManifest {
   optionalDependencies?: Record<string, string>;
 }
 
+interface RootManifest {
+  scripts?: Record<string, string>;
+}
+
 async function checkFile(path: string): Promise<boolean> {
   try {
     await access(path);
@@ -50,6 +55,10 @@ async function checkFile(path: string): Promise<boolean> {
   } catch {
     return false;
   }
+}
+
+async function readJsonFile<T>(path: string): Promise<T> {
+  return JSON.parse(await readFile(path, "utf-8")) as T;
 }
 
 async function getBinaryVersion(name: string): Promise<string | null> {
@@ -117,6 +126,10 @@ async function readWorkspacePackageManifests(): Promise<PackageManifest[]> {
       return { path, ...(JSON.parse(content) as Omit<PackageManifest, "path">) };
     }),
   );
+}
+
+async function readRootManifest(): Promise<RootManifest> {
+  return readJsonFile<RootManifest>(join(PROJECT_ROOT, "package.json"));
 }
 
 async function runEnvDoctor(): Promise<DoctorSection> {
@@ -279,6 +292,179 @@ async function runDepsDoctor(): Promise<DoctorSection> {
   };
 }
 
+function extractPnpmRunReferences(content: string): string[] {
+  return [...content.matchAll(/pnpm run ([a-zA-Z0-9:_-]+)/g)].map((match) => match[1]);
+}
+
+function extractMarkdownLinks(content: string): string[] {
+  return [...content.matchAll(/\]\(([^)]+)\)/g)]
+    .map((match) => match[1])
+    .filter((target) => !target.startsWith("http") && !target.startsWith("#"))
+    .map((target) => target.replace(/^\.\//, ""));
+}
+
+function extractVitestProjects(content: string): string[] {
+  const projectsMatch = content.match(/projects:\s*\[([\s\S]*?)\]/m);
+  if (projectsMatch) {
+    return [...projectsMatch[1].matchAll(/"([^"]+)"/g)].map((match) => match[1]);
+  }
+
+  const workspaceMatch = content.match(/defineWorkspace\(\[([\s\S]*?)\]\)/m);
+  if (!workspaceMatch) return [];
+  return [...workspaceMatch[1].matchAll(/"([^"]+)"/g)].map((match) => match[1]);
+}
+
+function resolveProjectBase(projectRef: string): string {
+  const wildcardIndex = projectRef.search(/[*{[]/);
+  return wildcardIndex === -1 ? projectRef : projectRef.slice(0, wildcardIndex).replace(/\/$/, "");
+}
+
+function extractImportSpecifiers(content: string, filePath: string): string[] {
+  const sourceFile = ts.createSourceFile(filePath, content, ts.ScriptTarget.Latest, false);
+  const imports: string[] = [];
+
+  for (const statement of sourceFile.statements) {
+    if (!ts.isImportDeclaration(statement)) continue;
+    if (!ts.isStringLiteral(statement.moduleSpecifier)) continue;
+    imports.push(statement.moduleSpecifier.text);
+  }
+
+  return imports;
+}
+
+async function runRepoDoctor(): Promise<DoctorSection> {
+  const rootManifest = await readRootManifest();
+  const rootScripts = new Set(Object.keys(rootManifest.scripts ?? {}));
+  const rootScriptReferenceFiles = [".github/workflows/ci.yml", "README.md"];
+
+  const missingScriptRefs: string[] = [];
+  for (const relativePath of rootScriptReferenceFiles) {
+    const absolutePath = join(PROJECT_ROOT, relativePath);
+    if (!(await checkFile(absolutePath))) continue;
+    const content = await readFile(absolutePath, "utf-8");
+    for (const scriptName of extractPnpmRunReferences(content)) {
+      if (!rootScripts.has(scriptName)) {
+        missingScriptRefs.push(`${relativePath} -> ${scriptName}`);
+      }
+    }
+  }
+
+  const vitestConfigPath = join(PROJECT_ROOT, "vitest.config.mts");
+  const vitestProjects = (await checkFile(vitestConfigPath))
+    ? extractVitestProjects(await readFile(vitestConfigPath, "utf-8"))
+    : [];
+  const missingVitestProjects = [];
+  for (const projectRef of vitestProjects) {
+    const basePath = resolveProjectBase(projectRef);
+    if (basePath && !(await checkFile(join(PROJECT_ROOT, basePath)))) {
+      missingVitestProjects.push(projectRef);
+    }
+  }
+
+  const missingDocLinks: string[] = [];
+  for (const relativePath of ["README.md", "CONTRIBUTING.md", "CLAUDE.md"]) {
+    const absolutePath = join(PROJECT_ROOT, relativePath);
+    if (!(await checkFile(absolutePath))) continue;
+    const content = await readFile(absolutePath, "utf-8");
+    for (const target of extractMarkdownLinks(content)) {
+      if (!(await checkFile(join(PROJECT_ROOT, target)))) {
+        missingDocLinks.push(`${relativePath} -> ${target}`);
+      }
+    }
+  }
+
+  const checks: DoctorCheck[] = [
+    {
+      name: "root-script-references",
+      ok: missingScriptRefs.length === 0,
+      detail:
+        missingScriptRefs.length === 0
+          ? "all root script references resolve in docs and CI"
+          : `${missingScriptRefs.length} unresolved root script references (${missingScriptRefs[0]})`,
+      fixHint: "Update the docs/CI command or add the missing root script to package.json.",
+    },
+    {
+      name: "vitest-projects",
+      ok: missingVitestProjects.length === 0,
+      detail:
+        missingVitestProjects.length === 0
+          ? "all Vitest workspace project roots exist"
+          : `${missingVitestProjects.length} Vitest project roots are missing (${missingVitestProjects[0]})`,
+      fixHint:
+        "Remove stale entries from vitest.config.mts or restore the referenced workspace root.",
+    },
+    {
+      name: "doc-links",
+      ok: missingDocLinks.length === 0,
+      detail:
+        missingDocLinks.length === 0
+          ? "all local doc links resolve"
+          : `${missingDocLinks.length} local doc links are missing (${missingDocLinks[0]})`,
+      fixHint: "Fix the linked path or restore the referenced documentation file.",
+    },
+  ];
+
+  return {
+    name: "repo",
+    ok: checks.every((check) => check.ok),
+    checks,
+  };
+}
+
+async function runArchDoctor(): Promise<DoctorSection> {
+  const browserFacingFiles = await fg(
+    [
+      "apps/web/src/components/**/*.{ts,tsx}",
+      "apps/web/src/features/**/*.{ts,tsx}",
+      "apps/web/src/utils/**/*.{ts,tsx}",
+      "apps/web/src/providers.tsx",
+    ],
+    {
+      cwd: PROJECT_ROOT,
+      absolute: false,
+      onlyFiles: true,
+    },
+  );
+
+  const forbiddenImports = new Set([
+    "@raypx/database",
+    "@raypx/database/schemas",
+    "@raypx/auth/server",
+    "@raypx/admin/server",
+    "@raypx/storage",
+    "@raypx/stripe",
+  ]);
+
+  const violations: string[] = [];
+  for (const relativePath of browserFacingFiles) {
+    const content = await readFile(join(PROJECT_ROOT, relativePath), "utf-8");
+    for (const importPath of extractImportSpecifiers(content, relativePath)) {
+      if (forbiddenImports.has(importPath)) {
+        violations.push(`${relativePath} -> ${importPath}`);
+      }
+    }
+  }
+
+  const checks: DoctorCheck[] = [
+    {
+      name: "web-runtime-boundaries",
+      ok: violations.length === 0,
+      detail:
+        violations.length === 0
+          ? "browser-facing web modules avoid direct server/data package imports"
+          : `${violations.length} direct backend imports found in browser-facing modules (${violations[0]})`,
+      fixHint:
+        "Move the access behind @raypx/rpc or a client-safe wrapper instead of importing server/data packages directly.",
+    },
+  ];
+
+  return {
+    name: "arch",
+    ok: checks.every((check) => check.ok),
+    checks,
+  };
+}
+
 function printTextReport(sections: DoctorSection[], summary: DoctorSummary): void {
   const passedChecks = summary.totalChecks - summary.failedChecks;
   logger.log(
@@ -308,12 +494,14 @@ function printTextReport(sections: DoctorSection[], summary: DoctorSummary): voi
 export async function runDoctor(options: DoctorOptions = {}): Promise<void> {
   const sectionNames: DoctorSectionName[] = options.section
     ? [options.section]
-    : ["env", "db", "deps"];
+    : ["env", "db", "deps", "repo", "arch"];
 
   const sectionRunners: Record<DoctorSectionName, () => Promise<DoctorSection>> = {
     env: runEnvDoctor,
     db: runDbDoctor,
     deps: runDepsDoctor,
+    repo: runRepoDoctor,
+    arch: runArchDoctor,
   };
 
   const sections = await Promise.all(sectionNames.map((name) => sectionRunners[name]()));

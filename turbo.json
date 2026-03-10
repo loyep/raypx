@@ -50,7 +50,7 @@
       "outputs": ["generated/**", "**/*.generated.*"]
     },
     "test": {
-      "cache": true,
+      "cache": false,
       "dependsOn": ["^build"],
       "inputs": [
         "$TURBO_DEFAULT$",

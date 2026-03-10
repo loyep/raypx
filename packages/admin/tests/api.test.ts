@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { getUserStats, listUsers, updateUser } from "../api";
+import { getUserStats, listUsers, updateUser } from "../src/api";
 
 describe("admin api helpers", () => {
   it("delegates listUsers to client.admin.users.list", async () => {

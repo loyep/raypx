@@ -13,7 +13,7 @@ Raypx is an open-source SaaS template monorepo. It is built for fast product shi
 ## Architecture Principles
 
 - Single API layer: `oRPC` only.
-- Frontend accesses backend only through RPC.
+- Browser-facing modules access backend capabilities through RPC or client-safe wrappers.
 - AI is provider-pluggable (default path: Qwen, optional Zhipu).
 - Package boundaries are enforced by dependency layers.
 
@@ -43,14 +43,16 @@ raypx/
 │   ├── ai/              # AI domain services (providers, stream, logs)
 │   ├── auth/            # Better Auth integration + rpc helpers
 │   ├── config/          # Runtime/env config
-│   ├── core/            # Cross-package context + base contracts
+│   ├── core/            # Base runtime contracts and logger entrypoint
 │   ├── database/        # Drizzle schemas + adapters
 │   ├── design-system/   # Shared UI
-│   ├── forge/           # Internal command tooling
+│   ├── observability/   # Structured logging, metrics, Sentry helpers
 │   ├── rpc/             # oRPC transport layer
 │   ├── shared/          # Cross-end pure types/constants
 │   └── ...
-└── scripts/             # Internal automation scripts
+└── tooling/
+    ├── forge/           # Internal command tooling
+    └── tsconfig/        # Shared TypeScript presets
 ```
 
 ## Tech Stack
@@ -83,6 +85,7 @@ raypx/
 | `pnpm test` | Run test tasks |
 | `pnpm test:watch` | Run Vitest in watch mode |
 | `pnpm test:coverage` | Run coverage locally |
+| `pnpm coverage` | Alias for `pnpm test:coverage` |
 | `pnpm boundaries` | Validate workspace dependency boundaries |
 
 ### Platform

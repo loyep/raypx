@@ -51,13 +51,11 @@ Thank you for your interest in contributing to Raypx! This guide will help you g
 ```
 raypx/
 ├── apps/
-│   ├── web/          # Marketing/main web app
-│   ├── app/          # SaaS dashboard app
-│   └── docs/         # Documentation site
+│   └── web/          # Main fullstack app (dashboard, docs, API routes)
 ├── packages/
-│   ├── tsconfig/     # Shared TypeScript configurations
 │   ├── config/       # Environment validation
-│   ├── logger/       # Logging utilities
+│   ├── core/         # Base runtime contracts and logger entrypoint
+│   ├── observability/# Structured logging, metrics, tracing helpers
 │   ├── shared/       # Shared utilities
 │   ├── database/     # Database schema (Drizzle)
 │   ├── email/        # Email service
@@ -67,13 +65,16 @@ raypx/
 │   ├── ai/           # AI domain services
 │   ├── rpc/          # API layer (oRPC)
 │   └── design-system/# UI components
+└── tooling/
+    ├── forge/        # Internal command tooling
+    └── tsconfig/     # Shared TypeScript configs
 ```
 
 ## Project Direction
 
 Raypx follows a dual-track strategy:
 
-1. Product track: ship usable SaaS templates (`app`, `web`, `docs`).
+1. Product track: ship a usable SaaS template from `apps/web`.
 2. Platform track: keep `auth/ai/rpc/design-system` stable and reusable.
 
 References:
@@ -121,7 +122,7 @@ References:
 
 ```bash
 pnpm run test           # Run all tests
-pnpm run coverage       # Run with coverage
+pnpm run test:coverage  # Run with coverage
 ```
 
 ### Database Changes

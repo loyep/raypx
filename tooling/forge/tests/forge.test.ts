@@ -97,6 +97,8 @@ describe("forge cli", () => {
     expect(result.output).toContain('"sections"');
     expect(result.output).toContain('"env"');
     expect(result.output).toContain('"deps"');
+    expect(result.output).toContain('"repo"');
+    expect(result.output).toContain('"arch"');
   });
 
   it("supports scoped doctor output", () => {
@@ -111,6 +113,8 @@ describe("forge cli", () => {
     expect(result.output).toContain("forge doctor");
     expect(result.output).toContain("Commands:");
     expect(result.output).toContain("env");
+    expect(result.output).toContain("repo");
+    expect(result.output).toContain("arch");
     expect(result.output).toContain("Print structured JSON output");
     expect(result.output).toContain("Examples:");
   });

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { AIServiceError, toAIServiceError } from "./errors";
+import { AIServiceError, toAIServiceError } from "../src/errors";
 
 describe("toAIServiceError", () => {
   it("returns AIServiceError input directly", () => {

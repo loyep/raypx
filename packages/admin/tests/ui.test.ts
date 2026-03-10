@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getUsersColumns, UserEditDialog, UsersTable } from "../ui";
+import { getUsersColumns, UserEditDialog, UsersTable } from "../src/ui";
 
 describe("admin ui exports", () => {
   it("exports component factories", () => {
