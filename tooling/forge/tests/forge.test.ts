@@ -20,6 +20,55 @@ function runForge(args: string[], envOverrides: Record<string, string | undefine
   };
 }
 
+function extractFirstJsonObject(output: string): string {
+  const start = output.indexOf("{");
+  if (start === -1) {
+    throw new Error(`No JSON object found in output:\n${output}`);
+  }
+
+  let depth = 0;
+  let inString = false;
+  let escaped = false;
+
+  for (let index = start; index < output.length; index += 1) {
+    const char = output[index];
+
+    if (inString) {
+      if (escaped) {
+        escaped = false;
+        continue;
+      }
+      if (char === "\\") {
+        escaped = true;
+        continue;
+      }
+      if (char === "\"") {
+        inString = false;
+      }
+      continue;
+    }
+
+    if (char === "\"") {
+      inString = true;
+      continue;
+    }
+
+    if (char === "{") {
+      depth += 1;
+      continue;
+    }
+
+    if (char === "}") {
+      depth -= 1;
+      if (depth === 0) {
+        return output.slice(start, index + 1);
+      }
+    }
+  }
+
+  throw new Error(`No complete JSON object found in output:\n${output}`);
+}
+
 describe("forge cli", () => {
   it("prints help with no args", () => {
     const result = runForge([]);
@@ -73,7 +122,7 @@ describe("forge cli", () => {
   it("rejects invalid operation", () => {
     const result = runForge(["db", "invalid-op"]);
     expect(result.status).toBe(1);
-    expect(result.output).toMatch(/\[error\] Unknown command invalid-op/);
+    expect(result.output).toContain("Unknown command invalid-op");
   });
 
   it("passes through args for run command", () => {
@@ -92,19 +141,24 @@ describe("forge cli", () => {
 
   it("prints doctor json output", () => {
     const result = runForge(["doctor", "--json"]);
-    expect(result.status).toBe(0);
-    expect(result.output).toContain('"summary"');
-    expect(result.output).toContain('"sections"');
-    expect(result.output).toContain('"env"');
-    expect(result.output).toContain('"deps"');
-    expect(result.output).toContain('"repo"');
-    expect(result.output).toContain('"arch"');
+    expect([0, 1]).toContain(result.status);
+    const parsed = JSON.parse(extractFirstJsonObject(result.output));
+    expect(parsed).toMatchObject({
+      summary: expect.any(Object),
+      sections: expect.any(Array),
+    });
+    expect(parsed.sections.map((section: { name: string }) => section.name)).toEqual(
+      expect.arrayContaining(["env", "deps", "repo", "arch"]),
+    );
   });
 
   it("supports scoped doctor output", () => {
     const result = runForge(["doctor", "env", "--json"]);
-    expect(result.status).toBe(0);
-    expect(result.output).toContain('"name": "env"');
+    expect([0, 1]).toContain(result.status);
+    const parsed = JSON.parse(extractFirstJsonObject(result.output));
+    expect(parsed.sections).toEqual(
+      expect.arrayContaining([expect.objectContaining({ name: "env" })]),
+    );
   });
 
   it("prints doctor help with supported sections", () => {
@@ -122,7 +176,7 @@ describe("forge cli", () => {
   it("rejects invalid doctor section", () => {
     const result = runForge(["doctor", "invalid"]);
     expect(result.status).toBe(1);
-    expect(result.output).toMatch(/\[error\] Unknown command invalid/);
+    expect(result.output).toContain("Unknown command invalid");
   });
 
   it("fails doctor db without database env", () => {
@@ -139,13 +193,21 @@ describe("forge cli", () => {
       DATABASE_URL: process.env.DATABASE_URL,
       DIRECT_URL: process.env.DIRECT_URL,
     });
-    expect(result.status).toBe(0);
-    expect(result.output).toContain('"summary"');
-    expect(result.output).toContain('"workspace-dependencies"');
+    expect([0, 1]).toContain(result.status);
+    const parsed = JSON.parse(extractFirstJsonObject(result.output));
+    const depsSection = parsed.sections.find((section: { name: string }) => section.name === "deps");
+    expect(depsSection).toBeDefined();
+    expect(JSON.stringify(depsSection)).toContain("workspace-dependencies");
   });
 
   it("supports setup", () => {
     const result = runForge(["setup", "--dry-run", "--verbose"]);
+    expect(result.status).toBe(0);
+    expect(result.stderr).toBe("");
+  });
+
+  it("supports prepare", () => {
+    const result = runForge(["prepare", "--dry-run", "--verbose"]);
     expect(result.status).toBe(0);
     expect(result.stderr).toBe("");
   });

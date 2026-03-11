@@ -11,7 +11,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@dotenvx/dotenvx": "^1.53.0",
+    "@dotenvx/dotenvx": "^1.54.1",
     "@raypx/core": "workspace:*",
     "citty": "^0.2.1",
     "fast-glob": "^3.3.3",

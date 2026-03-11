@@ -21,7 +21,7 @@
   "dependencies": {
     "@raypx/database": "workspace:*",
     "@raypx/design-system": "workspace:*",
-    "@tabler/icons-react": "^3.39.0",
+    "@tabler/icons-react": "^3.40.0",
     "@tanstack/react-table": "^8.21.3",
     "react": "catalog:react19",
     "zod": "catalog:"

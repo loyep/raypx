@@ -184,6 +184,7 @@ export async function renderForgeUsage(
       "Workspace Commands:",
       "  clean             Clean workspace caches",
       "  doctor            Run health checks",
+      "  prepare           Run local workspace preparation tasks",
       "  setup             Run initial project setup",
       "  run [...command]  Run an arbitrary command in the current working directory",
       "",

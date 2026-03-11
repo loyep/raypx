@@ -4,6 +4,7 @@ import { runClean } from "./commands/clean";
 import { runDbOperation } from "./commands/db";
 import type { DoctorSectionName } from "./commands/doctor";
 import { runDoctor } from "./commands/doctor";
+import { runPrepare } from "./commands/prepare";
 import { runSetup } from "./commands/setup";
 import { runUiGenerate } from "./commands/ui";
 import { runCommand as runShellCommand } from "./libs/runner";
@@ -178,6 +179,19 @@ const setupCommand = createTaskCommand({
   },
 });
 
+const prepareCommand = createTaskCommand({
+  name: "prepare",
+  description: "Run local workspace preparation tasks",
+  examples: ["forge prepare", "forge prepare --dry-run --verbose"],
+  args: commonBooleanArgs,
+  async run({ args }) {
+    await runPrepare({
+      dryRun: Boolean(args["dry-run"]),
+      verbose: Boolean(args.verbose),
+    });
+  },
+});
+
 const runCliCommand = createTaskCommand({
   name: "run",
   description: "Run an arbitrary command in the current working directory",
@@ -222,6 +236,7 @@ export const forgeCommand = createForgeCommand({
     clean: cleanCommand,
     db: dbCommand,
     doctor: doctorCommand,
+    prepare: prepareCommand,
     setup: setupCommand,
     run: runCliCommand,
     ui: uiCommand,

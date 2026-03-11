@@ -16,7 +16,7 @@
     "@raypx/config": "workspace:*",
     "@raypx/database": "workspace:*",
     "@raypx/shared": "workspace:*",
-    "stripe": "^20.4.0"
+    "stripe": "^20.4.1"
   },
   "devDependencies": {
     "@raypx/tsconfig": "workspace:*",

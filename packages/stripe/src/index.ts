@@ -1,3 +1,4 @@
+import { authEnv, createEnv } from "@raypx/config";
 import { db, eq } from "@raypx/database";
 import {
   invoice,
@@ -6,7 +7,7 @@ import {
   type SubscriptionStatus,
   subscription,
 } from "@raypx/database/schemas";
-import { BILLING_PATHS, SITE_URL } from "@raypx/shared/config";
+import { BILLING_PATHS } from "@raypx/shared/config";
 import Stripe from "stripe";
 import { getStripe } from "./env";
 
@@ -14,7 +15,7 @@ export { Stripe };
 export { getStripe };
 
 function getDefaultBillingUrl(path: string): string {
-  return new URL(path, SITE_URL).toString();
+  return new URL(path, createEnv(authEnv).SITE_URL).toString();
 }
 
 // Type for subscription with period properties (for API version 2026-02-25.clover)

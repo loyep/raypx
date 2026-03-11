@@ -12,7 +12,6 @@
   },
   "scripts": {
     "clean": "rimraf dist .turbo",
-    "dev": "tsdown --watch",
     "test": "vitest run",
     "test:watch": "vitest --watch",
     "typecheck": "tsc --noEmit"
