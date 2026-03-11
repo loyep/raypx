@@ -111,15 +111,8 @@ export interface ResendConfig {
   fromName?: string;
 }
 
-/**
- * SMTP configuration
- */
 export interface SMTPConfig {
-  host: string;
-  port: number;
-  secure?: boolean;
-  user: string;
-  password: string;
+  url: string;
   fromEmail: string;
   fromName?: string;
 }

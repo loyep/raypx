@@ -16,16 +16,7 @@ export class SMTPEmailClient {
   constructor(config: SMTPConfig) {
     this.fromEmail = config.fromEmail;
     this.fromName = config.fromName;
-
-    this.transporter = nodemailer.createTransport({
-      host: config.host,
-      port: config.port,
-      secure: config.secure ?? config.port === 465,
-      auth: {
-        user: config.user,
-        pass: config.password,
-      },
-    });
+    this.transporter = nodemailer.createTransport(config.url);
   }
 
   /**
@@ -108,44 +99,3 @@ export class SMTPEmailClient {
     return recipient.name ? `${recipient.name} <${recipient.email}>` : recipient.email;
   }
 }
-
-function parseSmtpUrl(
-  value: string,
-): Pick<SMTPConfig, "host" | "port" | "secure" | "user" | "password"> {
-  let parsed: URL;
-  try {
-    parsed = new URL(value);
-  } catch {
-    throw new EmailError("INVALID_CONFIGURATION", "Invalid SMTP_URL");
-  }
-
-  if (parsed.protocol !== "smtp:" && parsed.protocol !== "smtps:") {
-    throw new EmailError("INVALID_CONFIGURATION", "SMTP_URL must use smtp:// or smtps://");
-  }
-
-  const host = parsed.hostname;
-  const port = parsed.port
-    ? Number.parseInt(parsed.port, 10)
-    : parsed.protocol === "smtps:"
-      ? 465
-      : 587;
-  const user = decodeURIComponent(parsed.username);
-  const password = decodeURIComponent(parsed.password);
-
-  if (!host || !user || !password) {
-    throw new EmailError(
-      "INVALID_CONFIGURATION",
-      "SMTP_URL must include host, username, and password",
-    );
-  }
-
-  return {
-    host,
-    port,
-    secure: parsed.protocol === "smtps:",
-    user,
-    password,
-  };
-}
-
-export { parseSmtpUrl };

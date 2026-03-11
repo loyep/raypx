@@ -36,15 +36,7 @@ describe("email smtp client", () => {
     const { createSMTPClient, SMTPEmailClient } = await loadEmailModule();
 
     expect(createSMTPClient()).toBeInstanceOf(SMTPEmailClient);
-    expect(createTransportMock).toHaveBeenCalledWith({
-      host: "smtp.raypx.com",
-      port: 2525,
-      secure: false,
-      auth: {
-        user: "mailer",
-        pass: "secret",
-      },
-    });
+    expect(createTransportMock).toHaveBeenCalledWith("smtp://mailer:secret@smtp.raypx.com:2525");
   });
 
   it("rejects missing smtp configuration", async () => {
@@ -56,29 +48,14 @@ describe("email smtp client", () => {
     );
   });
 
-  it("rejects invalid SMTP_URL values", async () => {
-    vi.stubEnv("SMTP_URL", "https://example.com");
-    const { createSMTPClient, EmailError } = await loadEmailModule();
-
-    expect(() => createSMTPClient()).toThrowError(
-      new EmailError("INVALID_CONFIGURATION", "SMTP_URL must use smtp:// or smtps://"),
-    );
-  });
-
   it("supports smtps URLs and encoded credentials", async () => {
     vi.stubEnv("SMTP_URL", "smtps://mailer%40raypx.com:sec%2Fret@smtp.raypx.com");
     const { createSMTPClient, SMTPEmailClient } = await loadEmailModule();
 
     expect(createSMTPClient()).toBeInstanceOf(SMTPEmailClient);
-    expect(createTransportMock).toHaveBeenCalledWith({
-      host: "smtp.raypx.com",
-      port: 465,
-      secure: true,
-      auth: {
-        user: "mailer@raypx.com",
-        pass: "sec/ret",
-      },
-    });
+    expect(createTransportMock).toHaveBeenCalledWith(
+      "smtps://mailer%40raypx.com:sec%2Fret@smtp.raypx.com",
+    );
   });
 
   it("formats recipients and returns message ids", async () => {
@@ -86,10 +63,7 @@ describe("email smtp client", () => {
     sendMailMock.mockResolvedValue({ messageId: "smtp_1" });
 
     const client = new SMTPEmailClient({
-      host: "smtp.raypx.com",
-      port: 2525,
-      user: "mailer",
-      password: "secret",
+      url: "smtp://mailer:secret@smtp.raypx.com:2525",
       fromEmail: "hello@raypx.com",
       fromName: "Raypx",
     });
@@ -125,10 +99,7 @@ describe("email smtp client", () => {
     verifyMock.mockRejectedValueOnce(new Error("nope"));
 
     const client = new SMTPEmailClient({
-      host: "smtp.raypx.com",
-      port: 465,
-      user: "mailer",
-      password: "secret",
+      url: "smtps://mailer:secret@smtp.raypx.com",
       fromEmail: "hello@raypx.com",
     });
 
