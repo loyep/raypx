@@ -108,8 +108,6 @@ describe("stripe integration", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.stubEnv("STRIPE_PRIVATE_KEY", "sk_test_123");
-    vi.stubEnv("VITE_PAY_SUCCESS_URL", "https://raypx.com/billing/success");
-    vi.stubEnv("VITE_PAY_CANCEL_URL", "https://raypx.com/billing/cancel");
   });
 
   it("creates a stripe client from env", () => {
@@ -146,16 +144,16 @@ describe("stripe integration", () => {
       customer_email: "user@raypx.com",
       mode: "subscription",
       line_items: [{ price: "price_basic", quantity: 1 }],
-      success_url: "https://raypx.com/billing/success",
-      cancel_url: "https://raypx.com/billing/cancel",
+      success_url: "http://localhost:3000/billing/success",
+      cancel_url: "http://localhost:3000/billing/cancel",
       metadata: { userId: "user_1" },
     });
     expect(checkoutCreateMock).toHaveBeenNthCalledWith(2, {
       customer: "cus_existing",
       mode: "subscription",
       line_items: [{ price: "price_pro", quantity: 1 }],
-      success_url: "https://raypx.com/billing/success",
-      cancel_url: "https://raypx.com/billing/cancel",
+      success_url: "http://localhost:3000/billing/success",
+      cancel_url: "http://localhost:3000/billing/cancel",
       metadata: { userId: "user_1" },
     });
   });
@@ -173,7 +171,7 @@ describe("stripe integration", () => {
     });
     expect(portalCreateMock).toHaveBeenCalledWith({
       customer: "cus_123",
-      return_url: "https://raypx.com/billing/success",
+      return_url: "http://localhost:3000/billing/success",
     });
   });
 

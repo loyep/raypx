@@ -72,13 +72,13 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
               <OAuthButton
                 provider="google"
                 render={({ disabled, isLoading, onClick }) => (
-                    <Button
-                      className="w-full"
-                      disabled={disabled}
-                      onClick={onClick}
-                      type="button"
-                      variant="default"
-                    >
+                  <Button
+                    className="w-full"
+                    disabled={disabled}
+                    onClick={onClick}
+                    type="button"
+                    variant="default"
+                  >
                     {isLoading ? (
                       <Spinner className="mr-2" />
                     ) : (
@@ -91,13 +91,13 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
               <OAuthButton
                 provider="github"
                 render={({ disabled, isLoading, onClick }) => (
-                    <Button
-                      className="w-full"
-                      disabled={disabled}
-                      onClick={onClick}
-                      type="button"
-                      variant="default"
-                    >
+                  <Button
+                    className="w-full"
+                    disabled={disabled}
+                    onClick={onClick}
+                    type="button"
+                    variant="default"
+                  >
                     {isLoading ? (
                       <Spinner className="mr-2" />
                     ) : (

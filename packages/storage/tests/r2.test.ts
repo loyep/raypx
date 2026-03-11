@@ -26,7 +26,7 @@ vi.mock("nanoid", () => ({
   nanoid: vi.fn(() => "fixed-file-id"),
 }));
 
-import { createR2Storage, R2Storage } from "../src/r2";
+import { createR2Storage, R2Storage } from "../src";
 import { StorageError } from "../src/types";
 
 describe("storage r2 client", () => {

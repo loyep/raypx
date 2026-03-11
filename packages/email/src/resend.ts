@@ -99,22 +99,3 @@ export class ResendEmailClient {
     return recipient.name ? `${recipient.name} <${recipient.email}>` : recipient.email;
   }
 }
-
-/**
- * Create a Resend client from environment
- */
-export function createResendClient(): ResendEmailClient {
-  const apiKey = process.env.RESEND_API_KEY;
-  const fromEmail = process.env.EMAIL_FROM ?? "noreply@example.com";
-  const fromName = process.env.EMAIL_FROM_NAME;
-
-  if (!apiKey) {
-    throw new EmailError("INVALID_CONFIGURATION", "Missing RESEND_API_KEY");
-  }
-
-  return new ResendEmailClient({
-    apiKey,
-    fromEmail,
-    fromName,
-  });
-}

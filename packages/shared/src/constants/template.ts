@@ -109,7 +109,7 @@ export const SUPPORTED_LANGUAGES = ["en", "zh", "ja", "ko"] as const;
 /** Email configuration constants */
 export const EmailConfig = {
   /** Default sender (use environment variable or fallback) */
-  DEFAULT_FROM: process.env.RESEND_FROM || "noreply@localhost",
+  DEFAULT_FROM: process.env.EMAIL_FROM || "noreply@localhost",
   /** Support email address (use environment variable or fallback) */
   SUPPORT_EMAIL: process.env.SUPPORT_EMAIL || "support@localhost",
   /** Maximum recipients count */

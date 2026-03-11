@@ -21,37 +21,68 @@ vi.mock("nodemailer", () => ({
     createTransport: createTransportMock,
   },
 }));
-
-import { createSMTPClient, EmailError, SMTPEmailClient } from "../src";
+async function loadEmailModule() {
+  vi.resetModules();
+  return import("../src");
+}
 
 describe("email smtp client", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it("creates an smtp client from env", () => {
-    vi.stubEnv("SMTP_HOST", "smtp.raypx.com");
-    vi.stubEnv("SMTP_PORT", "2525");
-    vi.stubEnv("SMTP_USER", "mailer");
-    vi.stubEnv("SMTP_PASSWORD", "secret");
+  it("creates an smtp client from SMTP_URL", async () => {
+    vi.stubEnv("SMTP_URL", "smtp://mailer:secret@smtp.raypx.com:2525");
+    const { createSMTPClient, SMTPEmailClient } = await loadEmailModule();
 
     expect(createSMTPClient()).toBeInstanceOf(SMTPEmailClient);
+    expect(createTransportMock).toHaveBeenCalledWith({
+      host: "smtp.raypx.com",
+      port: 2525,
+      secure: false,
+      auth: {
+        user: "mailer",
+        pass: "secret",
+      },
+    });
   });
 
-  it("rejects missing smtp configuration", () => {
-    vi.stubEnv("SMTP_HOST", "");
-    vi.stubEnv("SMTP_USER", "");
-    vi.stubEnv("SMTP_PASSWORD", "");
+  it("rejects missing smtp configuration", async () => {
+    vi.stubEnv("SMTP_URL", "");
+    const { createSMTPClient, EmailError } = await loadEmailModule();
 
     expect(() => createSMTPClient()).toThrowError(
-      new EmailError(
-        "INVALID_CONFIGURATION",
-        "Missing SMTP configuration (SMTP_HOST, SMTP_USER, SMTP_PASSWORD)",
-      ),
+      new EmailError("INVALID_CONFIGURATION", "Missing SMTP_URL"),
     );
   });
 
+  it("rejects invalid SMTP_URL values", async () => {
+    vi.stubEnv("SMTP_URL", "https://example.com");
+    const { createSMTPClient, EmailError } = await loadEmailModule();
+
+    expect(() => createSMTPClient()).toThrowError(
+      new EmailError("INVALID_CONFIGURATION", "SMTP_URL must use smtp:// or smtps://"),
+    );
+  });
+
+  it("supports smtps URLs and encoded credentials", async () => {
+    vi.stubEnv("SMTP_URL", "smtps://mailer%40raypx.com:sec%2Fret@smtp.raypx.com");
+    const { createSMTPClient, SMTPEmailClient } = await loadEmailModule();
+
+    expect(createSMTPClient()).toBeInstanceOf(SMTPEmailClient);
+    expect(createTransportMock).toHaveBeenCalledWith({
+      host: "smtp.raypx.com",
+      port: 465,
+      secure: true,
+      auth: {
+        user: "mailer@raypx.com",
+        pass: "sec/ret",
+      },
+    });
+  });
+
   it("formats recipients and returns message ids", async () => {
+    const { SMTPEmailClient } = await loadEmailModule();
     sendMailMock.mockResolvedValue({ messageId: "smtp_1" });
 
     const client = new SMTPEmailClient({
@@ -89,6 +120,7 @@ describe("email smtp client", () => {
   });
 
   it("reports verification state from the transporter", async () => {
+    const { SMTPEmailClient } = await loadEmailModule();
     verifyMock.mockResolvedValueOnce(true);
     verifyMock.mockRejectedValueOnce(new Error("nope"));
 

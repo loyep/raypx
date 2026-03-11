@@ -1,25 +1,13 @@
 import type { SiteConfig } from "@raypx/seo";
-import { SITE_URL } from "@raypx/shared/config";
+import { PRODUCT_CONFIG, SITE_METADATA, SITE_URL } from "@raypx/shared/config";
 
 export const siteConfig: SiteConfig = {
-  name: "Raypx",
-  title: "Raypx - Type-Safe Full-Stack Starter",
-  description:
-    "Raypx is a production-ready starter with TanStack Start, Better Auth, oRPC, and Drizzle. Ship type-safe web products faster with a modern monorepo foundation.",
-  keywords: [
-    "React",
-    "React 19",
-    "TypeScript",
-    "TanStack Start",
-    "full-stack",
-    "Better Auth",
-    "Drizzle ORM",
-    "shadcn/ui",
-    "SSR",
-    "SSG",
-  ],
+  name: SITE_METADATA.marketing.name,
+  title: SITE_METADATA.marketing.title,
+  description: SITE_METADATA.marketing.description,
+  keywords: [...SITE_METADATA.marketing.keywords],
   url: SITE_URL,
-  author: "Raypx",
-  image: "/og.png",
-  github: "https://github.com/raypx/raypx",
+  author: PRODUCT_CONFIG.author,
+  image: PRODUCT_CONFIG.image,
+  github: PRODUCT_CONFIG.github,
 };

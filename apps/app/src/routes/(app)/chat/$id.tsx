@@ -1,8 +1,7 @@
 import { generatePageHead } from "@raypx/seo";
 import { createFileRoute } from "@tanstack/react-router";
-import { useCallback } from "react";
+import { PagePlaceholder } from "@/components/page-placeholder";
 import { siteConfig } from "@/config/site";
-import { ChatPage } from "@/features/chat/components/page";
 
 export const Route = createFileRoute("/(app)/chat/$id")({
   component: ChatConversationRoute,
@@ -11,28 +10,13 @@ export const Route = createFileRoute("/(app)/chat/$id")({
 
 function ChatConversationRoute() {
   const { id } = Route.useParams();
-  const navigate = Route.useNavigate();
-
-  const handleRouteConversationChange = useCallback(
-    (conversationId: string | null) => {
-      if (conversationId) {
-        void navigate({
-          replace: true,
-          to: "/chat/$id",
-          params: { id: conversationId },
-        });
-        return;
-      }
-
-      void navigate({
-        replace: true,
-        to: "/chat",
-      });
-    },
-    [navigate],
-  );
 
   return (
-    <ChatPage onRouteConversationChange={handleRouteConversationChange} routeConversationId={id} />
+    <PagePlaceholder
+      description={`Conversation ${id} is hidden while the dashboard UI is being rebuilt. Keep the route for future restoration.`}
+      kicker="Conversation"
+      primaryAction={{ label: "Back to chat", to: "/chat" }}
+      title="Conversation view removed"
+    />
   );
 }

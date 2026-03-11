@@ -1,8 +1,7 @@
 import { generatePageHead } from "@raypx/seo";
 import { createFileRoute } from "@tanstack/react-router";
-import { useCallback } from "react";
+import { PagePlaceholder } from "@/components/page-placeholder";
 import { siteConfig } from "@/config/site";
-import { ChatPage } from "@/features/chat/components/page";
 
 export const Route = createFileRoute("/(app)/chat/")({
   component: ChatIndexRoute,
@@ -10,31 +9,12 @@ export const Route = createFileRoute("/(app)/chat/")({
 });
 
 function ChatIndexRoute() {
-  const navigate = Route.useNavigate();
-
-  const handleRouteConversationChange = useCallback(
-    (conversationId: string | null) => {
-      if (conversationId) {
-        void navigate({
-          replace: true,
-          to: "/chat/$id",
-          params: { id: conversationId },
-        });
-        return;
-      }
-
-      void navigate({
-        replace: true,
-        to: "/chat",
-      });
-    },
-    [navigate],
-  );
-
   return (
-    <ChatPage
-      onRouteConversationChange={handleRouteConversationChange}
-      routeConversationId={null}
+    <PagePlaceholder
+      description="The previous chat workspace has been stripped back so the dashboard can be redesigned from a clean baseline."
+      kicker="Chat"
+      primaryAction={{ label: "Open settings", to: "/settings/ai-providers" }}
+      title="Chat page is intentionally minimal"
     />
   );
 }

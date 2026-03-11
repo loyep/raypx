@@ -8,9 +8,9 @@
  * Falls back to localhost for development
  */
 export const SITE_URL =
-  (typeof import.meta !== "undefined" && import.meta.env?.VITE_SITE_URL) ||
   process.env.SITE_URL ||
-  process.env.VITE_SITE_URL ||
+  process.env.AUTH_URL ||
+  (typeof import.meta !== "undefined" && import.meta.env?.SITE_URL) ||
   "http://localhost:3000";
 
 /**

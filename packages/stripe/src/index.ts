@@ -6,9 +6,16 @@ import {
   type SubscriptionStatus,
   subscription,
 } from "@raypx/database/schemas";
+import { BILLING_PATHS, SITE_URL } from "@raypx/shared/config";
 import Stripe from "stripe";
+import { getStripe } from "./env";
 
 export { Stripe };
+export { getStripe };
+
+function getDefaultBillingUrl(path: string): string {
+  return new URL(path, SITE_URL).toString();
+}
 
 // Type for subscription with period properties (for API version 2026-02-25.clover)
 interface SubscriptionWithPeriod {
@@ -23,19 +30,6 @@ interface SubscriptionWithPeriod {
     }>;
   };
   customer: string;
-}
-
-/**
- * Get Stripe client instance
- */
-export function getStripe(): Stripe {
-  const secretKey = process.env.STRIPE_PRIVATE_KEY;
-  if (!secretKey) {
-    throw new Error("STRIPE_PRIVATE_KEY is not configured");
-  }
-  return new Stripe(secretKey, {
-    apiVersion: "2026-02-25.clover",
-  });
 }
 
 /**
@@ -67,8 +61,8 @@ export async function createCheckoutSession(options: {
           quantity: 1,
         },
       ],
-      success_url: successUrl ?? `${process.env.VITE_PAY_SUCCESS_URL ?? "/"}`,
-      cancel_url: cancelUrl ?? `${process.env.VITE_PAY_CANCEL_URL ?? "/"}`,
+      success_url: successUrl ?? getDefaultBillingUrl(BILLING_PATHS.success),
+      cancel_url: cancelUrl ?? getDefaultBillingUrl(BILLING_PATHS.cancel),
       metadata: {
         userId,
       },
@@ -87,8 +81,8 @@ export async function createCheckoutSession(options: {
         quantity: 1,
       },
     ],
-    success_url: successUrl ?? `${process.env.VITE_PAY_SUCCESS_URL ?? "/"}`,
-    cancel_url: cancelUrl ?? `${process.env.VITE_PAY_CANCEL_URL ?? "/"}`,
+    success_url: successUrl ?? getDefaultBillingUrl(BILLING_PATHS.success),
+    cancel_url: cancelUrl ?? getDefaultBillingUrl(BILLING_PATHS.cancel),
     metadata: {
       userId,
     },
@@ -118,7 +112,7 @@ export async function createPortalSession(options: {
 
   const session = await stripe.billingPortal.sessions.create({
     customer: sub.stripeCustomerId,
-    return_url: returnUrl ?? `${process.env.VITE_PAY_SUCCESS_URL ?? "/"}`,
+    return_url: returnUrl ?? getDefaultBillingUrl(BILLING_PATHS.success),
   });
 
   return { url: session.url };

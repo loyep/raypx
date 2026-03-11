@@ -18,24 +18,28 @@ vi.mock("resend", () => ({
     constructor(public apiKey: string) {}
   },
 }));
-
-import { createResendClient, EmailError, ResendEmailClient } from "../src";
+async function loadEmailModule() {
+  vi.resetModules();
+  return import("../src");
+}
 
 describe("email resend client", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it("creates a resend client from env", () => {
+  it("creates a resend client from env", async () => {
     vi.stubEnv("RESEND_API_KEY", "re_test_123");
     vi.stubEnv("EMAIL_FROM", "hello@raypx.com");
     vi.stubEnv("EMAIL_FROM_NAME", "Raypx");
+    const { createResendClient, ResendEmailClient } = await loadEmailModule();
 
     expect(createResendClient()).toBeInstanceOf(ResendEmailClient);
   });
 
-  it("rejects missing resend configuration", () => {
+  it("rejects missing resend configuration", async () => {
     vi.stubEnv("RESEND_API_KEY", "");
+    const { createResendClient, EmailError } = await loadEmailModule();
 
     expect(() => createResendClient()).toThrowError(
       new EmailError("INVALID_CONFIGURATION", "Missing RESEND_API_KEY"),
@@ -43,6 +47,7 @@ describe("email resend client", () => {
   });
 
   it("formats recipients, tags, and react content for resend", async () => {
+    const { ResendEmailClient } = await loadEmailModule();
     sendEmailMock.mockResolvedValue({
       data: { id: "email_1" },
       error: null,
@@ -91,6 +96,7 @@ describe("email resend client", () => {
   });
 
   it("throws when no content is provided", async () => {
+    const { EmailError, ResendEmailClient } = await loadEmailModule();
     const client = new ResendEmailClient({
       apiKey: "re_test_123",
       fromEmail: "hello@raypx.com",

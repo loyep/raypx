@@ -3,8 +3,8 @@ import { z } from "zod";
 export const authEnv = {
   id: "auth",
   shared: {
-    AUTH_URL: z.url(),
-    SITE_URL: z.url().optional().default("http://localhost:3000"),
+    AUTH_URL: z.url().default("http://localhost:3000"),
+    SITE_URL: z.url().default("http://localhost:3000"),
   },
   server: {
     AUTH_SECRET: z.string().min(32).optional(),

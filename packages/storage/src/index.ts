@@ -1,5 +1,6 @@
 // R2 Storage
 
+export { createR2Storage } from "./env";
 // Image processing
 export {
   generateThumbnail,
@@ -7,7 +8,7 @@ export {
   isValidImage,
   processImage,
 } from "./image";
-export { createR2Storage, R2Storage } from "./r2";
+export { R2Storage } from "./r2";
 
 // Types
 export type {

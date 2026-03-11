@@ -1,6 +1,7 @@
 // Email clients
-export { createResendClient, ResendEmailClient } from "./resend";
-export { createSMTPClient, SMTPEmailClient } from "./smtp";
+export { createResendClient, createSMTPClient } from "./client";
+export { ResendEmailClient } from "./resend";
+export { SMTPEmailClient } from "./smtp";
 
 // Email templates
 export {

@@ -1,13 +1,13 @@
 import type { SiteConfig } from "@raypx/seo";
-import { SITE_URL } from "@raypx/shared/config";
+import { PRODUCT_CONFIG, SITE_METADATA, SITE_URL } from "@raypx/shared/config";
 
 export const siteConfig: SiteConfig = {
-  name: "Raypx App",
-  title: "Raypx App",
-  description: "The Raypx product app for authenticated chat and AI provider workflows.",
-  keywords: ["Raypx", "AI", "chat", "TanStack Start", "oRPC"],
+  name: SITE_METADATA.app.name,
+  title: SITE_METADATA.app.title,
+  description: SITE_METADATA.app.description,
+  keywords: [...SITE_METADATA.app.keywords],
   url: SITE_URL,
-  author: "Raypx",
-  image: "/og.png",
-  github: "https://github.com/raypx/raypx",
+  author: PRODUCT_CONFIG.author,
+  image: PRODUCT_CONFIG.image,
+  github: PRODUCT_CONFIG.github,
 };

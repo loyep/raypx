@@ -1,20 +1,22 @@
+import { env } from "./env";
+
 // ==================== Email Domain Configuration ====================
 
 /** Email domain, retrieved from EMAIL_DOMAIN environment variable */
-const EMAIL_DOMAIN = process.env.EMAIL_DOMAIN || "localhost";
+const EMAIL_DOMAIN = env.EMAIL_DOMAIN;
 
 // ==================== Email Address Constants ====================
 
 /** Email address configuration object */
 export const EMAIL_ADDRESSES = {
   /** No-reply email address */
-  NOREPLY: process.env.NOREPLY_EMAIL || `noreply@${EMAIL_DOMAIN}`,
+  NOREPLY: env.NOREPLY_EMAIL || `noreply@${EMAIL_DOMAIN}`,
   /** Hello email address */
-  HELLO: process.env.HELLO_EMAIL || `hello@${EMAIL_DOMAIN}`,
+  HELLO: env.HELLO_EMAIL || `hello@${EMAIL_DOMAIN}`,
   /** Support email address */
-  SUPPORT: process.env.SUPPORT_EMAIL || `support@${EMAIL_DOMAIN}`,
+  SUPPORT: env.SUPPORT_EMAIL || `support@${EMAIL_DOMAIN}`,
   /** Test email address */
-  TEST: process.env.TEST_EMAIL || `test@${EMAIL_DOMAIN}`,
+  TEST: env.TEST_EMAIL || `test@${EMAIL_DOMAIN}`,
 } as const;
 
 // ==================== Email Template Constants ====================
@@ -22,7 +24,7 @@ export const EMAIL_ADDRESSES = {
 /** Email template configuration object */
 export const EMAIL_TEMPLATES = {
   /** Default sender */
-  DEFAULT_FROM: process.env.RESEND_FROM || `Raypx <${EMAIL_ADDRESSES.HELLO}>`,
+  DEFAULT_FROM: env.EMAIL_FROM || `Raypx <${EMAIL_ADDRESSES.HELLO}>`,
   /** Support email sender */
   SUPPORT_FROM: `Raypx Support <${EMAIL_ADDRESSES.SUPPORT}>`,
   /** No-reply email sender */
@@ -32,7 +34,7 @@ export const EMAIL_TEMPLATES = {
 // ==================== Other Email Configuration ====================
 
 /** Message ID domain, retrieved from MESSAGE_ID_DOMAIN environment variable, defaults to EMAIL_DOMAIN */
-export const MESSAGE_ID_DOMAIN = process.env.MESSAGE_ID_DOMAIN || EMAIL_DOMAIN;
+export const MESSAGE_ID_DOMAIN = env.MESSAGE_ID_DOMAIN || EMAIL_DOMAIN;
 
 // ==================== Type Exports ====================
 

@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./env": "./src/env.ts"
   },
   "scripts": {
     "clean": "rimraf dist .turbo",
@@ -14,6 +15,7 @@
   "dependencies": {
     "@raypx/config": "workspace:*",
     "@raypx/database": "workspace:*",
+    "@raypx/shared": "workspace:*",
     "stripe": "^20.4.0"
   },
   "devDependencies": {

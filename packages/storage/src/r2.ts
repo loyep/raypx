@@ -175,22 +175,3 @@ export class R2Storage {
     return `${year}/${month}/${day}/${id}`;
   }
 }
-
-/**
- * Create an R2 storage instance from environment
- */
-export function createR2Storage(): R2Storage {
-  const config = {
-    accountId: process.env.R2_ACCOUNT_ID ?? "",
-    accessKeyId: process.env.R2_ACCESS_KEY_ID ?? "",
-    secretAccessKey: process.env.R2_SECRET_ACCESS_KEY ?? "",
-    bucket: process.env.R2_BUCKET ?? "",
-    publicUrl: process.env.R2_PUBLIC_URL,
-  };
-
-  if (!config.accountId || !config.accessKeyId || !config.secretAccessKey || !config.bucket) {
-    throw new StorageError("INVALID_CONFIGURATION", "Missing R2 configuration");
-  }
-
-  return new R2Storage(config);
-}

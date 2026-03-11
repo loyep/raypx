@@ -109,30 +109,43 @@ export class SMTPEmailClient {
   }
 }
 
-/**
- * Create an SMTP client from environment
- */
-export function createSMTPClient(): SMTPEmailClient {
-  const host = process.env.SMTP_HOST;
-  const port = process.env.SMTP_PORT ? Number.parseInt(process.env.SMTP_PORT, 10) : 587;
-  const user = process.env.SMTP_USER;
-  const password = process.env.SMTP_PASSWORD;
-  const fromEmail = process.env.EMAIL_FROM ?? "noreply@example.com";
-  const fromName = process.env.EMAIL_FROM_NAME;
+function parseSmtpUrl(
+  value: string,
+): Pick<SMTPConfig, "host" | "port" | "secure" | "user" | "password"> {
+  let parsed: URL;
+  try {
+    parsed = new URL(value);
+  } catch {
+    throw new EmailError("INVALID_CONFIGURATION", "Invalid SMTP_URL");
+  }
+
+  if (parsed.protocol !== "smtp:" && parsed.protocol !== "smtps:") {
+    throw new EmailError("INVALID_CONFIGURATION", "SMTP_URL must use smtp:// or smtps://");
+  }
+
+  const host = parsed.hostname;
+  const port = parsed.port
+    ? Number.parseInt(parsed.port, 10)
+    : parsed.protocol === "smtps:"
+      ? 465
+      : 587;
+  const user = decodeURIComponent(parsed.username);
+  const password = decodeURIComponent(parsed.password);
 
   if (!host || !user || !password) {
     throw new EmailError(
       "INVALID_CONFIGURATION",
-      "Missing SMTP configuration (SMTP_HOST, SMTP_USER, SMTP_PASSWORD)",
+      "SMTP_URL must include host, username, and password",
     );
   }
 
-  return new SMTPEmailClient({
+  return {
     host,
     port,
+    secure: parsed.protocol === "smtps:",
     user,
     password,
-    fromEmail,
-    fromName,
-  });
+  };
 }
+
+export { parseSmtpUrl };

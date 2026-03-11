@@ -50,6 +50,7 @@ describe("config env helpers", () => {
 describe("config env schemas", () => {
   it("provides auth and analytics defaults", () => {
     expect(authEnv.shared.SITE_URL.parse(undefined)).toBe("http://localhost:3000");
+    expect(authEnv.shared.AUTH_URL.parse(undefined)).toBe("http://localhost:3000");
     expect(analyticsEnv.client.VITE_PUBLIC_ENABLE_GA.parse(undefined)).toBe(false);
   });
 
