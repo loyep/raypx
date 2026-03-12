@@ -3,9 +3,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import {
   HomeCapabilities as Capabilities,
   HomeCta as Cta,
-  HomeFooter as Footer,
-  HomeHeader as Header,
   HomeHero as Hero,
+  HomeModes as Modes,
+  HomeScenarios as Scenarios,
+  MarketingShell,
 } from "@/components/home";
 import { siteConfig } from "@/config/site";
 
@@ -16,15 +17,12 @@ export const Route = createFileRoute("/(home)/")({
 
 function HomePage() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <Header siteConfig={siteConfig} />
-
-      <main id="main-content">
+    <MarketingShell siteConfig={siteConfig}>
         <Hero />
+        <Scenarios />
         <Capabilities />
+        <Modes />
         <Cta siteConfig={siteConfig} />
-        <Footer siteConfig={siteConfig} />
-      </main>
-    </div>
+    </MarketingShell>
   );
 }

@@ -15,6 +15,8 @@ export function HomeFooter({ siteConfig }: HomeFooterProps) {
           <span>© {new Date().getFullYear()} Raypx. All rights reserved.</span>
         </div>
         <div className="flex items-center gap-4">
+          <Link to="/download">Download</Link>
+          <Link to="/open-source">Open Source</Link>
           <Link to="/docs">Docs</Link>
           <Link to="/privacy">Privacy</Link>
           <Link to="/terms">Terms</Link>

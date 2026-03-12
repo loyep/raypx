@@ -13,19 +13,29 @@ type HomeHeaderProps = {
 export function HomeHeader({ siteConfig }: HomeHeaderProps) {
   const { data: session } = useSession();
   const isLoggedIn = Boolean(session?.user);
+  const navItems = [
+    { label: "Download", to: "/download" as const },
+    { label: "Open Source", to: "/open-source" as const },
+    { label: "Docs", to: "/docs" as const },
+  ];
 
   return (
-    <header className="sticky top-0 z-50 border-b bg-background/90">
-      <div className="container mx-auto flex h-14 items-center justify-between px-4">
+    <header className="sticky top-0 z-50 border-b bg-background/90 backdrop-blur">
+      <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Link className="flex items-center gap-2" to="/">
           <Logo alt={siteConfig.name} />
           <span className="font-semibold">{siteConfig.name}</span>
         </Link>
 
+        <div className="hidden items-center gap-1 md:flex">
+          {navItems.map((item) => (
+            <Button key={item.to} render={<Link to={item.to} />} size="sm" variant="ghost">
+              {item.label}
+            </Button>
+          ))}
+        </div>
+
         <div className="flex items-center gap-2">
-          <Button render={<Link to="/docs" />} size="sm" variant="ghost">
-            Docs
-          </Button>
           <Button
             render={
               <a
@@ -43,11 +53,11 @@ export function HomeHeader({ siteConfig }: HomeHeaderProps) {
           <ThemeSwitcher />
           {isLoggedIn ? (
             <Button render={<Link to="/dashboard" />} size="sm" variant="default">
-              Dashboard
+              Open App
             </Button>
           ) : (
-            <Button render={<Link to="/login" />} size="sm" variant="default">
-              Sign in
+            <Button render={<Link to="/signup" />} size="sm" variant="default">
+              Start Free
             </Button>
           )}
         </div>

@@ -23,6 +23,8 @@ import { Route as ApiHelloRouteImport } from './routes/api/hello'
 import { Route as ApiHealthRouteImport } from './routes/api/health'
 import { Route as legalTermsRouteImport } from './routes/(legal)/terms'
 import { Route as legalPrivacyRouteImport } from './routes/(legal)/privacy'
+import { Route as homeOpenSourceRouteImport } from './routes/(home)/open-source'
+import { Route as homeDownloadRouteImport } from './routes/(home)/download'
 import { Route as authSignupRouteImport } from './routes/(auth)/signup'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
 import { Route as appOrpcUsersRouteImport } from './routes/(app)/orpc-users'
@@ -107,6 +109,16 @@ const legalPrivacyRoute = legalPrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
   getParentRoute: () => legalRouteRoute,
+} as any)
+const homeOpenSourceRoute = homeOpenSourceRouteImport.update({
+  id: '/open-source',
+  path: '/open-source',
+  getParentRoute: () => homeRouteRoute,
+} as any)
+const homeDownloadRoute = homeDownloadRouteImport.update({
+  id: '/download',
+  path: '/download',
+  getParentRoute: () => homeRouteRoute,
 } as any)
 const authSignupRoute = authSignupRouteImport.update({
   id: '/signup',
@@ -208,6 +220,8 @@ export interface FileRoutesByFullPath {
   '/orpc-users': typeof appOrpcUsersRoute
   '/login': typeof authLoginRoute
   '/signup': typeof authSignupRoute
+  '/download': typeof homeDownloadRoute
+  '/open-source': typeof homeOpenSourceRoute
   '/privacy': typeof legalPrivacyRoute
   '/terms': typeof legalTermsRoute
   '/api/health': typeof ApiHealthRoute
@@ -236,6 +250,8 @@ export interface FileRoutesByTo {
   '/orpc-users': typeof appOrpcUsersRoute
   '/login': typeof authLoginRoute
   '/signup': typeof authSignupRoute
+  '/download': typeof homeDownloadRoute
+  '/open-source': typeof homeOpenSourceRoute
   '/privacy': typeof legalPrivacyRoute
   '/terms': typeof legalTermsRoute
   '/api/health': typeof ApiHealthRoute
@@ -271,6 +287,8 @@ export interface FileRoutesById {
   '/(app)/orpc-users': typeof appOrpcUsersRoute
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/signup': typeof authSignupRoute
+  '/(home)/download': typeof homeDownloadRoute
+  '/(home)/open-source': typeof homeOpenSourceRoute
   '/(legal)/privacy': typeof legalPrivacyRoute
   '/(legal)/terms': typeof legalTermsRoute
   '/api/health': typeof ApiHealthRoute
@@ -303,6 +321,8 @@ export interface FileRouteTypes {
     | '/orpc-users'
     | '/login'
     | '/signup'
+    | '/download'
+    | '/open-source'
     | '/privacy'
     | '/terms'
     | '/api/health'
@@ -331,6 +351,8 @@ export interface FileRouteTypes {
     | '/orpc-users'
     | '/login'
     | '/signup'
+    | '/download'
+    | '/open-source'
     | '/privacy'
     | '/terms'
     | '/api/health'
@@ -365,6 +387,8 @@ export interface FileRouteTypes {
     | '/(app)/orpc-users'
     | '/(auth)/login'
     | '/(auth)/signup'
+    | '/(home)/download'
+    | '/(home)/open-source'
     | '/(legal)/privacy'
     | '/(legal)/terms'
     | '/api/health'
@@ -502,6 +526,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/privacy'
       preLoaderRoute: typeof legalPrivacyRouteImport
       parentRoute: typeof legalRouteRoute
+    }
+    '/(home)/open-source': {
+      id: '/(home)/open-source'
+      path: '/open-source'
+      fullPath: '/open-source'
+      preLoaderRoute: typeof homeOpenSourceRouteImport
+      parentRoute: typeof homeRouteRoute
+    }
+    '/(home)/download': {
+      id: '/(home)/download'
+      path: '/download'
+      fullPath: '/download'
+      preLoaderRoute: typeof homeDownloadRouteImport
+      parentRoute: typeof homeRouteRoute
     }
     '/(auth)/signup': {
       id: '/(auth)/signup'
@@ -702,10 +740,14 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
 )
 
 interface homeRouteRouteChildren {
+  homeDownloadRoute: typeof homeDownloadRoute
+  homeOpenSourceRoute: typeof homeOpenSourceRoute
   homeIndexRoute: typeof homeIndexRoute
 }
 
 const homeRouteRouteChildren: homeRouteRouteChildren = {
+  homeDownloadRoute: homeDownloadRoute,
+  homeOpenSourceRoute: homeOpenSourceRoute,
   homeIndexRoute: homeIndexRoute,
 }
 

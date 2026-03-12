@@ -4,23 +4,23 @@ import {
   CardHeader,
   CardTitle,
 } from "@raypx/design-system/components/ui/card";
-import { IconLock, IconSparkles, IconStack } from "@tabler/icons-react";
+import { IconCoin, IconLayersIntersect, IconShieldHalfFilled } from "@tabler/icons-react";
 
 const capabilities = [
   {
-    title: "Type-safe API",
-    description: "oRPC keeps request and response types aligned from server to UI.",
-    icon: IconSparkles,
+    title: "Clear model access layers",
+    description: "Keep personal providers separate from the hosted key pool so users always understand who pays and who controls routing.",
+    icon: IconLayersIntersect,
   },
   {
-    title: "Auth out of the box",
-    description: "Better Auth with session handling and extensible provider workflows.",
-    icon: IconLock,
+    title: "Permissioned operator controls",
+    description: "Admin pages manage key pool health, prompt policy layers, and usage without leaking operator complexity into the user workspace.",
+    icon: IconShieldHalfFilled,
   },
   {
-    title: "Monorepo ready",
-    description: "Turborepo package boundaries and shared tooling for teams.",
-    icon: IconStack,
+    title: "Usage and billing boundaries",
+    description: "Entitlements make free, BYOK, and hosted plans feel like coherent product choices instead of hidden switches.",
+    icon: IconCoin,
   },
 ] as const;
 
@@ -30,10 +30,10 @@ export function HomeCapabilities() {
       <div className="container mx-auto max-w-6xl">
         <div className="mb-8 space-y-2 text-center">
           <p className="font-mono text-[11px] text-primary uppercase tracking-[0.16em]">
-            Core capabilities
+            Why this shape matters
           </p>
           <h2 className="font-semibold text-3xl tracking-tight sm:text-4xl">
-            Everything needed for the first production release
+            The architecture is built so product, open source, and hosted SaaS can coexist.
           </h2>
         </div>
 
