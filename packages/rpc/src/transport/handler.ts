@@ -94,50 +94,45 @@ export const createHandler = (props: { prefix: `/${string}` }) => {
         schemaConverters: [new ZodToJsonSchemaConverter()],
       }),
     ],
-    interceptors: [
-      onError(() => undefined),
-    ],
+    interceptors: [onError(() => undefined)],
   });
 
   return async ({ request }: { request: Request }) => {
     const trace = resolveRequestTrace(request);
 
-    return runWithLogContext(
-      getRequestTraceLogContext(request, trace),
-      async () => {
-        try {
-          const rpcResult = await rpcHandler.handle(request, {
-            prefix: props.prefix,
-            context: await createContext({ req: request, trace }),
-          });
-          if (rpcResult.response) return withTraceHeaders(rpcResult.response, trace);
+    return runWithLogContext(getRequestTraceLogContext(request, trace), async () => {
+      try {
+        const rpcResult = await rpcHandler.handle(request, {
+          prefix: props.prefix,
+          context: await createContext({ req: request, trace }),
+        });
+        if (rpcResult.response) return withTraceHeaders(rpcResult.response, trace);
 
-          const apiResult = await apiHandler.handle(request, {
-            prefix: `${props.prefix}/api-reference`,
-            context: await createContext({ req: request, trace }),
-          });
-          if (apiResult.response) return withTraceHeaders(apiResult.response, trace);
+        const apiResult = await apiHandler.handle(request, {
+          prefix: `${props.prefix}/api-reference`,
+          context: await createContext({ req: request, trace }),
+        });
+        if (apiResult.response) return withTraceHeaders(apiResult.response, trace);
 
-          return withTraceHeaders(new Response("Not found", { status: 404 }), trace);
-        } catch (error) {
-          if (error instanceof Error) {
-            log.error(
-              {
-                err: error,
-              },
-              "RPC handler failed",
-            );
-          } else {
-            log.error(
-              {
-                error,
-              },
-              "RPC handler failed with unknown error",
-            );
-          }
-          throw error;
+        return withTraceHeaders(new Response("Not found", { status: 404 }), trace);
+      } catch (error) {
+        if (error instanceof Error) {
+          log.error(
+            {
+              err: error,
+            },
+            "RPC handler failed",
+          );
+        } else {
+          log.error(
+            {
+              error,
+            },
+            "RPC handler failed with unknown error",
+          );
         }
-      },
-    );
+        throw error;
+      }
+    });
   };
 };

@@ -7,7 +7,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@raypx/design-system/components/ui/card";
-import { IconArrowRight, IconCircleCheck, IconKey, IconQuote, IconWorld } from "@tabler/icons-react";
+import {
+  IconArrowRight,
+  IconCircleCheck,
+  IconKey,
+  IconQuote,
+  IconWorld,
+} from "@tabler/icons-react";
 import { Link } from "@tanstack/react-router";
 
 const trustItems = ["Open source", "BYOK friendly", "Hosted plan available"] as const;
@@ -41,8 +47,8 @@ export function HomeHero() {
             </h1>
             <p className="max-w-xl text-base text-muted-foreground sm:text-lg">
               Raypx is designed for people who want more than a chat box: ask questions, keep
-              threads alive, organize work into spaces, and choose between your own keys or a
-              hosted pool.
+              threads alive, organize work into spaces, and choose between your own keys or a hosted
+              pool.
             </p>
           </div>
 
@@ -58,7 +64,9 @@ export function HomeHero() {
 
           <div className="space-y-3">
             <div className="inline-flex items-center gap-2 rounded-md border bg-card px-3 py-2 font-mono text-sm">
-              <span className="text-muted-foreground">Ask -&gt; Thread -&gt; Space -&gt; Library</span>
+              <span className="text-muted-foreground">
+                Ask -&gt; Thread -&gt; Space -&gt; Library
+              </span>
             </div>
             <div className="flex flex-wrap gap-2">
               {trustItems.map((item) => (
@@ -89,25 +97,35 @@ export function HomeHero() {
           <div className="absolute inset-x-0 top-0 h-1 bg-linear-to-r from-primary/80 via-cyan-500/80 to-primary/80" />
           <CardHeader className="space-y-2 border-b bg-muted/40">
             <CardTitle className="text-base">Workspace Snapshot</CardTitle>
-            <CardDescription>How the product is meant to feel from the first session.</CardDescription>
+            <CardDescription>
+              How the product is meant to feel from the first session.
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4 p-5">
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="rounded-lg border bg-background p-3">
                 <p className="text-muted-foreground text-xs">Ask</p>
-                <p className="mt-1 font-semibold text-sm">Direct question entry with explicit modes</p>
+                <p className="mt-1 font-semibold text-sm">
+                  Direct question entry with explicit modes
+                </p>
               </div>
               <div className="rounded-lg border bg-background p-3">
                 <p className="text-muted-foreground text-xs">Threads</p>
-                <p className="mt-1 font-semibold text-sm">Longer reasoning without losing context</p>
+                <p className="mt-1 font-semibold text-sm">
+                  Longer reasoning without losing context
+                </p>
               </div>
               <div className="rounded-lg border bg-background p-3">
                 <p className="text-muted-foreground text-xs">Spaces</p>
-                <p className="mt-1 font-semibold text-sm">Project-level context, defaults, and saved work</p>
+                <p className="mt-1 font-semibold text-sm">
+                  Project-level context, defaults, and saved work
+                </p>
               </div>
               <div className="rounded-lg border bg-background p-3">
                 <p className="text-muted-foreground text-xs">Library</p>
-                <p className="mt-1 font-semibold text-sm">Reusable links, files, notes, and outputs</p>
+                <p className="mt-1 font-semibold text-sm">
+                  Reusable links, files, notes, and outputs
+                </p>
               </div>
             </div>
 

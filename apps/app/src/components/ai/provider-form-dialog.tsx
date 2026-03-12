@@ -271,7 +271,11 @@ export function AIProviderFormDialog({
                       onChange={(event) => {
                         const nextValue = event.target.value;
                         field.handleChange(nextValue);
-                        const models = parseModels([nextValue, ...recommendedModelsForDriver(form.state.values.driver)].join(", "));
+                        const models = parseModels(
+                          [nextValue, ...recommendedModelsForDriver(form.state.values.driver)].join(
+                            ", ",
+                          ),
+                        );
                         form.setFieldValue("modelsText", models.join(", "));
                       }}
                       placeholder="Type a model ID or use a recommended one"
@@ -286,7 +290,11 @@ export function AIProviderFormDialog({
                           field.handleChange(model);
                           form.setFieldValue(
                             "modelsText",
-                            parseModels([model, ...recommendedModelsForDriver(form.state.values.driver)].join(", ")).join(", "),
+                            parseModels(
+                              [model, ...recommendedModelsForDriver(form.state.values.driver)].join(
+                                ", ",
+                              ),
+                            ).join(", "),
                           );
                         }}
                         size="sm"

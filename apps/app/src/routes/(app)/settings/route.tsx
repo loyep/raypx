@@ -25,7 +25,11 @@ function SettingsLayout() {
         </div>
 
         <div className="rounded-2xl border bg-card p-3">
-          <Button className="mb-2 w-full justify-start gap-2" render={<Link to="/ask" />} variant="outline">
+          <Button
+            className="mb-2 w-full justify-start gap-2"
+            render={<Link to="/ask" />}
+            variant="outline"
+          >
             <IconArrowLeft className="size-4" />
             Back to workspace
           </Button>

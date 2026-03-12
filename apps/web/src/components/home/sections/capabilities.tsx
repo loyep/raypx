@@ -9,17 +9,20 @@ import { IconCoin, IconLayersIntersect, IconShieldHalfFilled } from "@tabler/ico
 const capabilities = [
   {
     title: "Clear model access layers",
-    description: "Keep personal providers separate from the hosted key pool so users always understand who pays and who controls routing.",
+    description:
+      "Keep personal providers separate from the hosted key pool so users always understand who pays and who controls routing.",
     icon: IconLayersIntersect,
   },
   {
     title: "Permissioned operator controls",
-    description: "Admin pages manage key pool health, prompt policy layers, and usage without leaking operator complexity into the user workspace.",
+    description:
+      "Admin pages manage key pool health, prompt policy layers, and usage without leaking operator complexity into the user workspace.",
     icon: IconShieldHalfFilled,
   },
   {
     title: "Usage and billing boundaries",
-    description: "Entitlements make free, BYOK, and hosted plans feel like coherent product choices instead of hidden switches.",
+    description:
+      "Entitlements make free, BYOK, and hosted plans feel like coherent product choices instead of hidden switches.",
     icon: IconCoin,
   },
 ] as const;

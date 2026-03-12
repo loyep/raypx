@@ -1,4 +1,5 @@
-import { generateAllComponentExports, logger } from "../libs/utils";
+import { logger } from "../libs/logger";
+import { generateAllComponentExports } from "../libs/utils";
 
 /**
  * Generate UI component exports

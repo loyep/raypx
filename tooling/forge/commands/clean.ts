@@ -1,7 +1,8 @@
 import fg from "fast-glob";
 import fs from "fs-extra";
+import { logger } from "../libs/logger";
 import { type RunOptions, runCommand } from "../libs/runner";
-import { logger, PROJECT_ROOT } from "../libs/utils";
+import { PROJECT_ROOT } from "../libs/utils";
 
 /**
  * Keep only workspace-level caches here. Package build outputs stay in each package clean script.

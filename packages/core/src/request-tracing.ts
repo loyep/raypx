@@ -74,10 +74,7 @@ export function getRequestTraceLogContext(
   };
 }
 
-export function withTraceHeaders(
-  response: Response,
-  trace: RequestTraceContext,
-): Response {
+export function withTraceHeaders(response: Response, trace: RequestTraceContext): Response {
   const headers = new Headers(response.headers);
   headers.set("x-request-id", trace.requestId);
   headers.set("x-trace-id", trace.traceId);

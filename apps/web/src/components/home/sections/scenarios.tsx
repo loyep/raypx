@@ -15,12 +15,14 @@ const scenarios = [
   },
   {
     title: "Threads",
-    description: "Keep follow-up thinking inside a conversation instead of treating each prompt like a reset.",
+    description:
+      "Keep follow-up thinking inside a conversation instead of treating each prompt like a reset.",
     icon: IconMessages,
   },
   {
     title: "Spaces",
-    description: "Organize long-lived projects with reusable defaults, files, notes, and saved context.",
+    description:
+      "Organize long-lived projects with reusable defaults, files, notes, and saved context.",
     icon: IconFolders,
   },
   {

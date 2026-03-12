@@ -112,10 +112,7 @@ function createPinoInstance(options: LoggerOptions = {}, bindings: LoggerContext
       environment: process.env.NODE_ENV ?? "development",
       ...bindings,
     },
-    timestamp:
-      options.timestamp === false
-        ? false
-        : pino.stdTimeFunctions.isoTime,
+    timestamp: options.timestamp === false ? false : pino.stdTimeFunctions.isoTime,
     formatters: {
       level: (label) => ({ level: label }),
       bindings: (baseBindings) => baseBindings,
@@ -279,9 +276,9 @@ export function withTag(tag: string): LoggerPort {
 }
 
 export { getLogContext, runWithLogContext } from "./log-context";
+export type { RequestLike, RequestTraceContext } from "./request-tracing";
 export {
   getRequestTraceLogContext,
   resolveRequestTrace,
   withTraceHeaders,
 } from "./request-tracing";
-export type { RequestLike, RequestTraceContext } from "./request-tracing";

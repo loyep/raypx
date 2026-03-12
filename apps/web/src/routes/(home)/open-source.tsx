@@ -39,19 +39,28 @@ function OpenSourcePage() {
               <CardHeader>
                 <CardTitle>What stays aligned</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3 text-sm text-muted-foreground">
-                <p>Ask, Threads, Spaces, and Library remain the same concepts across OSS and hosted.</p>
+              <CardContent className="space-y-3 text-muted-foreground text-sm">
+                <p>
+                  Ask, Threads, Spaces, and Library remain the same concepts across OSS and hosted.
+                </p>
                 <p>BYOK is first-class instead of being hidden behind paywalls.</p>
-                <p>Hosted plans add convenience and operator support, not a completely different product.</p>
+                <p>
+                  Hosted plans add convenience and operator support, not a completely different
+                  product.
+                </p>
               </CardContent>
             </Card>
             <Card>
               <CardHeader>
                 <CardTitle>What can differ</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3 text-sm text-muted-foreground">
-                <p>Hosted key pool and operator tooling are naturally richer in the official SaaS.</p>
-                <p>Self-hosting lets teams own provider, data, and deployment boundaries outright.</p>
+              <CardContent className="space-y-3 text-muted-foreground text-sm">
+                <p>
+                  Hosted key pool and operator tooling are naturally richer in the official SaaS.
+                </p>
+                <p>
+                  Self-hosting lets teams own provider, data, and deployment boundaries outright.
+                </p>
                 <p>Desktop will sit on top of the same domain model rather than fork it.</p>
               </CardContent>
             </Card>
@@ -68,9 +77,7 @@ function OpenSourcePage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-wrap gap-3">
-              <Button
-                render={<a href={siteConfig.github} rel="noreferrer" target="_blank" />}
-              >
+              <Button render={<a href={siteConfig.github} rel="noreferrer" target="_blank" />}>
                 <IconBrandGithub className="mr-2 size-4" />
                 View repository
               </Button>

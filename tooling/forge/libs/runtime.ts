@@ -1,7 +1,8 @@
 import { runCommand } from "citty";
 import { forgeCommand } from "../forge";
 import { resolveCommandForUsage, showUsage } from "./help";
-import { formatDuration, logger } from "./utils";
+import { logger } from "./logger";
+import { formatDuration } from "./utils";
 
 function handleError(error: unknown): never {
   const message = error instanceof Error ? error.message : String(error);

@@ -1,5 +1,6 @@
 import { spawn } from "node:child_process";
-import { logger, PROJECT_ROOT } from "./utils";
+import { logger } from "./logger";
+import { PROJECT_ROOT } from "./utils";
 
 /**
  * Command specification for execution

@@ -1,15 +1,29 @@
 import { Badge } from "@raypx/design-system/components/ui/badge";
 import { Button } from "@raypx/design-system/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@raypx/design-system/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@raypx/design-system/components/ui/card";
 import { Input } from "@raypx/design-system/components/ui/input";
 import { ScrollArea } from "@raypx/design-system/components/ui/scroll-area";
 import { toast } from "@raypx/design-system/components/ui/toast";
 import { cn } from "@raypx/design-system/lib/utils";
-import { IconCircleCheckFilled, IconKey, IconPlus, IconSearch, IconSparkles, IconTrash } from "@tabler/icons-react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { client } from "@raypx/rpc/client";
 import { generatePageHead } from "@raypx/seo";
+import {
+  IconCircleCheckFilled,
+  IconKey,
+  IconPlus,
+  IconSearch,
+  IconSparkles,
+  IconTrash,
+} from "@tabler/icons-react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useMemo, useState } from "react";
 import {
   AIProviderFormDialog,
   type AIProviderFormValues,
@@ -18,7 +32,6 @@ import {
 } from "@/components/ai/provider-form-dialog";
 import { WorkspacePage } from "@/components/workspace/workspace-primitives";
 import { siteConfig } from "@/config/site";
-import { useEffect, useMemo, useState } from "react";
 
 type ProviderRecord = {
   id: string;
@@ -317,7 +330,7 @@ function AIProviderSettingsPage() {
 
     const nextDefault =
       draftDefaultModel === model && isEnabled && !nextModels.includes(model)
-        ? nextModels[0] ?? ""
+        ? (nextModels[0] ?? "")
         : draftDefaultModel || nextModels[0] || "";
 
     setDraftDefaultModel(nextDefault);
@@ -360,7 +373,7 @@ function AIProviderSettingsPage() {
               </Button>
             </div>
             <div className="relative">
-              <IconSearch className="-translate-y-1/2 pointer-events-none absolute top-1/2 left-3 size-4 text-muted-foreground" />
+              <IconSearch className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 className="pl-9"
                 onChange={(event) => setProviderSearch(event.target.value)}
@@ -481,7 +494,11 @@ function AIProviderSettingsPage() {
                       <p className="font-medium text-sm">API key</p>
                       <Input
                         onChange={(event) => setDraftApiKey(event.target.value)}
-                        placeholder={selectedProvider.hasKey ? "Leave empty to keep current key" : "Paste API key"}
+                        placeholder={
+                          selectedProvider.hasKey
+                            ? "Leave empty to keep current key"
+                            : "Paste API key"
+                        }
                         type="password"
                         value={draftApiKey}
                       />
@@ -615,7 +632,7 @@ function AIProviderSettingsPage() {
               </div>
               <div className="grid gap-3 md:grid-cols-[1fr_auto]">
                 <div className="relative">
-                  <IconSearch className="-translate-y-1/2 pointer-events-none absolute top-1/2 left-3 size-4 text-muted-foreground" />
+                  <IconSearch className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
                     className="pl-9"
                     onChange={(event) => setModelSearch(event.target.value)}

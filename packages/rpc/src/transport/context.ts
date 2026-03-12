@@ -1,7 +1,7 @@
 import { ORPCError, os } from "@orpc/server";
 import { getRpcSessionFromRequest } from "@raypx/auth/rpc";
-import { resolveRequestTrace, type RequestTraceContext } from "@raypx/core/logger";
 import type { AuthSession as Session, AuthUser as User } from "@raypx/auth/types";
+import { type RequestTraceContext, resolveRequestTrace } from "@raypx/core/logger";
 import { db } from "@raypx/database";
 import { createORPCContext } from "./orpc-context";
 import { createRPCContext, type RPCContext } from "./rpc-context";

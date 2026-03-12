@@ -8,8 +8,8 @@ import { Textarea } from "@raypx/design-system/components/ui/textarea";
 import { toast } from "@raypx/design-system/components/ui/toast";
 import { client } from "@raypx/rpc/client";
 import { generatePageHead } from "@raypx/seo";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { IconAlertCircle, IconArrowUpRight, IconLoader2, IconSparkles } from "@tabler/icons-react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { InsightCard, WorkspacePage } from "@/components/workspace/workspace-primitives";
@@ -66,50 +66,43 @@ function AskPage() {
     providers.find((provider) => provider.id === preferences?.defaultProviderId) ?? null;
   const activeModel = preferences?.model || defaultProvider?.defaultModel || "";
 
-  const {
-    clearError,
-    conversationId,
-    conversationTitle,
-    error,
-    isLoading,
-    sendPrompt,
-    timing,
-  } = useChatStream(
-    (input) =>
-      client.ai.chat.stream({
-        prompt: input.prompt,
-        providerId: input.providerId,
-        model: input.model,
-        conversationId: input.conversationId,
-      }) as Promise<any>,
-    {
-      onEvent: (event) => {
-        if (event.type === "delta") {
-          setMessages((current) => {
-            const lastMessage = current.at(-1);
-            if (lastMessage?.role === "assistant") {
-              return [
-                ...current.slice(0, -1),
-                { ...lastMessage, content: lastMessage.content + event.text },
-              ];
-            }
+  const { clearError, conversationId, conversationTitle, error, isLoading, sendPrompt, timing } =
+    useChatStream(
+      (input) =>
+        client.ai.chat.stream({
+          prompt: input.prompt,
+          providerId: input.providerId,
+          model: input.model,
+          conversationId: input.conversationId,
+        }) as Promise<any>,
+      {
+        onEvent: (event) => {
+          if (event.type === "delta") {
+            setMessages((current) => {
+              const lastMessage = current.at(-1);
+              if (lastMessage?.role === "assistant") {
+                return [
+                  ...current.slice(0, -1),
+                  { ...lastMessage, content: lastMessage.content + event.text },
+                ];
+              }
 
-            return [
-              ...current,
-              {
-                id: `assistant-${Date.now()}`,
-                role: "assistant",
-                content: event.text,
-              },
-            ];
-          });
-        }
+              return [
+                ...current,
+                {
+                  id: `assistant-${Date.now()}`,
+                  role: "assistant",
+                  content: event.text,
+                },
+              ];
+            });
+          }
+        },
+        onError: (streamError) => {
+          toast.error(streamError.message || "Ask failed");
+        },
       },
-      onError: (streamError) => {
-        toast.error(streamError.message || "Ask failed");
-      },
-    },
-  );
+    );
 
   const lastAssistantMessage = useMemo(
     () => [...messages].reverse().find((message) => message.role === "assistant") ?? null,
@@ -182,12 +175,13 @@ function AskPage() {
         <CardContent className="text-sm">
           {defaultProvider ? (
             <p className="text-muted-foreground">
-              Ask will use <span className="font-medium text-foreground">{defaultProvider.name}</span>
+              Ask will use{" "}
+              <span className="font-medium text-foreground">{defaultProvider.name}</span>
               {" · "}
               <span className="font-medium text-foreground">
                 {preferences?.model || defaultProvider.defaultModel}
-              </span>
-              {" "}by default.
+              </span>{" "}
+              by default.
             </p>
           ) : (
             <p className="text-muted-foreground">
@@ -308,11 +302,7 @@ function AskPage() {
               </p>
             </div>
 
-            <Button
-              disabled={!conversationId}
-              render={<Link to="/threads" />}
-              variant="outline"
-            >
+            <Button disabled={!conversationId} render={<Link to="/threads" />} variant="outline">
               Open threads
               <IconArrowUpRight className="size-4" />
             </Button>

@@ -1,9 +1,9 @@
-import { describe, expect, it } from "vitest";
 import {
   getRequestTraceLogContext,
   resolveRequestTrace,
   withTraceHeaders,
 } from "@raypx/core/logger";
+import { describe, expect, it } from "vitest";
 
 describe("request tracing", () => {
   it("reuses incoming request and trace identifiers", () => {

@@ -14,7 +14,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@base-ui/react": "^1.2.0",
+    "@base-ui/react": "^1.3.0",
     "@fumadocs/base-ui": "^16.6.16",
     "@raypx/admin": "workspace:*",
     "@raypx/ai": "workspace:*",
@@ -28,7 +28,7 @@
     "@raypx/shared": "workspace:*",
     "@raypx/stripe": "workspace:*",
     "@tabler/icons-react": "^3.40.0",
-    "@tanstack/react-form": "^1.28.4",
+    "@tanstack/react-form": "^1.28.5",
     "@tanstack/react-query": "catalog:",
     "@tanstack/react-router": "catalog:",
     "@tanstack/react-start": "catalog:",
@@ -53,14 +53,14 @@
     "@types/node": "catalog:",
     "@types/react": "catalog:react19",
     "@types/react-dom": "catalog:react19",
-    "@vitejs/plugin-react": "^5.1.4",
+    "@vitejs/plugin-react": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
     "jiti": "catalog:",
     "nitro": "catalog:beta",
     "rollup-plugin-visualizer": "^7.0.1",
     "tailwindcss": "catalog:tailwindv4",
     "typescript": "catalog:",
-    "vite": "^8.0.0-beta.18",
+    "vite": "^8.0.0",
     "vite-tsconfig-paths": "^6.1.1",
     "vitest": "catalog:"
   }

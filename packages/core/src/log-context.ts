@@ -4,10 +4,7 @@ import type { LoggerContext } from "./logger";
 
 const logContextStorage = new AsyncLocalStorage<LoggerContext>();
 
-export function runWithLogContext<T>(
-  context: LoggerContext,
-  fn: () => T,
-): T {
+export function runWithLogContext<T>(context: LoggerContext, fn: () => T): T {
   const parentContext = logContextStorage.getStore() ?? {};
   return logContextStorage.run(
     {

@@ -1,5 +1,6 @@
+import { logger } from "../libs/logger";
 import { type RunOptions, runCommand } from "../libs/runner";
-import { logger, PROJECT_ROOT } from "../libs/utils";
+import { PROJECT_ROOT } from "../libs/utils";
 
 /**
  * Database operation types

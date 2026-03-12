@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@raypx/config": "workspace:*",
-    "dayjs": "^1.11.19",
+    "dayjs": "^1.11.20",
     "nanoid": "^5.1.6",
     "ua-parser-js": "^2.0.9",
     "zod": "catalog:"

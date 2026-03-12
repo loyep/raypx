@@ -8,7 +8,12 @@ import {
   CardTitle,
 } from "@raypx/design-system/components/ui/card";
 import { generatePageHead } from "@raypx/seo";
-import { IconArrowRight, IconDeviceDesktop, IconKeyboard, IconPaperclip } from "@tabler/icons-react";
+import {
+  IconArrowRight,
+  IconDeviceDesktop,
+  IconKeyboard,
+  IconPaperclip,
+} from "@tabler/icons-react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MarketingShell } from "@/components/home";
 import { siteConfig } from "@/config/site";
@@ -36,19 +41,19 @@ function DownloadPage() {
 
           <div className="grid gap-5 md:grid-cols-3">
             <PreviewCard
+              description="Trigger Ask from anywhere and drop results back into the same workspace."
               icon={IconKeyboard}
               title="Global ask"
-              description="Trigger Ask from anywhere and drop results back into the same workspace."
             />
             <PreviewCard
+              description="Clip text, links, and notes into the right project without re-opening a browser tab."
               icon={IconPaperclip}
               title="Save to Space"
-              description="Clip text, links, and notes into the right project without re-opening a browser tab."
             />
             <PreviewCard
+              description="Keep the assistant close by without making desktop its own business model."
               icon={IconDeviceDesktop}
               title="Always-available entry"
-              description="Keep the assistant close by without making desktop its own business model."
             />
           </div>
 

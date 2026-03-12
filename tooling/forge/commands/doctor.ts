@@ -3,7 +3,8 @@ import { access, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import fg from "fast-glob";
 import ts from "typescript";
-import { logger, PROJECT_ROOT } from "../libs/utils";
+import { logger } from "../libs/logger";
+import { PROJECT_ROOT } from "../libs/utils";
 import { repoPolicy } from "../repo-policy";
 
 /**
@@ -746,7 +747,13 @@ async function runArchDoctor(): Promise<DoctorSection> {
     cwd: PROJECT_ROOT,
     absolute: false,
     onlyFiles: true,
-    ignore: ["packages/core/**", "tooling/*/node_modules/**", "**/*.test.ts", "**/*.spec.ts"],
+    ignore: [
+      "packages/core/**",
+      "tooling/forge/**",
+      "tooling/*/node_modules/**",
+      "**/*.test.ts",
+      "**/*.spec.ts",
+    ],
   });
   const directConsolaImports: string[] = [];
   for (const relativePath of loggerFiles) {

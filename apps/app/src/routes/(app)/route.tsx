@@ -72,16 +72,16 @@ function AppLayout() {
             <div className="flex items-center gap-3 px-2 py-1">
               <Logo className="size-8 rounded-lg text-[10px] shadow-none" />
               <div className="min-w-0">
-                <p className="truncate font-semibold text-sm">
-                  {session.user.name ?? "Raypx"}
-                </p>
+                <p className="truncate font-semibold text-sm">{session.user.name ?? "Raypx"}</p>
                 <p className="truncate text-muted-foreground text-xs">Personal workspace</p>
               </div>
             </div>
 
             <div className="mt-5 px-2">
               <p className="text-muted-foreground text-xs">Signed in as</p>
-              <p className="truncate text-sm">{session.user.email ?? session.user.name ?? "user"}</p>
+              <p className="truncate text-sm">
+                {session.user.email ?? session.user.name ?? "user"}
+              </p>
             </div>
 
             <nav className="mt-6 space-y-1">

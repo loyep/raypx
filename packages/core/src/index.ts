@@ -6,8 +6,8 @@ export type {
   LogLevelName,
 } from "./logger";
 export {
-  getLogContext,
   createLogger,
+  getLogContext,
   getLogger,
   getRequestTraceLogContext,
   logger,
@@ -15,7 +15,7 @@ export {
   runWithLogContext,
   setLogger,
   setSilentMode,
-  withTraceHeaders,
   withTag,
+  withTraceHeaders,
 } from "./logger";
 export type { RequestLike, RequestTraceContext } from "./request-tracing";

@@ -1,7 +1,6 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
-
-import { createStructuredLogger, StructuredLogger } from "../src/logger";
 import type { LoggerPort } from "@raypx/core/logger";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { createStructuredLogger, StructuredLogger } from "../src/logger";
 
 afterEach(() => {
   vi.unstubAllEnvs();
