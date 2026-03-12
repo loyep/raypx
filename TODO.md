@@ -8,7 +8,7 @@ Last Updated: 2026-03-04
 - [ ] M2 AI Chat MVP（持久化 + 稳定流式 + 可恢复）
 - [ ] M3 可观测与成本治理（最小可运营）
 
-See also: `ROADMAP.md`, `docs/ARCHITECTURE.md`, `docs/TODO_AI_CHAT.md`.
+See also: `ROADMAP.md`.
 
 ## P1 - High Priority
 

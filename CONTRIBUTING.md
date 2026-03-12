@@ -80,8 +80,6 @@ Raypx follows a dual-track strategy:
 References:
 
 - `ROADMAP.md`
-- `docs/ARCHITECTURE.md`
-- `docs/RFC_PROCESS.md`
 
 Platform boundary notes:
 
@@ -271,7 +269,7 @@ refactor(rpc): simplify router middleware
 
 6. **Use RFC for architecture-impacting changes**
 
-For major cross-package design changes (interfaces, boundaries, migration strategy), open an RFC first and follow `docs/RFC_PROCESS.md`.
+For major cross-package design changes (interfaces, boundaries, migration strategy), discuss with maintainers first.
 
 ### PR Title Format
 

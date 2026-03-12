@@ -14,9 +14,6 @@ All notable changes to this project will be documented in this file.
 Related:
 
 - `ROADMAP.md`
-- `docs/ARCHITECTURE.md`
-- `docs/RFC_PROCESS.md`
-- `docs/rfcs/0000-template.md`
 
 ### feat(ai): unify chat state machine errors and coverage
 
