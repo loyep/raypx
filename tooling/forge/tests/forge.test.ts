@@ -211,4 +211,12 @@ describe("forge cli", () => {
     expect(result.status).toBe(0);
     expect(result.stderr).toBe("");
   });
+
+  it("skips lefthook install when disabled by env", () => {
+    const result = runForge(["prepare"], {
+      LEFTHOOK: "0",
+    });
+    expect(result.status).toBe(0);
+    expect(result.output).toContain("Skipping lefthook install (LEFTHOOK=0)");
+  });
 });
