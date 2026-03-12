@@ -2,7 +2,7 @@ export interface SiteConfig {
   name: string;
   title: string;
   description: string;
-  keywords: string[];
+  keywords?: string[];
   url: string;
   author: string;
   image: string;
