@@ -23,9 +23,7 @@ function seoMeta(config: SiteConfig): MetaTags[] {
     { charSet: "utf-8" },
     { name: "viewport", content: "width=device-width, initial-scale=1" },
     { name: "description", content: config.description },
-    ...(config.keywords?.length
-      ? [{ name: "keywords", content: config.keywords.join(", ") }]
-      : []),
+    ...(config.keywords?.length ? [{ name: "keywords", content: config.keywords.join(", ") }] : []),
     { name: "author", content: config.author },
   ];
 }
