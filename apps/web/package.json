@@ -20,6 +20,7 @@
     "@raypx/ai": "workspace:*",
     "@raypx/auth": "workspace:*",
     "@raypx/config": "workspace:*",
+    "@raypx/core": "workspace:*",
     "@raypx/database": "workspace:*",
     "@raypx/design-system": "workspace:*",
     "@raypx/rpc": "workspace:*",

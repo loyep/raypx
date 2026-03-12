@@ -1,5 +1,4 @@
 export type {
-  ConsolaInstance,
   LoggerContext,
   LoggerOptions,
   LoggerPort,
@@ -7,11 +6,16 @@ export type {
   LogLevelName,
 } from "./logger";
 export {
-  createConsola,
+  getLogContext,
   createLogger,
   getLogger,
+  getRequestTraceLogContext,
   logger,
+  resolveRequestTrace,
+  runWithLogContext,
   setLogger,
   setSilentMode,
+  withTraceHeaders,
   withTag,
 } from "./logger";
+export type { RequestLike, RequestTraceContext } from "./request-tracing";

@@ -59,60 +59,104 @@ function AppLayout() {
   const allNavItems = [...navItems, ...adminItems];
 
   return (
-    <main className="min-h-screen bg-muted/20">
-      <div className="mx-auto flex min-h-screen max-w-6xl flex-col gap-6 px-4 py-4 sm:px-6 sm:py-6">
-        <header className="flex flex-col gap-4 rounded-[28px] border border-border/70 bg-background px-4 py-4 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:px-6">
-          <div className="flex items-center gap-3">
-            <Logo className="size-10 rounded-xl text-xs shadow-none" />
-            <div>
-              <p className="font-semibold text-sm">Raypx App</p>
-              <p className="text-muted-foreground text-xs">
-                Signed in as {session.user.email ?? session.user.name ?? "user"}
-              </p>
+    <main className="min-h-screen bg-[#f5f5f3] text-foreground">
+      <div className="mx-auto min-h-screen max-w-[1600px] px-3 py-3 sm:px-4 sm:py-4">
+        <aside
+          className="space-y-4 lg:fixed lg:z-10 lg:w-[220px]"
+          style={{
+            left: "max(0.75rem, calc(50% - 50rem + 0.75rem))",
+            top: "0.75rem",
+          }}
+        >
+          <div className="border-border/60 bg-transparent p-2 lg:max-h-[calc(100vh-1.5rem)] lg:overflow-y-auto">
+            <div className="flex items-center gap-3 px-2 py-1">
+              <Logo className="size-8 rounded-lg text-[10px] shadow-none" />
+              <div className="min-w-0">
+                <p className="truncate font-semibold text-sm">
+                  {session.user.name ?? "Raypx"}
+                </p>
+                <p className="truncate text-muted-foreground text-xs">Personal workspace</p>
+              </div>
             </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <Badge variant="outline">Personal AI Workspace</Badge>
-            {session.user.role === "admin" || session.user.role === "superadmin" ? (
-              <Badge>Operator</Badge>
-            ) : null}
-          </div>
-          <nav className="flex flex-wrap gap-2">
-            {allNavItems.map((item) => {
-              const Icon = item.icon;
-              const active =
-                pathname === item.activePrefix || pathname.startsWith(`${item.activePrefix}/`);
-              return (
-                <Button
-                  className={cn("justify-start gap-2", active && "bg-accent")}
-                  key={`${item.label}-${item.activePrefix}`}
-                  render={
-                    <Link
-                      params={("params" in item ? item.params : undefined) as never}
-                      to={item.to as never}
-                    />
-                  }
-                  variant="ghost"
-                >
-                  <Icon className="size-4" />
-                  {item.label}
-                </Button>
-              );
-            })}
+
+            <div className="mt-5 px-2">
+              <p className="text-muted-foreground text-xs">Signed in as</p>
+              <p className="truncate text-sm">{session.user.email ?? session.user.name ?? "user"}</p>
+            </div>
+
+            <nav className="mt-6 space-y-1">
+              {allNavItems.map((item) => {
+                const Icon = item.icon;
+                const active =
+                  pathname === item.activePrefix || pathname.startsWith(`${item.activePrefix}/`);
+                return (
+                  <Button
+                    className={cn(
+                      "h-10 w-full justify-start gap-2 rounded-xl px-3 text-sm",
+                      active
+                        ? "bg-background text-foreground shadow-sm"
+                        : "text-muted-foreground hover:bg-background/70 hover:text-foreground",
+                    )}
+                    key={`${item.label}-${item.activePrefix}`}
+                    render={
+                      <Link
+                        params={("params" in item ? item.params : undefined) as never}
+                        to={item.to as never}
+                      />
+                    }
+                    variant="ghost"
+                  >
+                    <Icon className="size-4 shrink-0" />
+                    {item.label}
+                  </Button>
+                );
+              })}
+            </nav>
+
+            <div className="mt-6 flex flex-wrap gap-2 px-2">
+              <Badge className="rounded-full px-2.5 py-0.5" variant="outline">
+                {session.user.role}
+              </Badge>
+              {session.user.role === "admin" || session.user.role === "superadmin" ? (
+                <Badge className="rounded-full px-2.5 py-0.5">Operator</Badge>
+              ) : null}
+            </div>
+
             <Button
-              className="gap-2"
+              className="mt-6 h-10 w-full justify-start gap-2 rounded-xl px-3"
               onClick={async () => {
                 await signOut();
               }}
-              variant="outline"
+              variant="ghost"
             >
               <IconLogout className="size-4" />
               Sign out
             </Button>
-          </nav>
-        </header>
-        <div className="min-w-0 flex-1">
-          <Outlet />
+          </div>
+        </aside>
+
+        <div className="min-w-0 lg:pl-[236px]">
+          <section className="min-h-[calc(100vh-1.5rem)] rounded-[22px] border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
+            <header className="border-border/60 border-b px-5 py-4 sm:px-7">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <p className="font-semibold text-base">Raypx App</p>
+                  <p className="text-muted-foreground text-sm">
+                    Your personal AI workspace for asking, organizing, and returning to work.
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <Badge className="rounded-full px-2.5 py-0.5" variant="outline">
+                    Personal AI Workspace
+                  </Badge>
+                </div>
+              </div>
+            </header>
+
+            <div className="px-5 py-6 sm:px-7">
+              <Outlet />
+            </div>
+          </section>
         </div>
       </div>
     </main>

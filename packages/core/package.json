@@ -13,7 +13,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "consola": "^3.4.2"
+    "pino": "^9.9.4",
+    "pino-pretty": "^13.1.1"
   },
   "devDependencies": {
     "@raypx/tsconfig": "workspace:*",

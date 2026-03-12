@@ -42,16 +42,20 @@ const mockSession: Session = {
 function createMockContext(withSession: boolean): Context {
   if (!withSession) {
     return {
-      session: null,
       db: {} as Context["db"],
+      requestId: "req-test-1",
+      session: null,
+      traceId: "trace-test-1",
     };
   }
   return {
+    db: {} as Context["db"],
+    requestId: "req-test-1",
     session: {
       session: mockSession,
       user: mockUser,
     },
-    db: {} as Context["db"],
+    traceId: "trace-test-1",
   } as Context;
 }
 
@@ -84,6 +88,8 @@ describe("requireAuthMiddleware", () => {
 
     expect(capturedContext).toEqual(
       expect.objectContaining({
+        requestId: "req-test-1",
+        traceId: "trace-test-1",
         user: mockUser,
       }),
     );
@@ -109,7 +115,9 @@ describe("optionalAuthMiddleware", () => {
 
     expect(capturedContext).toEqual(
       expect.objectContaining({
+        requestId: "req-test-1",
         session: null,
+        traceId: "trace-test-1",
         user: null,
       }),
     );
@@ -130,6 +138,8 @@ describe("optionalAuthMiddleware", () => {
 
     expect(capturedContext).toEqual(
       expect.objectContaining({
+        requestId: "req-test-1",
+        traceId: "trace-test-1",
         user: mockUser,
       }),
     );
@@ -163,7 +173,9 @@ describe("optionalAuthProcedure", () => {
 
     expect(capturedContext).toEqual(
       expect.objectContaining({
+        requestId: "req-test-1",
         session: null,
+        traceId: "trace-test-1",
         user: null,
       }),
     );

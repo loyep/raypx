@@ -1,4 +1,3 @@
-import { createConsola } from "consola";
 import { afterEach, describe, expect, it } from "vitest";
 import { createLogger, getLogger, logger, setLogger, withTag } from "../src/logger";
 
@@ -16,7 +15,7 @@ describe("core logger", () => {
   });
 
   it("proxies the active logger instance", () => {
-    const customLogger = createConsola({ level: 2 });
+    const customLogger = createLogger({ level: "warn", format: "json" });
 
     setLogger(customLogger);
 

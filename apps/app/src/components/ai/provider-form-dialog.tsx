@@ -18,7 +18,7 @@ import {
 import { Input } from "@raypx/design-system/components/ui/input";
 import { AI_PROVIDER_DRIVERS, type AIProviderDriver } from "@raypx/shared/ai";
 import { useForm } from "@tanstack/react-form";
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { z } from "zod";
 
 export type AIProviderFormValues = {
@@ -85,6 +85,10 @@ const RECOMMENDED_MODELS: Record<AIProviderDriver, string[]> = {
   "azure-openai": ["gpt-4o-mini", "gpt-4.1-mini", "gpt-4.1"],
 };
 
+function recommendedModelsForDriver(driver: AIProviderDriver) {
+  return RECOMMENDED_MODELS[driver] ?? [];
+}
+
 export function parseModels(modelsText: string): string[] {
   const seen = new Set<string>();
   const models: string[] = [];
@@ -150,19 +154,16 @@ export function AIProviderFormDialog({
     }
   }, [form, initialValues, open]);
 
-  const modelOptions = useMemo(() => {
-    const options = parseModels(form.state.values.modelsText);
-    const defaultModel = form.state.values.defaultModel.trim();
-    if (!defaultModel || options.includes(defaultModel)) {
-      return options;
-    }
-    return [defaultModel, ...options];
-  }, [form.state.values.defaultModel, form.state.values.modelsText]);
-
   useEffect(() => {
-    if (form.state.values.defaultModel.trim() || modelOptions.length === 0) return;
-    form.setFieldValue("defaultModel", modelOptions[0] ?? "");
-  }, [form, form.state.values.defaultModel, modelOptions]);
+    const recommended = recommendedModelsForDriver(form.state.values.driver);
+    const currentDefault = form.state.values.defaultModel.trim();
+    const nextModels = parseModels([currentDefault, ...recommended].join(", "));
+
+    form.setFieldValue("modelsText", nextModels.join(", "));
+    if (!currentDefault && recommended[0]) {
+      form.setFieldValue("defaultModel", recommended[0]);
+    }
+  }, [form, form.state.values.defaultModel, form.state.values.driver]);
 
   return (
     <Dialog onOpenChange={onOpenChange} open={open}>
@@ -214,12 +215,9 @@ export function AIProviderFormDialog({
                     <div className="pt-1">
                       <Button
                         onClick={() => {
-                          const modelsText = RECOMMENDED_MODELS[field.state.value].join(", ");
-                          const models = parseModels(modelsText);
-                          form.setFieldValue("modelsText", modelsText);
-                          if (!form.state.values.defaultModel.trim()) {
-                            form.setFieldValue("defaultModel", models[0] ?? "");
-                          }
+                          const models = recommendedModelsForDriver(field.state.value);
+                          form.setFieldValue("modelsText", models.join(", "));
+                          form.setFieldValue("defaultModel", models[0] ?? "");
                         }}
                         size="sm"
                         type="button"
@@ -260,62 +258,51 @@ export function AIProviderFormDialog({
                 onBlur: ({ value }) => (value.trim() ? undefined : "Default model is required."),
               }}
             >
-              {(field) => {
-                const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
-                return (
-                  <FormItem
-                    className="sm:col-span-2"
-                    data-invalid={field.state.meta.isTouched && !field.state.meta.isValid}
-                  >
-                    <FormLabel htmlFor="provider-model">Default Model</FormLabel>
-                    <FormControl>
-                      {modelOptions.length > 0 ? (
-                        <select
-                          className="h-10 w-full rounded-md border bg-background px-3 text-sm"
-                          id="provider-model"
-                          onBlur={field.handleBlur}
-                          onChange={(event) => field.handleChange(event.target.value)}
-                          value={field.state.value}
-                        >
-                          {modelOptions.map((option) => (
-                            <option key={option} value={option}>
-                              {option}
-                            </option>
-                          ))}
-                        </select>
-                      ) : (
-                        <Input
-                          aria-invalid={isInvalid}
-                          id="provider-model"
-                          onBlur={field.handleBlur}
-                          onChange={(event) => field.handleChange(event.target.value)}
-                          placeholder="Type a model or load recommended models first"
-                          value={field.state.value}
-                        />
-                      )}
-                      <FormFieldMessage meta={field.state.meta} />
-                    </FormControl>
-                  </FormItem>
-                );
-              }}
-            </form.Field>
-
-            <form.Field
-              name="modelsText"
-              validators={{
-                onBlur: ({ value }) =>
-                  parseModels(value).length ? undefined : "Provide at least one model.",
-              }}
-            >
               {(field) => (
-                <FormTextField
+                <FormItem
                   className="sm:col-span-2"
-                  description="Separate models with commas."
-                  field={field}
-                  id="provider-models"
-                  inputProps={{ placeholder: "gpt-4o-mini, gpt-4.1-mini" }}
-                  label="Models (comma separated)"
-                />
+                  data-invalid={field.state.meta.isTouched && !field.state.meta.isValid}
+                >
+                  <FormLabel htmlFor="provider-model">Default model</FormLabel>
+                  <FormControl>
+                    <Input
+                      id="provider-model"
+                      onBlur={field.handleBlur}
+                      onChange={(event) => {
+                        const nextValue = event.target.value;
+                        field.handleChange(nextValue);
+                        const models = parseModels([nextValue, ...recommendedModelsForDriver(form.state.values.driver)].join(", "));
+                        form.setFieldValue("modelsText", models.join(", "));
+                      }}
+                      placeholder="Type a model ID or use a recommended one"
+                      value={field.state.value}
+                    />
+                  </FormControl>
+                  <div className="flex flex-wrap gap-2 pt-2">
+                    {recommendedModelsForDriver(form.state.values.driver).map((model) => (
+                      <Button
+                        key={model}
+                        onClick={() => {
+                          field.handleChange(model);
+                          form.setFieldValue(
+                            "modelsText",
+                            parseModels([model, ...recommendedModelsForDriver(form.state.values.driver)].join(", ")).join(", "),
+                          );
+                        }}
+                        size="sm"
+                        type="button"
+                        variant={field.state.value === model ? "default" : "outline"}
+                      >
+                        {model}
+                      </Button>
+                    ))}
+                  </div>
+                  <p className="pt-2 text-muted-foreground text-xs">
+                    Recommended models help you get started quickly. You can still type a custom
+                    model ID here.
+                  </p>
+                  <FormFieldMessage meta={field.state.meta} />
+                </FormItem>
               )}
             </form.Field>
 

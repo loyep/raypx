@@ -1,6 +1,11 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { createStructuredLogger, StructuredLogger } from "../src/logger";
+import type { LoggerPort } from "@raypx/core/logger";
+
+afterEach(() => {
+  vi.unstubAllEnvs();
+});
 
 describe("observability logger", () => {
   it("merges default and child context while preserving the service name", () => {
@@ -39,5 +44,39 @@ describe("observability logger", () => {
     });
     expect(logger.logger.level).toBe(5);
     expect(logger.withTag("jobs")).toBeDefined();
+  });
+
+  it("emits structured payloads instead of stringified context", () => {
+    const info = vi.fn();
+    const stubLogger: LoggerPort = {
+      level: 3,
+      trace: vi.fn(),
+      debug: vi.fn(),
+      info,
+      warn: vi.fn(),
+      error: vi.fn(),
+      success: vi.fn(),
+      log: vi.fn(),
+      withTag: vi.fn(),
+    };
+
+    const logger = new StructuredLogger({
+      serviceName: "api",
+      context: { environment: "test" },
+    }) as StructuredLogger & { logger: LoggerPort };
+
+    logger.logger = stubLogger;
+
+    logger.info("request completed", { requestId: "req-1", statusCode: 200 });
+
+    expect(info).toHaveBeenCalledWith(
+      {
+        environment: "test",
+        requestId: "req-1",
+        service: "api",
+        statusCode: 200,
+      },
+      "request completed",
+    );
   });
 });

@@ -5,7 +5,13 @@ import { RPCHandler } from "@orpc/server/fetch";
 import { CORSPlugin } from "@orpc/server/plugins";
 import { ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
 import { authEnv, createEnv } from "@raypx/config/envs";
-import { createLogger } from "@raypx/core/logger";
+import {
+  createLogger,
+  getRequestTraceLogContext,
+  resolveRequestTrace,
+  runWithLogContext,
+  withTraceHeaders,
+} from "@raypx/core/logger";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 
@@ -35,32 +41,50 @@ export const createHandler = (props: { prefix: `/${string}` }) => {
         const start = Date.now();
         const url = new URL(request.url);
         const path = url.pathname;
+        const trace = resolveRequestTrace(request);
 
-        log.debug(`--> ${request.method} ${path}`);
+        log.debug(
+          {
+            method: request.method,
+            path,
+            requestId: trace.requestId,
+            traceId: trace.traceId,
+          },
+          "RPC request started",
+        );
 
         return next().then((result) => {
           const duration = Date.now() - start;
 
           if (result.matched && result.response) {
-            log.info(`<-- ${request.method} ${path} ${result.response.status} ${duration}ms`);
+            log.info(
+              {
+                durationMs: duration,
+                method: request.method,
+                path,
+                requestId: trace.requestId,
+                statusCode: result.response.status,
+                traceId: trace.traceId,
+              },
+              "RPC request completed",
+            );
           } else {
-            log.debug(`<-- ${request.method} ${path} no match ${duration}ms`);
+            log.debug(
+              {
+                durationMs: duration,
+                method: request.method,
+                path,
+                requestId: trace.requestId,
+                traceId: trace.traceId,
+              },
+              "RPC request had no match",
+            );
           }
 
           return result;
         });
       },
-      onError((error: unknown) => {
-        if (error instanceof Error) {
-          log.error("RPC Error:", {
-            name: error.name,
-            message: error.message,
-            stack: error.stack,
-          });
-        } else {
-          log.error("RPC Error (unknown):", error);
-        }
-      }),
+      onError(() => undefined),
     ],
   });
 
@@ -71,33 +95,49 @@ export const createHandler = (props: { prefix: `/${string}` }) => {
       }),
     ],
     interceptors: [
-      onError((error: unknown) => {
-        if (error instanceof Error) {
-          log.error("OpenAPI Error:", {
-            name: error.name,
-            message: error.message,
-            stack: error.stack,
-          });
-        } else {
-          log.error("OpenAPI Error (unknown):", error);
-        }
-      }),
+      onError(() => undefined),
     ],
   });
 
   return async ({ request }: { request: Request }) => {
-    const rpcResult = await rpcHandler.handle(request, {
-      prefix: props.prefix,
-      context: await createContext({ req: request }),
-    });
-    if (rpcResult.response) return rpcResult.response;
+    const trace = resolveRequestTrace(request);
 
-    const apiResult = await apiHandler.handle(request, {
-      prefix: `${props.prefix}/api-reference`,
-      context: await createContext({ req: request }),
-    });
-    if (apiResult.response) return apiResult.response;
+    return runWithLogContext(
+      getRequestTraceLogContext(request, trace),
+      async () => {
+        try {
+          const rpcResult = await rpcHandler.handle(request, {
+            prefix: props.prefix,
+            context: await createContext({ req: request, trace }),
+          });
+          if (rpcResult.response) return withTraceHeaders(rpcResult.response, trace);
 
-    return new Response("Not found", { status: 404 });
+          const apiResult = await apiHandler.handle(request, {
+            prefix: `${props.prefix}/api-reference`,
+            context: await createContext({ req: request, trace }),
+          });
+          if (apiResult.response) return withTraceHeaders(apiResult.response, trace);
+
+          return withTraceHeaders(new Response("Not found", { status: 404 }), trace);
+        } catch (error) {
+          if (error instanceof Error) {
+            log.error(
+              {
+                err: error,
+              },
+              "RPC handler failed",
+            );
+          } else {
+            log.error(
+              {
+                error,
+              },
+              "RPC handler failed with unknown error",
+            );
+          }
+          throw error;
+        }
+      },
+    );
   };
 };

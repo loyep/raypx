@@ -78,25 +78,27 @@ export class StructuredLogger {
    */
   private log(level: LogLevel, message: string, context?: LogContext, error?: Error): void {
     const entry = this.createEntry(level, message, context, error);
-
-    const formattedContext = entry.context ? JSON.stringify(entry.context, null, 2) : "";
+    const payload = {
+      ...entry.context,
+      ...(entry.error ? { error: entry.error } : {}),
+    };
 
     switch (level) {
       case "trace":
-        this.logger.trace(message, formattedContext);
+        this.logger.trace(payload, message);
         break;
       case "debug":
-        this.logger.debug(message, formattedContext);
+        this.logger.debug(payload, message);
         break;
       case "info":
-        this.logger.info(message, formattedContext);
+        this.logger.info(payload, message);
         break;
       case "warn":
-        this.logger.warn(message, formattedContext);
+        this.logger.warn(payload, message);
         break;
       case "error":
       case "fatal":
-        this.logger.error(error ?? message, formattedContext);
+        this.logger.error(payload, error ?? message);
         break;
     }
   }

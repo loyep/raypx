@@ -57,6 +57,10 @@ const mockSession = {
 // Helper to create mock context
 function createMockContext(role = "user"): Context {
   return {
+    db: {
+      select: () => mockSelect(),
+    } as Context["db"],
+    requestId: "req-test-1",
     session: {
       session: mockSession,
       user: {
@@ -64,9 +68,7 @@ function createMockContext(role = "user"): Context {
         role,
       },
     },
-    db: {
-      select: () => mockSelect(),
-    } as Context["db"],
+    traceId: "trace-test-1",
   } as Context;
 }
 

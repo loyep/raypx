@@ -1,5 +1,6 @@
 import { ORPCError, os } from "@orpc/server";
 import { getRpcSessionFromRequest } from "@raypx/auth/rpc";
+import { resolveRequestTrace, type RequestTraceContext } from "@raypx/core/logger";
 import type { AuthSession as Session, AuthUser as User } from "@raypx/auth/types";
 import { db } from "@raypx/database";
 import { createORPCContext } from "./orpc-context";
@@ -44,11 +45,19 @@ export interface SessionContext {
 
 export type Context = RPCContext<SessionContext, typeof db>;
 
-export async function createContext({ req }: { req: Request }) {
+export async function createContext({
+  req,
+  trace = resolveRequestTrace(req),
+}: {
+  req: Request;
+  trace?: RequestTraceContext;
+}) {
   return createRPCContext({
     req,
     db,
     getSession: getRpcSessionFromRequest,
+    requestId: trace.requestId,
+    traceId: trace.traceId,
   });
 }
 

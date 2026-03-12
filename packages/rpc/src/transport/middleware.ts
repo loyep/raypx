@@ -16,7 +16,9 @@ export const requireAuthMiddleware = o.middleware(async ({ context, next }) => {
   return next({
     context: {
       db: context.db,
+      requestId: context.requestId,
       session: context.session,
+      traceId: context.traceId,
       user: context.session.user,
     },
   });
@@ -28,7 +30,9 @@ export const optionalAuthMiddleware = o.middleware(async ({ context, next }) => 
   return next({
     context: {
       db: context.db,
+      requestId: context.requestId,
       session: context.session ?? null,
+      traceId: context.traceId,
       user: context.session?.user ?? null,
     },
   });
@@ -53,7 +57,9 @@ export const requireRoleMiddleware = (roles: readonly string[]) =>
     return next({
       context: {
         db: context.db,
+        requestId: context.requestId,
         session: context.session,
+        traceId: context.traceId,
         user: context.session.user,
       },
     });
@@ -78,7 +84,9 @@ export const requirePermissionMiddleware = (permission: Permission) =>
     return next({
       context: {
         db: context.db,
+        requestId: context.requestId,
         session: context.session,
+        traceId: context.traceId,
         user: context.session.user,
       },
     });

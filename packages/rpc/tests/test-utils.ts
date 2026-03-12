@@ -56,8 +56,10 @@ export function createMockContext(
 
   if (!withSession) {
     return {
-      session: null,
       db: {} as Context["db"],
+      requestId: "req-test-1",
+      session: null,
+      traceId: "trace-test-1",
     } as unknown as Context;
   }
 
@@ -68,8 +70,10 @@ export function createMockContext(
   };
 
   return {
-    session,
     db: {} as Context["db"],
+    requestId: "req-test-1",
+    session,
+    traceId: "trace-test-1",
   } as unknown as Context;
 }
 
