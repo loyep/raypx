@@ -257,8 +257,8 @@ export const aiProfiles = pgTable(
     id: uuid("id")
       .primaryKey()
       .$defaultFn(() => uuidv7()),
-    scope: text("scope").notNull(), // 'system' | 'organization' | 'user'
-    ownerType: text("owner_type"), // 'organization' | 'user' | null(for system)
+    scope: text("scope").notNull(), // 'system' | 'organization' | 'user' | 'mode' | 'space'
+    ownerType: text("owner_type"), // 'organization' | 'user' | 'space' | null(for system/mode)
     ownerId: text("owner_id"),
     name: text("name").notNull(),
     provider: text("provider").notNull(), // 'qwen' | 'zhipu'
@@ -283,10 +283,13 @@ export const aiProfiles = pgTable(
     index("idx_ai_profiles_provider").on(table.provider),
     index("idx_ai_profiles_provider_id").on(table.providerId),
     index("idx_ai_profiles_updated_at").on(table.updatedAt),
-    check("chk_ai_profiles_scope_valid", sql`${table.scope} IN ('system', 'organization', 'user')`),
+    check(
+      "chk_ai_profiles_scope_valid",
+      sql`${table.scope} IN ('system', 'organization', 'user', 'mode', 'space')`,
+    ),
     check(
       "chk_ai_profiles_owner_type_valid",
-      sql`${table.ownerType} IS NULL OR ${table.ownerType} IN ('organization', 'user')`,
+      sql`${table.ownerType} IS NULL OR ${table.ownerType} IN ('organization', 'user', 'space')`,
     ),
     check(
       "chk_ai_profiles_temperature_range",
@@ -308,7 +311,7 @@ export const aiProfileBindings = pgTable(
     id: uuid("id")
       .primaryKey()
       .$defaultFn(() => uuidv7()),
-    ownerType: text("owner_type").notNull(), // 'organization' | 'user'
+    ownerType: text("owner_type").notNull(), // 'organization' | 'user' | 'space'
     ownerId: text("owner_id").notNull(),
     profileId: uuid("profile_id")
       .notNull()
@@ -332,7 +335,7 @@ export const aiProfileBindings = pgTable(
     ),
     check(
       "chk_ai_profile_bindings_owner_type_valid",
-      sql`${table.ownerType} IN ('organization', 'user')`,
+      sql`${table.ownerType} IN ('organization', 'user', 'space')`,
     ),
   ],
 );

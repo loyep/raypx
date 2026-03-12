@@ -26,11 +26,13 @@ import { ok } from "../../contracts/response";
 import { adminProcedure, protectedProcedure } from "../../transport/middleware";
 
 export const aiRouter = {
-  capabilities: protectedProcedure.handler(async () => {
-    return ok({
+  capabilities: protectedProcedure.handler(async () =>
+    ok({
       eventVersion: AI_EVENT_VERSION,
       providerDrivers: AI_PROVIDER_DRIVERS,
       providers: [],
+      sourceModes: ["byok", "hosted"],
+      workspaceModes: ["ask", "research", "write", "summarize"],
       features: {
         chat: true,
         stream: true,
@@ -40,9 +42,12 @@ export const aiRouter = {
         tasks: false,
         tools: false,
         memory: false,
+        spaces: true,
+        search: true,
+        citations: true,
       },
-    });
-  }),
+    }),
+  ),
 
   preferences: {
     get: protectedProcedure.handler(async ({ context }) => {

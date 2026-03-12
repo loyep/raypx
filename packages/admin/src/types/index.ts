@@ -1,4 +1,7 @@
 export type {
+  AdminKeyPoolSummary,
+  AdminPromptPolicySummary,
+  AdminUsageOverview,
   AdminUser,
   AdminUserRole,
   AdminUserStats,

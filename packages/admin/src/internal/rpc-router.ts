@@ -1,5 +1,12 @@
 import { and, count, db, eq, ilike, or, sql } from "@raypx/database";
-import { user } from "@raypx/database/schemas";
+import {
+  aiCallLogs,
+  aiProfiles,
+  aiProviderKeys,
+  aiProviders,
+  subscription,
+  user,
+} from "@raypx/database/schemas";
 import { z } from "zod";
 import { ok } from "../api-response";
 
@@ -128,6 +135,77 @@ export function createAdminUsersRouter({ requirePermission }: CreateAdminUsersRo
         admins: adminResult[0]?.count ?? 0,
         banned: bannedResult[0]?.count ?? 0,
         verified: verifiedResult[0]?.count ?? 0,
+      });
+    }),
+  };
+}
+
+export function createAdminKeyPoolRouter({ requirePermission }: CreateAdminUsersRouterProps) {
+  return {
+    summary: requirePermission("users:read").handler(async () => {
+      const [providers, keys] = await Promise.all([
+        db.select().from(aiProviders).where(eq(aiProviders.scope, "system")),
+        db.select().from(aiProviderKeys),
+      ]);
+
+      const defaultProvider = providers.find((provider) => provider.isDefault) ?? null;
+
+      return ok({
+        totalProviders: providers.length,
+        configuredKeys: keys.filter((item) => item.status === "active").length,
+        enabledProviders: providers.filter((provider) => provider.isEnabled).length,
+        defaultProviderName: defaultProvider?.name ?? null,
+      });
+    }),
+  };
+}
+
+export function createAdminPromptPoliciesRouter({
+  requirePermission,
+}: CreateAdminUsersRouterProps) {
+  return {
+    summary: requirePermission("users:read").handler(async () => {
+      const profiles = await db.select().from(aiProfiles);
+
+      return ok({
+        totalProfiles: profiles.length,
+        systemProfiles: profiles.filter((profile) => profile.scope === "system").length,
+        modeProfiles: profiles.filter((profile) => profile.scope === "mode").length,
+        spaceProfiles: profiles.filter((profile) => profile.scope === "space").length,
+        userProfiles: profiles.filter((profile) => profile.scope === "user").length,
+      });
+    }),
+  };
+}
+
+export function createAdminUsageOverviewRouter({ requirePermission }: CreateAdminUsersRouterProps) {
+  return {
+    summary: requirePermission("users:read").handler(async () => {
+      const [calls, subscriptions, providers] = await Promise.all([
+        db.select().from(aiCallLogs),
+        db.select().from(subscription),
+        db.select().from(aiProviders).where(eq(aiProviders.scope, "user")),
+      ]);
+
+      const totals = calls.reduce(
+        (acc, call) => ({
+          totalCalls: acc.totalCalls + 1,
+          totalTokens: acc.totalTokens + (call.totalTokens ?? 0),
+          totalCostUsdCents: acc.totalCostUsdCents + (call.costUsdCents ?? 0),
+        }),
+        {
+          totalCalls: 0,
+          totalTokens: 0,
+          totalCostUsdCents: 0,
+        },
+      );
+
+      return ok({
+        ...totals,
+        activeSubscriptions: subscriptions.filter(
+          (item) => item.status === "active" || item.status === "trialing",
+        ).length,
+        userProviders: providers.length,
       });
     }),
   };

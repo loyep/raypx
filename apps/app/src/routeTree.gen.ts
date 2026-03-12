@@ -19,12 +19,18 @@ import { Route as authSignupRouteImport } from './routes/(auth)/signup'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
 import { Route as appSettingsRouteRouteImport } from './routes/(app)/settings/route'
 import { Route as appChatRouteRouteImport } from './routes/(app)/chat/route'
+import { Route as appThreadsIndexRouteImport } from './routes/(app)/threads/index'
+import { Route as appSpacesIndexRouteImport } from './routes/(app)/spaces/index'
 import { Route as appSettingsIndexRouteImport } from './routes/(app)/settings/index'
+import { Route as appLibraryIndexRouteImport } from './routes/(app)/library/index'
 import { Route as appChatIndexRouteImport } from './routes/(app)/chat/index'
+import { Route as appAskIndexRouteImport } from './routes/(app)/ask/index'
 import { Route as ApiRpcSplatRouteImport } from './routes/api/rpc.$'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth.$'
+import { Route as appSettingsBillingRouteImport } from './routes/(app)/settings/billing'
 import { Route as appSettingsAiProvidersRouteImport } from './routes/(app)/settings/ai-providers'
 import { Route as appChatIdRouteImport } from './routes/(app)/chat/$id'
+import { Route as appAdminSlugRouteImport } from './routes/(app)/admin/$slug'
 
 const legalRouteRoute = legalRouteRouteImport.update({
   id: '/(legal)',
@@ -73,15 +79,35 @@ const appChatRouteRoute = appChatRouteRouteImport.update({
   path: '/chat',
   getParentRoute: () => appRouteRoute,
 } as any)
+const appThreadsIndexRoute = appThreadsIndexRouteImport.update({
+  id: '/threads/',
+  path: '/threads/',
+  getParentRoute: () => appRouteRoute,
+} as any)
+const appSpacesIndexRoute = appSpacesIndexRouteImport.update({
+  id: '/spaces/',
+  path: '/spaces/',
+  getParentRoute: () => appRouteRoute,
+} as any)
 const appSettingsIndexRoute = appSettingsIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => appSettingsRouteRoute,
 } as any)
+const appLibraryIndexRoute = appLibraryIndexRouteImport.update({
+  id: '/library/',
+  path: '/library/',
+  getParentRoute: () => appRouteRoute,
+} as any)
 const appChatIndexRoute = appChatIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => appChatRouteRoute,
+} as any)
+const appAskIndexRoute = appAskIndexRouteImport.update({
+  id: '/ask/',
+  path: '/ask/',
+  getParentRoute: () => appRouteRoute,
 } as any)
 const ApiRpcSplatRoute = ApiRpcSplatRouteImport.update({
   id: '/api/rpc/$',
@@ -93,6 +119,11 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const appSettingsBillingRoute = appSettingsBillingRouteImport.update({
+  id: '/billing',
+  path: '/billing',
+  getParentRoute: () => appSettingsRouteRoute,
+} as any)
 const appSettingsAiProvidersRoute = appSettingsAiProvidersRouteImport.update({
   id: '/ai-providers',
   path: '/ai-providers',
@@ -103,6 +134,11 @@ const appChatIdRoute = appChatIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => appChatRouteRoute,
 } as any)
+const appAdminSlugRoute = appAdminSlugRouteImport.update({
+  id: '/admin/$slug',
+  path: '/admin/$slug',
+  getParentRoute: () => appRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -112,12 +148,18 @@ export interface FileRoutesByFullPath {
   '/signup': typeof authSignupRoute
   '/privacy': typeof legalPrivacyRoute
   '/terms': typeof legalTermsRoute
+  '/admin/$slug': typeof appAdminSlugRoute
   '/chat/$id': typeof appChatIdRoute
   '/settings/ai-providers': typeof appSettingsAiProvidersRoute
+  '/settings/billing': typeof appSettingsBillingRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
+  '/ask/': typeof appAskIndexRoute
   '/chat/': typeof appChatIndexRoute
+  '/library/': typeof appLibraryIndexRoute
   '/settings/': typeof appSettingsIndexRoute
+  '/spaces/': typeof appSpacesIndexRoute
+  '/threads/': typeof appThreadsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -125,12 +167,18 @@ export interface FileRoutesByTo {
   '/signup': typeof authSignupRoute
   '/privacy': typeof legalPrivacyRoute
   '/terms': typeof legalTermsRoute
+  '/admin/$slug': typeof appAdminSlugRoute
   '/chat/$id': typeof appChatIdRoute
   '/settings/ai-providers': typeof appSettingsAiProvidersRoute
+  '/settings/billing': typeof appSettingsBillingRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
+  '/ask': typeof appAskIndexRoute
   '/chat': typeof appChatIndexRoute
+  '/library': typeof appLibraryIndexRoute
   '/settings': typeof appSettingsIndexRoute
+  '/spaces': typeof appSpacesIndexRoute
+  '/threads': typeof appThreadsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -144,12 +192,18 @@ export interface FileRoutesById {
   '/(auth)/signup': typeof authSignupRoute
   '/(legal)/privacy': typeof legalPrivacyRoute
   '/(legal)/terms': typeof legalTermsRoute
+  '/(app)/admin/$slug': typeof appAdminSlugRoute
   '/(app)/chat/$id': typeof appChatIdRoute
   '/(app)/settings/ai-providers': typeof appSettingsAiProvidersRoute
+  '/(app)/settings/billing': typeof appSettingsBillingRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
+  '/(app)/ask/': typeof appAskIndexRoute
   '/(app)/chat/': typeof appChatIndexRoute
+  '/(app)/library/': typeof appLibraryIndexRoute
   '/(app)/settings/': typeof appSettingsIndexRoute
+  '/(app)/spaces/': typeof appSpacesIndexRoute
+  '/(app)/threads/': typeof appThreadsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -161,12 +215,18 @@ export interface FileRouteTypes {
     | '/signup'
     | '/privacy'
     | '/terms'
+    | '/admin/$slug'
     | '/chat/$id'
     | '/settings/ai-providers'
+    | '/settings/billing'
     | '/api/auth/$'
     | '/api/rpc/$'
+    | '/ask/'
     | '/chat/'
+    | '/library/'
     | '/settings/'
+    | '/spaces/'
+    | '/threads/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -174,12 +234,18 @@ export interface FileRouteTypes {
     | '/signup'
     | '/privacy'
     | '/terms'
+    | '/admin/$slug'
     | '/chat/$id'
     | '/settings/ai-providers'
+    | '/settings/billing'
     | '/api/auth/$'
     | '/api/rpc/$'
+    | '/ask'
     | '/chat'
+    | '/library'
     | '/settings'
+    | '/spaces'
+    | '/threads'
   id:
     | '__root__'
     | '/'
@@ -192,12 +258,18 @@ export interface FileRouteTypes {
     | '/(auth)/signup'
     | '/(legal)/privacy'
     | '/(legal)/terms'
+    | '/(app)/admin/$slug'
     | '/(app)/chat/$id'
     | '/(app)/settings/ai-providers'
+    | '/(app)/settings/billing'
     | '/api/auth/$'
     | '/api/rpc/$'
+    | '/(app)/ask/'
     | '/(app)/chat/'
+    | '/(app)/library/'
     | '/(app)/settings/'
+    | '/(app)/spaces/'
+    | '/(app)/threads/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -281,6 +353,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof appChatRouteRouteImport
       parentRoute: typeof appRouteRoute
     }
+    '/(app)/threads/': {
+      id: '/(app)/threads/'
+      path: '/threads'
+      fullPath: '/threads/'
+      preLoaderRoute: typeof appThreadsIndexRouteImport
+      parentRoute: typeof appRouteRoute
+    }
+    '/(app)/spaces/': {
+      id: '/(app)/spaces/'
+      path: '/spaces'
+      fullPath: '/spaces/'
+      preLoaderRoute: typeof appSpacesIndexRouteImport
+      parentRoute: typeof appRouteRoute
+    }
     '/(app)/settings/': {
       id: '/(app)/settings/'
       path: '/'
@@ -288,12 +374,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof appSettingsIndexRouteImport
       parentRoute: typeof appSettingsRouteRoute
     }
+    '/(app)/library/': {
+      id: '/(app)/library/'
+      path: '/library'
+      fullPath: '/library/'
+      preLoaderRoute: typeof appLibraryIndexRouteImport
+      parentRoute: typeof appRouteRoute
+    }
     '/(app)/chat/': {
       id: '/(app)/chat/'
       path: '/'
       fullPath: '/chat/'
       preLoaderRoute: typeof appChatIndexRouteImport
       parentRoute: typeof appChatRouteRoute
+    }
+    '/(app)/ask/': {
+      id: '/(app)/ask/'
+      path: '/ask'
+      fullPath: '/ask/'
+      preLoaderRoute: typeof appAskIndexRouteImport
+      parentRoute: typeof appRouteRoute
     }
     '/api/rpc/$': {
       id: '/api/rpc/$'
@@ -309,6 +409,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/(app)/settings/billing': {
+      id: '/(app)/settings/billing'
+      path: '/billing'
+      fullPath: '/settings/billing'
+      preLoaderRoute: typeof appSettingsBillingRouteImport
+      parentRoute: typeof appSettingsRouteRoute
+    }
     '/(app)/settings/ai-providers': {
       id: '/(app)/settings/ai-providers'
       path: '/ai-providers'
@@ -322,6 +429,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/chat/$id'
       preLoaderRoute: typeof appChatIdRouteImport
       parentRoute: typeof appChatRouteRoute
+    }
+    '/(app)/admin/$slug': {
+      id: '/(app)/admin/$slug'
+      path: '/admin/$slug'
+      fullPath: '/admin/$slug'
+      preLoaderRoute: typeof appAdminSlugRouteImport
+      parentRoute: typeof appRouteRoute
     }
   }
 }
@@ -342,11 +456,13 @@ const appChatRouteRouteWithChildren = appChatRouteRoute._addFileChildren(
 
 interface appSettingsRouteRouteChildren {
   appSettingsAiProvidersRoute: typeof appSettingsAiProvidersRoute
+  appSettingsBillingRoute: typeof appSettingsBillingRoute
   appSettingsIndexRoute: typeof appSettingsIndexRoute
 }
 
 const appSettingsRouteRouteChildren: appSettingsRouteRouteChildren = {
   appSettingsAiProvidersRoute: appSettingsAiProvidersRoute,
+  appSettingsBillingRoute: appSettingsBillingRoute,
   appSettingsIndexRoute: appSettingsIndexRoute,
 }
 
@@ -356,11 +472,21 @@ const appSettingsRouteRouteWithChildren =
 interface appRouteRouteChildren {
   appChatRouteRoute: typeof appChatRouteRouteWithChildren
   appSettingsRouteRoute: typeof appSettingsRouteRouteWithChildren
+  appAdminSlugRoute: typeof appAdminSlugRoute
+  appAskIndexRoute: typeof appAskIndexRoute
+  appLibraryIndexRoute: typeof appLibraryIndexRoute
+  appSpacesIndexRoute: typeof appSpacesIndexRoute
+  appThreadsIndexRoute: typeof appThreadsIndexRoute
 }
 
 const appRouteRouteChildren: appRouteRouteChildren = {
   appChatRouteRoute: appChatRouteRouteWithChildren,
   appSettingsRouteRoute: appSettingsRouteRouteWithChildren,
+  appAdminSlugRoute: appAdminSlugRoute,
+  appAskIndexRoute: appAskIndexRoute,
+  appLibraryIndexRoute: appLibraryIndexRoute,
+  appSpacesIndexRoute: appSpacesIndexRoute,
+  appThreadsIndexRoute: appThreadsIndexRoute,
 }
 
 const appRouteRouteWithChildren = appRouteRoute._addFileChildren(

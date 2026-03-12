@@ -13,6 +13,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@raypx/admin": "workspace:*",
     "@raypx/ai": "workspace:*",
     "@raypx/auth": "workspace:*",
     "@raypx/config": "workspace:*",

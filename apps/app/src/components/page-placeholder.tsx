@@ -10,7 +10,14 @@ type PagePlaceholderProps = {
   kicker?: string;
   primaryAction?: {
     label: string;
-    to: "/chat" | "/settings/ai-providers";
+    to:
+      | "/ask"
+      | "/chat"
+      | "/threads"
+      | "/spaces"
+      | "/library"
+      | "/settings/ai-providers"
+      | "/settings/billing";
   };
 };
 

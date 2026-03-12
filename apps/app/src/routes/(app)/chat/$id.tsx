@@ -13,10 +13,10 @@ function ChatConversationRoute() {
 
   return (
     <PagePlaceholder
-      description={`Conversation ${id} is hidden while the dashboard UI is being rebuilt. Keep the route for future restoration.`}
+      description={`Legacy chat route ${id} now belongs to the Threads area. Keep this redirect-safe placeholder while thread detail is redesigned.`}
       kicker="Conversation"
-      primaryAction={{ label: "Back to chat", to: "/chat" }}
-      title="Conversation view removed"
+      primaryAction={{ label: "Open threads", to: "/threads" }}
+      title="Conversation moved into Threads"
     />
   );
 }

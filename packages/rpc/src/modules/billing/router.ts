@@ -3,9 +3,27 @@ import { billingService } from "../../application/billing/service";
 import { protectedProcedure } from "../../transport/middleware";
 
 export const billingRouter = {
+  plans: {
+    list: protectedProcedure.handler(async () => {
+      return billingService.getPlans();
+    }),
+  },
+
   subscription: {
     get: protectedProcedure.handler(async ({ context }) => {
       return billingService.getSubscription(context);
+    }),
+  },
+
+  usage: {
+    get: protectedProcedure.handler(async ({ context }) => {
+      return billingService.getUsage(context);
+    }),
+  },
+
+  entitlements: {
+    get: protectedProcedure.handler(async ({ context }) => {
+      return billingService.getEntitlements(context);
     }),
   },
 

@@ -1,6 +1,6 @@
 import { Button } from "@raypx/design-system/components/ui/button";
 import { cn } from "@raypx/design-system/lib/utils";
-import { IconArrowLeft, IconSparkles } from "@tabler/icons-react";
+import { IconArrowLeft, IconCreditCard, IconSparkles } from "@tabler/icons-react";
 import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/(app)/settings")({
@@ -11,6 +11,7 @@ function SettingsLayout() {
   const pathname = useRouterState({ select: (state) => state.location.pathname });
   const navItems = [
     { label: "AI Providers", to: "/settings/ai-providers" as const, icon: IconSparkles },
+    { label: "Billing", to: "/settings/billing" as const, icon: IconCreditCard },
   ];
 
   return (
@@ -22,9 +23,9 @@ function SettingsLayout() {
         </p>
       </div>
       <div className="flex flex-wrap gap-2">
-        <Button className="justify-start gap-2" render={<Link to="/chat" />} variant="outline">
+        <Button className="justify-start gap-2" render={<Link to="/ask" />} variant="outline">
           <IconArrowLeft className="size-4" />
-          Back to chat
+          Back to workspace
         </Button>
         {navItems.map((item) => {
           const Icon = item.icon;

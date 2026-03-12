@@ -10,3 +10,4 @@ export * from "./organizations";
 export * from "./resources";
 export * from "./subscription";
 export * from "./vector";
+export * from "./workspace";

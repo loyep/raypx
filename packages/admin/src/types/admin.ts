@@ -46,3 +46,26 @@ export type AdminUserStats = {
   banned: number;
   verified: number;
 };
+
+export type AdminKeyPoolSummary = {
+  totalProviders: number;
+  configuredKeys: number;
+  enabledProviders: number;
+  defaultProviderName: string | null;
+};
+
+export type AdminPromptPolicySummary = {
+  totalProfiles: number;
+  systemProfiles: number;
+  modeProfiles: number;
+  spaceProfiles: number;
+  userProfiles: number;
+};
+
+export type AdminUsageOverview = {
+  totalCalls: number;
+  totalTokens: number;
+  totalCostUsdCents: number;
+  activeSubscriptions: number;
+  userProviders: number;
+};
