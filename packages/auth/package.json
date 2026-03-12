@@ -17,10 +17,10 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@better-auth/drizzle-adapter": "^1.5.4",
+    "@better-auth/drizzle-adapter": "^1.5.5",
     "@raypx/config": "workspace:*",
     "@raypx/database": "workspace:*",
-    "better-auth": "^1.5.4"
+    "better-auth": "^1.5.5"
   },
   "devDependencies": {
     "@raypx/tsconfig": "workspace:*",

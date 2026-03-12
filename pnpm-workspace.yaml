@@ -4,44 +4,18 @@ packages:
   - tooling/*
 
 autoInstallPeers: false
-preferWorkspacePackages: true
-
-onlyBuiltDependencies:
-  - lefthook
-
-peerDependencyRules:
-  allowAny:
-    - vite
-  ignoreMissing:
-    - mssql
-    - "@types/mssql"
-    - '@prisma/client'
-    - prisma
-    - mongodb
-  allowedVersions:
-    vite: "*"
-
-updateConfig:
-  ignoreDependencies:
-    - "@types/node"
-
-overrides:
-  esbuild: ^0.27.3
-  vite: "catalog:beta"
-  '@vitejs/plugin-react': "catalog:"
-  lightningcss: ^1.32.0
 
 catalog:
-  '@tanstack/devtools-vite': ^0.5.4
-  '@tanstack/react-devtools': ^0.9.12
+  '@tanstack/devtools-vite': ^0.5.5
+  '@tanstack/react-devtools': ^0.9.13
   '@tanstack/react-query': ^5.90.21
   '@tanstack/react-query-devtools': ^5.91.3
   '@tanstack/react-router': ^1.166.7
   '@tanstack/react-router-devtools': ^1.166.7
-  '@tanstack/react-start': ^1.166.7
+  '@tanstack/react-start': ^1.166.8
   '@types/node': 24.10.4
-  '@vitest/coverage-v8': ^4.1.0-beta.6
   '@vitejs/plugin-react': ^5.1.4
+  '@vitest/coverage-v8': ^4.1.0-beta.6
   babel-plugin-react-compiler: ^1.0.0
   jiti: ^2.6.1
   recharts: ^3.8.0
@@ -52,13 +26,13 @@ catalog:
 
 catalogs:
   beta:
-    nitro: ^3.0.1-alpha.2
-    tsdown: ^0.21.1
-    vite: ^8.0.0-beta.18
     drizzle-kit: beta
     drizzle-orm: beta
     drizzle-seed: beta
     drizzle-zod: beta
+    nitro: latest
+    tsdown: ^0.21.2
+    vite: ^8.0.0-beta.18
   react19:
     '@types/react': ^19.2.14
     '@types/react-dom': ^19.2.3
@@ -67,3 +41,28 @@ catalogs:
   tailwindv4:
     '@tailwindcss/vite': ^4.2.1
     tailwindcss: ^4.2.1
+
+onlyBuiltDependencies:
+  - lefthook
+
+overrides:
+  '@vitejs/plugin-react': "catalog:"
+  esbuild: ^0.27.3
+  lightningcss: ^1.32.0
+  vite: "catalog:beta"
+
+peerDependencyRules:
+  allowAny:
+    - vite
+  allowedVersions:
+    '@react-email/body': 0.3.0
+    vite: "*"
+  ignoreMissing:
+    - mssql
+    - "@types/mssql"
+    - mongodb
+preferWorkspacePackages: true
+
+updateConfig:
+  ignoreDependencies:
+    - "@types/node"

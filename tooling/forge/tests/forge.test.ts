@@ -42,13 +42,13 @@ function extractFirstJsonObject(output: string): string {
         escaped = true;
         continue;
       }
-      if (char === "\"") {
+      if (char === '"') {
         inString = false;
       }
       continue;
     }
 
-    if (char === "\"") {
+    if (char === '"') {
       inString = true;
       continue;
     }
@@ -195,7 +195,9 @@ describe("forge cli", () => {
     });
     expect([0, 1]).toContain(result.status);
     const parsed = JSON.parse(extractFirstJsonObject(result.output));
-    const depsSection = parsed.sections.find((section: { name: string }) => section.name === "deps");
+    const depsSection = parsed.sections.find(
+      (section: { name: string }) => section.name === "deps",
+    );
     expect(depsSection).toBeDefined();
     expect(JSON.stringify(depsSection)).toContain("workspace-dependencies");
   });

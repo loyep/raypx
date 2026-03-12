@@ -1,6 +1,7 @@
 {
   "name": "raypx",
   "private": true,
+  "version": "0.0.1",
   "description": "A modern web application built with TanStack Start and TypeScript",
   "homepage": "https://raypx.com",
   "bugs": {
