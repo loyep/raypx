@@ -1,12 +1,4 @@
-import type { SessionWithExtendedUser } from "@raypx/auth";
-import { getServerSession } from "@raypx/auth/server";
-import { createServerFn } from "@tanstack/react-start";
+import { createGetSession } from "@raypx/auth/tanstack-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 
-export const getSession = createServerFn({ method: "GET" }).handler(
-  async (): Promise<SessionWithExtendedUser | null> => {
-    const headers = getRequestHeaders();
-    const session = await getServerSession(headers);
-    return session as SessionWithExtendedUser | null;
-  },
-);
+export const getSession = createGetSession(getRequestHeaders);

@@ -23,12 +23,8 @@ export { AuthProvider, useAuthContext } from "./provider";
 export type {
   AuthConfig,
   AuthErrorType,
-  AuthSession,
-  AuthUser,
-  ExtendedSession,
   ExtendedUser,
   OAuthProvider,
-  SessionContext,
   SessionWithExtendedUser,
 } from "./types";
-export { AuthError } from "./types";
+export { AuthError, isAdmin } from "./types";

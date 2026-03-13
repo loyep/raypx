@@ -1,3 +1,4 @@
+import { authClient } from "@raypx/auth";
 import { Button } from "@raypx/design-system/components/ui/button";
 import {
   Dialog,
@@ -22,7 +23,6 @@ import { useForm } from "@tanstack/react-form";
 import { useRouter } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { z } from "zod";
-import { authClient } from "@/lib/auth";
 
 type CreateWorkspaceDialogProps = {
   open: boolean;

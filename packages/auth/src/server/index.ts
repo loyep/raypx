@@ -16,7 +16,7 @@ import {
 import { defaultRoles } from "better-auth/plugins/admin/access";
 
 import { env } from "../envs";
-import type { AuthConfig } from "../types";
+import type { AuthConfig, SessionWithExtendedUser } from "../types";
 
 const DEFAULT_ORG_NAME = "Default Workspace";
 
@@ -219,13 +219,20 @@ export function createAuth(config: AuthConfig = {}) {
 export type ServerSession = Awaited<ReturnType<Auth["api"]["getSession"]>>;
 
 /**
+ * Session result with extended fields (role, activeOrganizationId).
+ * Inferred from getServerSession return type.
+ */
+export type GetSessionResult = SessionWithExtendedUser | null;
+
+/**
  * Framework-agnostic auth helpers
  */
 function createServerAuthHelpers(config: AuthConfig = {}) {
   const auth = createAuth(config);
 
-  async function getSession(headers: Headers): Promise<ServerSession> {
-    return auth.api.getSession({ headers });
+  async function getSession(headers: Headers): Promise<GetSessionResult> {
+    const session = await auth.api.getSession({ headers });
+    return session as GetSessionResult;
   }
 
   async function hasSession(headers: Headers): Promise<boolean> {
@@ -268,3 +275,26 @@ export async function getSessionFromRequest(auth: ReturnType<typeof createAuth>,
  * Type export for the auth instance
  */
 export type Auth = ReturnType<typeof createAuth>;
+
+/**
+ * Handlers for TanStack Start api/auth route.
+ * Use with createFileRoute("/api/auth/$").
+ *
+ * @example
+ * ```ts
+ * import { createAuthRouteHandlers } from "@raypx/auth/server";
+ * import { createFileRoute } from "@tanstack/react-router";
+ *
+ * export const Route = createFileRoute("/api/auth/$")({
+ *   server: {
+ *     handlers: createAuthRouteHandlers(),
+ *   },
+ * });
+ * ```
+ */
+export function createAuthRouteHandlers() {
+  return {
+    GET: async ({ request }: { request: Request }) => serverAuth.handler(request),
+    POST: async ({ request }: { request: Request }) => serverAuth.handler(request),
+  };
+}

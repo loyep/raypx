@@ -1,3 +1,5 @@
+import type { ExtendedUser } from "@raypx/auth";
+import { authClient } from "@raypx/auth";
 import { Button } from "@raypx/design-system/components/ui/button";
 import {
   Card,
@@ -13,8 +15,6 @@ import { createFileRoute, Link, useLoaderData } from "@tanstack/react-router";
 import { lazy, Suspense } from "react";
 import { CreateWorkspaceDialog } from "@/components/dashboard/workspace";
 import { siteConfig } from "@/config/site";
-import { authClient } from "@/lib/auth";
-import type { ExtendedUser } from "@/types/auth";
 import { client } from "@/utils/orpc";
 
 const ActivityChart = lazy(() =>

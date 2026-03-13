@@ -16,7 +16,7 @@ import {
   FormTextField,
 } from "@raypx/design-system/components/ui/form";
 import { Input } from "@raypx/design-system/components/ui/input";
-import { AI_PROVIDER_DRIVERS, type AIProviderDriver } from "@raypx/shared/ai";
+import { AI_PROVIDER_DRIVERS, type AIProviderDriver, parseModels } from "@raypx/shared/ai";
 import { useForm } from "@tanstack/react-form";
 import { useEffect } from "react";
 import { z } from "zod";
@@ -87,20 +87,6 @@ const RECOMMENDED_MODELS: Record<AIProviderDriver, string[]> = {
 
 function recommendedModelsForDriver(driver: AIProviderDriver) {
   return RECOMMENDED_MODELS[driver] ?? [];
-}
-
-export function parseModels(modelsText: string): string[] {
-  const seen = new Set<string>();
-  const models: string[] = [];
-
-  for (const part of modelsText.split(",")) {
-    const model = part.trim();
-    if (!model || seen.has(model)) continue;
-    seen.add(model);
-    models.push(model);
-  }
-
-  return models;
 }
 
 const providerFormSchema = z.object({

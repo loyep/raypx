@@ -1,6 +1,8 @@
+import { authClient, signOut } from "@raypx/auth";
 import { getServerSession } from "@raypx/auth/server";
 import { db, eq } from "@raypx/database";
 import { account } from "@raypx/database/schemas";
+import { FormErrorAlert } from "@raypx/design-system/components/form-error-alert";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -26,9 +28,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 import { useState } from "react";
-import { FormErrorAlert } from "@/components/form/error-alert";
 import { siteConfig } from "@/config/site";
-import { authClient, signOut } from "@/lib/auth";
 
 const checkHasPassword = createServerFn({ method: "GET" }).handler(async () => {
   const headers = getRequestHeaders();

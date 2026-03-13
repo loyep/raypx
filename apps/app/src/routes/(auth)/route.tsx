@@ -1,5 +1,5 @@
+import { RouteLoading } from "@raypx/design-system/components/route-loading";
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
-import { RouteLoading } from "@/components/route-loading";
 import { getSession } from "@/lib/auth-server";
 
 export const Route = createFileRoute("/(auth)")({

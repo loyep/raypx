@@ -1,3 +1,4 @@
+import { authClient } from "@raypx/auth";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,7 +11,6 @@ import {
 import { IconCheck, IconChevronDown, IconLayoutGrid, IconPlus } from "@tabler/icons-react";
 import { useRouter } from "@tanstack/react-router";
 import { type FC, useEffect, useRef, useState } from "react";
-import { authClient } from "@/lib/auth";
 import { CreateWorkspaceDialog } from "./dialog";
 
 const STORAGE_KEY_PREFIX = "raypx-active-workspace";

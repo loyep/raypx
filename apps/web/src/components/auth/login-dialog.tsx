@@ -1,3 +1,4 @@
+import { OAuthButton, OAuthButtonGroup } from "@raypx/auth";
 import { Button } from "@raypx/design-system/components/ui/button";
 import {
   Dialog,
@@ -11,7 +12,6 @@ import { Spinner } from "@raypx/design-system/components/ui/spinner";
 import { Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { useState } from "react";
 import { EmailSignInForm } from "@/components/auth/sign-in-form";
-import { OAuthButton, OAuthButtonGroup } from "@/lib/auth";
 
 interface LoginDialogProps {
   open: boolean;

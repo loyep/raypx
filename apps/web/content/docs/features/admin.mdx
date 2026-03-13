@@ -219,8 +219,8 @@ export function SidebarNavigation({ onNavigate, userRole }: SidebarNavigationPro
 
 ```typescript
 // apps/web/src/routes/(app)/admin/$slug.tsx
-import { useSession } from "@/lib/auth";
-import type { ExtendedUser } from "@/types/auth";
+import { useSession } from "@raypx/auth";
+import type { ExtendedUser } from "@raypx/auth";
 
 function AdminUsersPage() {
   const { data: session, isPending } = useSession();

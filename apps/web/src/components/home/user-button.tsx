@@ -1,3 +1,4 @@
+import { signOut, useSession } from "@raypx/auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@raypx/design-system/components/ui/avatar";
 import { Button } from "@raypx/design-system/components/ui/button";
 import {
@@ -19,7 +20,6 @@ import {
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { LoginDialog } from "@/components/auth";
-import { signOut, useSession } from "@/lib/auth";
 
 export function UserButton() {
   const { data: session } = useSession();

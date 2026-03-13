@@ -1,10 +1,10 @@
+import { useSession } from "@raypx/auth";
 import { ThemeSwitcher } from "@raypx/design-system/components/theme-switcher";
 import { Button } from "@raypx/design-system/components/ui/button";
 import type { SiteConfig } from "@raypx/seo";
 import { IconBrandGithub } from "@tabler/icons-react";
 import { Link } from "@tanstack/react-router";
 import { Logo } from "@/components/logo";
-import { useSession } from "@/lib/auth";
 
 type HomeHeaderProps = {
   siteConfig: SiteConfig;

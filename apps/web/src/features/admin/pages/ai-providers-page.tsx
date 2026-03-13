@@ -8,6 +8,7 @@ import {
   CardTitle,
 } from "@raypx/design-system/components/ui/card";
 import { toast } from "@raypx/design-system/components/ui/toast";
+import { parseModels } from "@raypx/shared/ai";
 import { IconPencil, IconPlus, IconTrash } from "@tabler/icons-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
@@ -21,20 +22,6 @@ import { client } from "@/utils/orpc";
 type ProviderItem = Awaited<
   ReturnType<typeof client.ai.system.providers.list>
 >["data"]["providers"][number];
-
-function parseModels(modelsText: string): string[] {
-  const seen = new Set<string>();
-  const models: string[] = [];
-
-  for (const part of modelsText.split(",")) {
-    const model = part.trim();
-    if (!model || seen.has(model)) continue;
-    seen.add(model);
-    models.push(model);
-  }
-
-  return models;
-}
 
 export function AdminAIProvidersPage() {
   const queryClient = useQueryClient();

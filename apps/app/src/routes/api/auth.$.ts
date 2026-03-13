@@ -1,11 +1,8 @@
-import { serverAuth } from "@raypx/auth/server";
+import { createAuthRouteHandlers } from "@raypx/auth/server";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/api/auth/$")({
   server: {
-    handlers: {
-      GET: async ({ request }: { request: Request }) => serverAuth.handler(request),
-      POST: async ({ request }) => serverAuth.handler(request),
-    },
+    handlers: createAuthRouteHandlers(),
   },
 });

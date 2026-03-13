@@ -31,6 +31,25 @@ export function getAIErrorMessage(code: AIErrorCode, fallback?: string): string 
   return AI_ERROR_MESSAGES[code] ?? fallback ?? "Unknown AI error";
 }
 
+/**
+ * Parse model names from comma-separated string or array.
+ * Trims whitespace and deduplicates.
+ */
+export function parseModels(input: string): string[];
+export function parseModels(input: string[]): string[];
+export function parseModels(input: string | string[]): string[] {
+  const parts = typeof input === "string" ? input.split(",") : input;
+  const seen = new Set<string>();
+  const models: string[] = [];
+  for (const part of parts) {
+    const model = part.trim();
+    if (!model || seen.has(model)) continue;
+    seen.add(model);
+    models.push(model);
+  }
+  return models;
+}
+
 export const AI_EVENT_VERSION = 1 as const;
 
 export type AIUsage = {

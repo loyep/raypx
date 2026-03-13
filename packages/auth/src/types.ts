@@ -19,6 +19,13 @@ export type ExtendedUser = AuthUser & {
 };
 
 /**
+ * Helper to check if user has admin role.
+ */
+export function isAdmin(user: { role?: string | null } | undefined | null): boolean {
+  return user?.role === "admin";
+}
+
+/**
  * Session with organization plugin fields (activeOrganizationId).
  */
 export type ExtendedSession = Session & {

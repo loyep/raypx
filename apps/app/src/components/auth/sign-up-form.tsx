@@ -1,3 +1,5 @@
+import { authClient, signIn, signUp } from "@raypx/auth";
+import { FormErrorAlert } from "@raypx/design-system/components/form-error-alert";
 import { Button } from "@raypx/design-system/components/ui/button";
 import { Checkbox } from "@raypx/design-system/components/ui/checkbox";
 import {
@@ -14,8 +16,6 @@ import { useForm } from "@tanstack/react-form";
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { z } from "zod";
-import { FormErrorAlert } from "@/components/form/error-alert";
-import { authClient, signIn, signUp } from "@/lib/auth";
 
 type SignUpValues = {
   name: string;

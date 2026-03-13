@@ -13,6 +13,7 @@ import { toast } from "@raypx/design-system/components/ui/toast";
 import { cn } from "@raypx/design-system/lib/utils";
 import { client } from "@raypx/rpc/client";
 import { generatePageHead } from "@raypx/seo";
+import { parseModels } from "@raypx/shared/ai";
 import {
   IconCircleCheckFilled,
   IconKey,
@@ -47,20 +48,6 @@ type ProviderRecord = {
 };
 
 type ProviderLibraryItem = (typeof BYOK_PROVIDER_LIBRARY)[number];
-
-function parseModels(models: string[]) {
-  const seen = new Set<string>();
-  const items: string[] = [];
-
-  for (const model of models) {
-    const value = model.trim();
-    if (!value || seen.has(value)) continue;
-    seen.add(value);
-    items.push(value);
-  }
-
-  return items;
-}
 
 export const Route = createFileRoute("/(app)/settings/ai-providers")({
   component: AIProviderSettingsPage,

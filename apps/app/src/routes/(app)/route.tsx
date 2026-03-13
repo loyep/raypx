@@ -1,3 +1,5 @@
+import { signOut } from "@raypx/auth";
+import { RouteLoading } from "@raypx/design-system/components/route-loading";
 import { Badge } from "@raypx/design-system/components/ui/badge";
 import { Button } from "@raypx/design-system/components/ui/button";
 import { cn } from "@raypx/design-system/lib/utils";
@@ -12,8 +14,6 @@ import {
 } from "@tabler/icons-react";
 import { createFileRoute, Link, Outlet, redirect, useRouterState } from "@tanstack/react-router";
 import { Logo } from "@/components/logo";
-import { RouteLoading } from "@/components/route-loading";
-import { signOut } from "@/lib/auth";
 import { getSession } from "@/lib/auth-server";
 
 export const Route = createFileRoute("/(app)")({

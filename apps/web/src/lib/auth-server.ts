@@ -1,8 +1,4 @@
-import { getServerSession } from "@raypx/auth/server";
-import { createServerFn } from "@tanstack/react-start";
+import { createGetSession } from "@raypx/auth/tanstack-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 
-export const getSession = createServerFn({ method: "GET" }).handler(async () => {
-  const headers = getRequestHeaders();
-  return getServerSession(headers);
-});
+export const getSession = createGetSession(getRequestHeaders);

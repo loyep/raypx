@@ -1,9 +1,9 @@
+import type { ExtendedUser } from "@raypx/auth";
 import { generatePageHead } from "@raypx/seo";
 import { createFileRoute, useLoaderData, useNavigate } from "@tanstack/react-router";
 import { siteConfig } from "@/config/site";
 import { AdminUsersPage } from "@/features/admin/pages/users-page";
 import { getAdminPageComponent, resolveAdminRoute } from "@/plugins/admin-route-resolver";
-import type { ExtendedUser } from "@/types/auth";
 
 export const Route = createFileRoute("/(app)/admin/$slug")({
   component: AdminWildcardPage,

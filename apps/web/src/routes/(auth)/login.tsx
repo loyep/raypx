@@ -1,3 +1,4 @@
+import { OAuthButton, OAuthButtonGroup } from "@raypx/auth";
 import { Button } from "@raypx/design-system/components/ui/button";
 import { Separator } from "@raypx/design-system/components/ui/separator";
 import { Spinner } from "@raypx/design-system/components/ui/spinner";
@@ -8,7 +9,6 @@ import { useState } from "react";
 import { AuthLayout } from "@/components/auth";
 import { EmailSignInForm } from "@/components/auth/sign-in-form";
 import { siteConfig } from "@/config/site";
-import { OAuthButton, OAuthButtonGroup } from "@/lib/auth";
 
 export const Route = createFileRoute("/(auth)/login")({
   component: LoginPage,

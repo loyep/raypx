@@ -9,6 +9,7 @@ import {
 } from "@raypx/design-system/components/ui/card";
 import { toast } from "@raypx/design-system/components/ui/toast";
 import { generatePageHead } from "@raypx/seo";
+import { parseModels } from "@raypx/shared/ai";
 import {
   IconAlertTriangle,
   IconCircleCheck,
@@ -30,20 +31,6 @@ import { client } from "@/utils/orpc";
 type ProviderItem = Awaited<
   ReturnType<typeof client.ai.getPreferences>
 >["data"]["providers"][number];
-
-function parseModels(modelsText: string): string[] {
-  const seen = new Set<string>();
-  const models: string[] = [];
-
-  for (const part of modelsText.split(",")) {
-    const model = part.trim();
-    if (!model || seen.has(model)) continue;
-    seen.add(model);
-    models.push(model);
-  }
-
-  return models;
-}
 
 export const Route = createFileRoute("/(app)/settings/ai-providers")({
   component: AIProviderSettingsPage,

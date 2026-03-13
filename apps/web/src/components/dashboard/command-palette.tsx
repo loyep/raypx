@@ -1,3 +1,4 @@
+import { signOut } from "@raypx/auth";
 import {
   Command,
   CommandDialog,
@@ -21,7 +22,6 @@ import {
 } from "@tabler/icons-react";
 import { useNavigate } from "@tanstack/react-router";
 import { type FC, useCallback, useEffect, useState } from "react";
-import { signOut } from "@/lib/auth";
 
 type CommandPaletteProps = {
   open?: boolean;

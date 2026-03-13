@@ -1,5 +1,6 @@
 import { getDashboardNavigationItems } from "@raypx/admin/server";
-import type { SessionWithExtendedUser } from "@raypx/auth";
+import { signOut } from "@raypx/auth";
+import { RouteLoading } from "@raypx/design-system/components/route-loading";
 import {
   createFileRoute,
   Outlet,
@@ -14,15 +15,13 @@ import {
   DashboardSidebar,
   MobileSidebar,
 } from "@/components/dashboard";
-import { RouteLoading } from "@/components/route-loading";
-import { signOut } from "@/lib/auth";
 import { getSession } from "@/lib/auth-server";
 
 export const Route = createFileRoute("/(app)")({
   component: AppLayout,
   pendingComponent: RouteLoading,
   loader: async () => {
-    const session = (await getSession()) as SessionWithExtendedUser | null;
+    const session = await getSession();
     if (!session?.session) {
       throw redirect({ to: "/login" });
     }

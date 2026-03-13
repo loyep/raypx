@@ -1,4 +1,5 @@
 import { listUsers } from "@raypx/admin/api";
+import { type ExtendedUser, isAdmin } from "@raypx/auth";
 import {
   Card,
   CardContent,
@@ -18,7 +19,6 @@ import { generatePageHead } from "@raypx/seo";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useLoaderData } from "@tanstack/react-router";
 import { siteConfig } from "@/config/site";
-import type { ExtendedUser } from "@/types/auth";
 import { client } from "@/utils/orpc";
 
 export const Route = createFileRoute("/(app)/orpc-users")({
@@ -29,7 +29,7 @@ export const Route = createFileRoute("/(app)/orpc-users")({
 function ORPCUsersPage() {
   const { session } = useLoaderData({ from: "/(app)" });
   const user = session.user as ExtendedUser;
-  const isAdmin = user.role === "admin";
+  const userIsAdmin = isAdmin(user);
 
   const usersQuery = useQuery({
     queryKey: ["orpc", "adminUsers", "list"],
@@ -38,7 +38,7 @@ function ORPCUsersPage() {
         page: 1,
         pageSize: 20,
       }),
-    enabled: isAdmin,
+    enabled: userIsAdmin,
   });
 
   const users = usersQuery.data?.users ?? [];
@@ -52,7 +52,7 @@ function ORPCUsersPage() {
         </p>
       </div>
 
-      {!isAdmin ? (
+      {!userIsAdmin ? (
         <Card>
           <CardHeader>
             <CardTitle>Admin only</CardTitle>

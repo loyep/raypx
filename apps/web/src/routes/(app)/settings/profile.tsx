@@ -1,3 +1,4 @@
+import { useSession } from "@raypx/auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@raypx/design-system/components/ui/avatar";
 import {
   Card,
@@ -12,7 +13,6 @@ import { Label } from "@raypx/design-system/components/ui/label";
 import { generatePageHead } from "@raypx/seo";
 import { createFileRoute } from "@tanstack/react-router";
 import { siteConfig } from "@/config/site";
-import { useSession } from "@/lib/auth";
 
 export const Route = createFileRoute("/(app)/settings/profile")({
   component: SettingsProfilePage,
