@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { WorkspacePage } from "@/components/workspace/workspace-primitives";
 import { siteConfig } from "@/config/site";
-import { getSession } from "@/lib/auth-server";
+import { getSession } from "@raypx/auth/tanstack-start";
 
 const allowedSlugs = [
   "users",

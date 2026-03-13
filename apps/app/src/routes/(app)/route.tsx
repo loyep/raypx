@@ -14,7 +14,7 @@ import {
 } from "@tabler/icons-react";
 import { createFileRoute, Link, Outlet, redirect, useRouterState } from "@tanstack/react-router";
 import { Logo } from "@/components/logo";
-import { getSession } from "@/lib/auth-server";
+import { getSession } from "@raypx/auth/tanstack-start";
 
 export const Route = createFileRoute("/(app)")({
   component: AppLayout,
