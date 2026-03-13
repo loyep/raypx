@@ -191,9 +191,6 @@ export async function renderForgeUsage(
       "Database Commands:",
       "  db <command>      Run database operations",
       "",
-      "UI Commands:",
-      "  ui generate       Generate UI exports",
-      "",
       "Options:",
       "  -h, --help        Display this message",
     ].join("\n");

@@ -76,7 +76,6 @@ describe("forge cli", () => {
     expect(result.output).toContain("forge");
     expect(result.output).toContain("Workspace Commands");
     expect(result.output).toContain("Database Commands");
-    expect(result.output).toContain("UI Commands");
     expect(result.output).toContain("clean");
     expect(result.output).toContain("doctor");
   });

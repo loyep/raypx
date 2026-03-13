@@ -7,7 +7,7 @@ import { PROJECT_ROOT } from "../libs/utils";
 /**
  * Keep only workspace-level caches here. Package build outputs stay in each package clean script.
  */
-const CLEAN_PATTERNS = ["**/node_modules/.vite", ".turbo"];
+const CLEAN_PATTERNS = ["**/node_modules/.vite", ".turbo", ".cache"];
 
 /**
  * Clean workspace caches

@@ -1,25 +1,15 @@
 #!/usr/bin/env node
 
-import { mkdirSync, appendFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
-const cwd = process.cwd();
-const args = process.argv.slice(2);
-const logFile = resolve(cwd, ".cache/raypx-forge/commands.log");
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-mkdirSync(dirname(logFile), { recursive: true });
-
-function writeLog(message) {
-  appendFileSync(logFile, `${new Date().toISOString()} ${message}\n`);
-}
-
+const cwd = process.cwd();
+const args = process.argv.slice(2);
 const entry = resolve(__dirname, "../index.ts");
-
-writeLog(`START cwd="${cwd}" args="${args.join(" ")}"`);
 
 const child = spawn(process.execPath, ["--import", "tsx", entry, ...args], {
   cwd,
@@ -27,13 +17,11 @@ const child = spawn(process.execPath, ["--import", "tsx", entry, ...args], {
   env: process.env,
 });
 
-child.on("exit", (code, signal) => {
-  const exitCode = code ?? 1;
-  writeLog(`END code=${exitCode}${signal ? ` signal=${signal}` : ""}`);
-  process.exit(exitCode);
+child.on("exit", (code) => {
+  process.exit(code ?? 1);
 });
 
 child.on("error", (error) => {
-  writeLog(`ERROR message="${error.message}"`);
+  console.error(error);
   process.exit(1);
 });

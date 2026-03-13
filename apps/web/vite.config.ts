@@ -5,16 +5,21 @@ import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact, { reactCompilerPreset } from "@vitejs/plugin-react";
 import mdx from "fumadocs-mdx/vite";
 import { nitro } from "nitro/vite";
-import { visualizer } from "rollup-plugin-visualizer";
-import { defineConfig, type UserConfig } from "vite";
+import { defineConfig, type Plugin, type UserConfig } from "vite";
 import * as MdxConfig from "./source.config";
 import "./src/env.ts";
 
 const isAnalyze = process.env.BUNDLE_ANALYZE === "true";
 
+async function VisualizerPlugin(enable: boolean): Promise<Plugin[]> {
+  if (!enable) return [];
+  const { default: visualizer } = await import("rollup-plugin-visualizer");
+  return [visualizer({ open: true })];
+}
+
 export default defineConfig(async ({ command, isSsrBuild }) => {
   const isBuild = command === "build";
-  const isDev = command === "serve";
+  const isServeMode = command === "serve"; // dev or preview
   const enableBundleAnalyze = isAnalyze && !isSsrBuild;
   const enableAnalyze = isBuild && enableBundleAnalyze;
 
@@ -38,7 +43,7 @@ export default defineConfig(async ({ command, isSsrBuild }) => {
       cssCodeSplit: true,
       ssrEmitAssets: true,
     },
-    ...(isDev && {
+    ...(isServeMode && {
       server: {
         warmup: {
           clientFiles: ["./src/router.tsx", "./src/routes/__root.tsx", "./src/styles/globals.css"],
@@ -48,13 +53,7 @@ export default defineConfig(async ({ command, isSsrBuild }) => {
     }),
     plugins: [
       mdx(MdxConfig),
-      ...(enableAnalyze
-        ? [
-            visualizer({
-              open: true,
-            }),
-          ]
-        : []),
+      VisualizerPlugin(enableAnalyze),
       devtools({
         enhancedLogs: { enabled: false },
         injectSource: { enabled: false },

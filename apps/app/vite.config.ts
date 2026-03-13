@@ -4,13 +4,18 @@ import { devtools } from "@tanstack/devtools-vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact, { reactCompilerPreset } from "@vitejs/plugin-react";
 import { nitro } from "nitro/vite";
-import { visualizer } from "rollup-plugin-visualizer";
-import { defineConfig, type UserConfig } from "vite";
+import { defineConfig, type Plugin, type UserConfig } from "vite";
 import "./src/env.ts";
+
+async function VisualizerPlugin(enable: boolean): Promise<Plugin[]> {
+  if (!enable) return [];
+  const { default: visualizer } = await import("rollup-plugin-visualizer");
+  return [visualizer({ open: true })];
+}
 
 export default defineConfig(async ({ command, isSsrBuild }) => {
   const isBuild = command === "build";
-  const isDev = command === "serve";
+  const isServeMode = command === "serve"; // dev or preview
   const enableBundleAnalyze = process.env.BUNDLE_ANALYZE === "true" && !isSsrBuild;
   const enableTanstackDevtools = process.env.TANSTACK_DEVTOOLS === "true";
 
@@ -28,15 +33,8 @@ export default defineConfig(async ({ command, isSsrBuild }) => {
     build: {
       cssCodeSplit: true,
       ssrEmitAssets: true,
-      rolldownOptions: isBuild
-        ? undefined
-        : {
-            output: {
-              chunkFileNames: "assets/chunks/[name]-[hash].js",
-            },
-          },
     },
-    ...(isDev
+    ...(isServeMode
       ? {
           server: {
             warmup: {
@@ -51,7 +49,7 @@ export default defineConfig(async ({ command, isSsrBuild }) => {
         }
       : {}),
     plugins: [
-      ...(enableBundleAnalyze ? [visualizer({ open: true })] : []),
+      VisualizerPlugin(enableBundleAnalyze),
       ...(enableTanstackDevtools
         ? [
             devtools({

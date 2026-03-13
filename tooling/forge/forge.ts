@@ -6,7 +6,6 @@ import type { DoctorSectionName } from "./commands/doctor";
 import { runDoctor } from "./commands/doctor";
 import { runPrepare } from "./commands/prepare";
 import { runSetup } from "./commands/setup";
-import { runUiGenerate } from "./commands/ui";
 import { runCommand as runShellCommand } from "./libs/runner";
 
 export interface ForgeMeta {
@@ -217,25 +216,6 @@ const runCliCommand = createTaskCommand({
   },
 });
 
-const uiCommand = createForgeCommand({
-  meta: {
-    name: "ui",
-    description: "UI tooling commands",
-  },
-  subCommands: {
-    generate: createForgeCommand({
-      meta: {
-        name: "generate",
-        description: "Generate UI exports",
-        examples: ["forge ui generate"],
-      },
-      async run() {
-        await runUiGenerate();
-      },
-    }),
-  },
-});
-
 export const forgeCommand = createForgeCommand({
   meta: {
     name: "forge",
@@ -249,6 +229,5 @@ export const forgeCommand = createForgeCommand({
     prepare: prepareCommand,
     setup: setupCommand,
     run: runCliCommand,
-    ui: uiCommand,
   },
 });

@@ -6,7 +6,6 @@ Unified monorepo command entrypoint.
 
 ```bash
 forge db <operation> [--dry-run] [--verbose]
-forge ui generate
 forge doctor [--json]
 forge run <command> [...args]
 ```
@@ -33,13 +32,3 @@ forge db seed
 forge doctor --json
 forge run vite dev
 ```
-
-## Logs
-
-Each command appends to:
-
-```bash
-.cache/raypx-forge/commands.log
-```
-
-The log file is written under the current working directory of the command.
