@@ -1,27 +1,22 @@
-import { fileURLToPath } from "node:url";
 import babel from "@rolldown/plugin-babel";
 import tailwindcss from "@tailwindcss/vite";
 import { devtools } from "@tanstack/devtools-vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact, { reactCompilerPreset } from "@vitejs/plugin-react";
 import mdx from "fumadocs-mdx/vite";
-import { createJiti } from "jiti";
 import { nitro } from "nitro/vite";
 import { visualizer } from "rollup-plugin-visualizer";
 import { defineConfig, type UserConfig } from "vite";
 import * as MdxConfig from "./source.config";
+import "./src/env.ts";
 
-const jiti = createJiti(fileURLToPath(import.meta.url));
+const isAnalyze = process.env.BUNDLE_ANALYZE === "true";
 
 export default defineConfig(async ({ command, isSsrBuild }) => {
   const isBuild = command === "build";
   const isDev = command === "serve";
-  const enableBundleAnalyze = process.env.BUNDLE_ANALYZE === "true" && !isSsrBuild;
+  const enableBundleAnalyze = isAnalyze && !isSsrBuild;
   const enableAnalyze = isBuild && enableBundleAnalyze;
-
-  if (isBuild) {
-    await jiti.import<typeof import("./src/env.ts")>("./src/env.ts").then((m) => m.default);
-  }
 
   return {
     resolve: {

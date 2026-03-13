@@ -17,7 +17,6 @@ catalog:
   '@vitejs/plugin-react': ^6.0.1
   '@vitest/coverage-v8': ^4.1.0
   babel-plugin-react-compiler: ^1.0.0
-  jiti: ^2.6.1
   recharts: ^3.8.0
   type-fest: ^5.4.4
   typescript: ^5.9.3

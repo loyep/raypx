@@ -34,7 +34,6 @@
     "@types/node": "catalog:",
     "drizzle-kit": "catalog:beta",
     "drizzle-seed": "catalog:beta",
-    "jiti": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }

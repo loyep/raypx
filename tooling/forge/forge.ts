@@ -203,7 +203,17 @@ const runCliCommand = createTaskCommand({
       throw new Error("Usage: forge run <command> [...args]");
     }
 
-    await runShellCommand({ command, args: commandArgs, cwd: process.cwd() });
+    const tsxImport = "--import tsx";
+    const nodeOptions = process.env.NODE_OPTIONS
+      ? `${process.env.NODE_OPTIONS} ${tsxImport}`
+      : tsxImport;
+
+    await runShellCommand({
+      command,
+      args: commandArgs,
+      cwd: process.cwd(),
+      env: { NODE_OPTIONS: nodeOptions },
+    });
   },
 });
 

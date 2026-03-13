@@ -42,7 +42,6 @@
     "@types/react-dom": "catalog:react19",
     "@vitejs/plugin-react": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
-    "jiti": "catalog:",
     "nitro": "catalog:beta",
     "rollup-plugin-visualizer": "^7.0.1",
     "tailwindcss": "catalog:tailwindv4",

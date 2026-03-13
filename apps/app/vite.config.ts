@@ -1,27 +1,18 @@
-import { fileURLToPath } from "node:url";
 import babel from "@rolldown/plugin-babel";
 import tailwindcss from "@tailwindcss/vite";
 import { devtools } from "@tanstack/devtools-vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact, { reactCompilerPreset } from "@vitejs/plugin-react";
-import { createJiti } from "jiti";
 import { nitro } from "nitro/vite";
 import { visualizer } from "rollup-plugin-visualizer";
 import { defineConfig, type UserConfig } from "vite";
-
-const jiti = createJiti(fileURLToPath(import.meta.url));
+import "./src/env.ts";
 
 export default defineConfig(async ({ command, isSsrBuild }) => {
   const isBuild = command === "build";
   const isDev = command === "serve";
   const enableBundleAnalyze = process.env.BUNDLE_ANALYZE === "true" && !isSsrBuild;
   const enableTanstackDevtools = process.env.TANSTACK_DEVTOOLS === "true";
-
-  if (isBuild) {
-    await jiti
-      .import<typeof import("./src/env.ts")>("./src/env.ts")
-      .then((module) => module.default);
-  }
 
   return {
     resolve: {
