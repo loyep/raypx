@@ -11,6 +11,7 @@
     "shadcn": "pnpm dlx shadcn@latest",
     "start": "forge run node .output/server/index.mjs",
     "test": "vitest run",
+    "pretypecheck": "fumadocs-mdx",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
