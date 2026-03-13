@@ -1,4 +1,5 @@
 import { getDashboardNavigationItems } from "@raypx/admin/server";
+import type { SessionWithExtendedUser } from "@raypx/auth";
 import {
   createFileRoute,
   Outlet,
@@ -21,7 +22,7 @@ export const Route = createFileRoute("/(app)")({
   component: AppLayout,
   pendingComponent: RouteLoading,
   loader: async () => {
-    const session = await getSession();
+    const session = (await getSession()) as SessionWithExtendedUser | null;
     if (!session?.session) {
       throw redirect({ to: "/login" });
     }

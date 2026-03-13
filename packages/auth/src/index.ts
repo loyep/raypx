@@ -25,6 +25,7 @@ export type {
   AuthErrorType,
   AuthSession,
   AuthUser,
+  ExtendedSession,
   ExtendedUser,
   OAuthProvider,
   SessionContext,

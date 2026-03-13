@@ -19,11 +19,18 @@ export type ExtendedUser = AuthUser & {
 };
 
 /**
+ * Session with organization plugin fields (activeOrganizationId).
+ */
+export type ExtendedSession = Session & {
+  activeOrganizationId?: string | null;
+};
+
+/**
  * Session with extended user (for admin/username plugins).
  * Matches getSession return: { session, user }
  */
 export type SessionWithExtendedUser = {
-  session: Session;
+  session: ExtendedSession;
   user: ExtendedUser;
 };
 
