@@ -15,7 +15,7 @@ import {
   DashboardSidebar,
   MobileSidebar,
 } from "@/components/dashboard";
-import { getSession } from "@/lib/auth-server";
+import { getSession } from "@raypx/auth/tanstack-start";
 
 export const Route = createFileRoute("/(app)")({
   component: AppLayout,

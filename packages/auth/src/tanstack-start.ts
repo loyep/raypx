@@ -19,3 +19,13 @@ export function createGetSession(getHeaders: () => Headers) {
     return getServerSession(getHeaders());
   });
 }
+
+/**
+ * Pre-built getSession server function. Uses dynamic import inside the handler
+ * to avoid pulling @tanstack/react-start/server into client bundles.
+ * Safe to import from route loaders and components.
+ */
+export const getSession = createServerFn({ method: "GET" }).handler(async () => {
+  const { getRequest } = await import("@tanstack/react-start/server");
+  return getServerSession(getRequest().headers);
+});
