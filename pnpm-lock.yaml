@@ -158,9 +158,15 @@ importers:
       '@raypx/ai':
         specifier: workspace:*
         version: link:../../packages/ai
+      '@raypx/ai-ui':
+        specifier: workspace:*
+        version: link:../../packages/ai-ui
       '@raypx/auth':
         specifier: workspace:*
         version: link:../../packages/auth
+      '@raypx/auth-ui':
+        specifier: workspace:*
+        version: link:../../packages/auth-ui
       '@raypx/config':
         specifier: workspace:*
         version: link:../../packages/config
@@ -267,9 +273,15 @@ importers:
       '@raypx/ai':
         specifier: workspace:*
         version: link:../../packages/ai
+      '@raypx/ai-ui':
+        specifier: workspace:*
+        version: link:../../packages/ai-ui
       '@raypx/auth':
         specifier: workspace:*
         version: link:../../packages/auth
+      '@raypx/auth-ui':
+        specifier: workspace:*
+        version: link:../../packages/auth-ui
       '@raypx/config':
         specifier: workspace:*
         version: link:../../packages/config
@@ -403,6 +415,9 @@ importers:
       '@raypx/design-system':
         specifier: workspace:*
         version: link:../design-system
+      '@raypx/shared':
+        specifier: workspace:*
+        version: link:../shared
       '@tabler/icons-react':
         specifier: ^3.40.0
         version: 3.40.0(react@19.2.4)
@@ -484,6 +499,34 @@ importers:
         specifier: 'catalog:'
         version: 4.3.6
 
+  packages/ai-ui:
+    dependencies:
+      '@raypx/design-system':
+        specifier: workspace:*
+        version: link:../design-system
+      '@raypx/shared':
+        specifier: workspace:*
+        version: link:../shared
+      '@tanstack/react-form':
+        specifier: ^1.28.5
+        version: 1.28.5(@tanstack/react-start@1.166.8(crossws@0.4.4(srvx@0.11.9))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(vite@8.0.0(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(tsx@4.21.0)))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      react:
+        specifier: catalog:react19
+        version: 19.2.4
+      zod:
+        specifier: 'catalog:'
+        version: 4.3.6
+    devDependencies:
+      '@raypx/tsconfig':
+        specifier: workspace:*
+        version: link:../../tooling/tsconfig
+      '@types/react':
+        specifier: catalog:react19
+        version: 19.2.14
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+
   packages/auth:
     dependencies:
       '@better-auth/drizzle-adapter':
@@ -523,6 +566,37 @@ importers:
       vitest:
         specifier: 'catalog:'
         version: 4.1.0(@opentelemetry/api@1.9.0)(@types/node@25.5.0)(jsdom@28.1.0(@noble/hashes@2.0.1))(vite@8.0.0(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(tsx@4.21.0))
+
+  packages/auth-ui:
+    dependencies:
+      '@raypx/auth':
+        specifier: workspace:*
+        version: link:../auth
+      '@raypx/design-system':
+        specifier: workspace:*
+        version: link:../design-system
+      '@tanstack/react-form':
+        specifier: ^1.28.5
+        version: 1.28.5(@tanstack/react-start@1.166.8(crossws@0.4.4(srvx@0.11.9))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(vite@8.0.0(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(tsx@4.21.0)))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      '@tanstack/react-router':
+        specifier: 'catalog:'
+        version: 1.166.7(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      react:
+        specifier: catalog:react19
+        version: 19.2.4
+      zod:
+        specifier: 'catalog:'
+        version: 4.3.6
+    devDependencies:
+      '@raypx/tsconfig':
+        specifier: workspace:*
+        version: link:../../tooling/tsconfig
+      '@types/react':
+        specifier: catalog:react19
+        version: 19.2.14
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
 
   packages/config:
     dependencies:

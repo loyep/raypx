@@ -7,6 +7,7 @@ import {
   subscription,
   user,
 } from "@raypx/database/schemas";
+import { USER_ROLES } from "@raypx/shared";
 import { z } from "zod";
 import { ok } from "../api-response";
 
@@ -14,7 +15,7 @@ const userListInput = z.object({
   page: z.number().int().min(1).default(1),
   pageSize: z.number().int().min(1).max(100).default(10),
   search: z.string().optional(),
-  role: z.enum(["admin", "user", "superadmin"]).optional(),
+  role: z.enum(USER_ROLES).optional(),
   banned: z.boolean().optional(),
 });
 
@@ -24,7 +25,7 @@ const userGetByIdInput = z.object({
 
 const userUpdateInput = z.object({
   id: z.string(),
-  role: z.enum(["admin", "user", "superadmin"]).optional(),
+  role: z.enum(USER_ROLES).optional(),
   banned: z.boolean().optional(),
   banReason: z.string().optional(),
   banExpires: z.date().nullable().optional(),

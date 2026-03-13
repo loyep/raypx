@@ -19,6 +19,8 @@
     "@fumadocs/base-ui": "^16.6.16",
     "@raypx/admin": "workspace:*",
     "@raypx/ai": "workspace:*",
+    "@raypx/ai-ui": "workspace:*",
+    "@raypx/auth-ui": "workspace:*",
     "@raypx/auth": "workspace:*",
     "@raypx/config": "workspace:*",
     "@raypx/core": "workspace:*",

@@ -29,7 +29,7 @@ import {
   AIProviderFormDialog,
   type AIProviderFormValues,
   BYOK_PROVIDER_LIBRARY,
-  emptyAIProviderForm,
+  emptyAIProviderFormWithSetDefault,
 } from "@/components/ai/provider-form-dialog";
 import { WorkspacePage } from "@/components/workspace/workspace-primitives";
 import { siteConfig } from "@/config/site";
@@ -57,7 +57,7 @@ export const Route = createFileRoute("/(app)/settings/ai-providers")({
 function AIProviderSettingsPage() {
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [form, setForm] = useState<AIProviderFormValues>(emptyAIProviderForm);
+  const [form, setForm] = useState<AIProviderFormValues>(emptyAIProviderFormWithSetDefault);
   const [selectedProviderId, setSelectedProviderId] = useState<string | null>(null);
   const [providerSearch, setProviderSearch] = useState("");
   const [modelSearch, setModelSearch] = useState("");
@@ -181,7 +181,7 @@ function AIProviderSettingsPage() {
           driver: values.driver,
           baseUrl: values.baseUrl.trim() || null,
           defaultModel: values.defaultModel.trim(),
-          models: [values.defaultModel.trim()],
+          models: parseModels(values.modelsText),
           isEnabled: true,
           setDefault: values.setDefault,
         });
@@ -215,7 +215,7 @@ function AIProviderSettingsPage() {
         driver: values.driver,
         baseUrl: values.baseUrl.trim() || null,
         defaultModel: values.defaultModel.trim(),
-        models: [values.defaultModel.trim()],
+        models: parseModels(values.modelsText),
       });
 
       if (values.apiKey.trim()) {
@@ -232,7 +232,7 @@ function AIProviderSettingsPage() {
     onSuccess: async (_, values) => {
       toast.success(values.mode === "create" ? "Provider added" : "Provider updated");
       setDialogOpen(false);
-      setForm(emptyAIProviderForm);
+      setForm(emptyAIProviderFormWithSetDefault);
       await refresh();
     },
     onError: (error) => {
@@ -288,7 +288,7 @@ function AIProviderSettingsPage() {
 
   const openCreateDialog = (provider?: ProviderLibraryItem) => {
     setForm({
-      ...emptyAIProviderForm,
+      ...emptyAIProviderFormWithSetDefault,
       name: provider?.name ?? "",
       driver: provider?.driver ?? "openai",
       defaultModel: provider?.recommendedModels[0] ?? "",
@@ -715,6 +715,7 @@ function AIProviderSettingsPage() {
           await saveMutation.mutateAsync(values);
         }}
         open={dialogOpen}
+        showSetDefault
         title="Add provider"
       />
     </WorkspacePage>

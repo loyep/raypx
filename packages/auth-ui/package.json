@@ -1,0 +1,29 @@
+{
+  "name": "@raypx/auth-ui",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./components/email-sign-in-form": "./src/email-sign-in-form.tsx",
+    "./components/email-sign-up-form": "./src/email-sign-up-form.tsx",
+    "./components/auth-layout": "./src/auth-layout.tsx"
+  },
+  "scripts": {
+    "clean": "rimraf dist .turbo",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@raypx/auth": "workspace:*",
+    "@raypx/design-system": "workspace:*",
+    "@tanstack/react-form": "^1.28.5",
+    "@tanstack/react-router": "catalog:",
+    "react": "catalog:react19",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@raypx/tsconfig": "workspace:*",
+    "@types/react": "catalog:react19",
+    "typescript": "catalog:"
+  }
+}

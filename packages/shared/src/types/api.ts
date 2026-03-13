@@ -1,4 +1,5 @@
-export type UserRole = "admin" | "user" | "superadmin";
+export const USER_ROLES = ["admin", "user", "superadmin"] as const;
+export type UserRole = (typeof USER_ROLES)[number];
 
 export type StatusCode = 200 | 201 | 400 | 401 | 403 | 404 | 500;
 

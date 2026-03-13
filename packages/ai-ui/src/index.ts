@@ -1,7 +1,9 @@
 export {
   AIProviderFormDialog,
+  type AIProviderFormDialogProps,
   type AIProviderFormValues,
   BYOK_PROVIDER_LIBRARY,
+  createEmptyAIProviderForm,
   emptyAIProviderForm,
   emptyAIProviderFormWithSetDefault,
-} from "@raypx/ai-ui";
+} from "./ai-provider-form-dialog";

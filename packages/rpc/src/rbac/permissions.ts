@@ -1,3 +1,5 @@
+import { USER_ROLES } from "@raypx/shared";
+
 export const permissions = [
   "users:read",
   "users:update",
@@ -9,7 +11,7 @@ export const permissions = [
 
 export type Permission = (typeof permissions)[number];
 
-export const roles = ["admin", "superadmin", "user"] as const;
+export const roles = USER_ROLES;
 export type Role = (typeof roles)[number];
 
 const ROLE_PERMISSIONS: Record<Role, ReadonlySet<Permission>> = {

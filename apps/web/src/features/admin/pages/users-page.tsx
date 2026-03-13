@@ -1,4 +1,4 @@
-import { type AdminUser, UserEditDialog, UsersTable } from "@raypx/admin";
+import { type AdminUser, type AdminUserRole, UserEditDialog, UsersTable } from "@raypx/admin";
 import { getUserStats, listUsers, updateUser } from "@raypx/admin/api";
 import {
   Card,
@@ -59,7 +59,7 @@ export function AdminUsersPage() {
         page: requestPage,
         pageSize: 10,
         search: debouncedSearch || undefined,
-        role: roleFilter !== "all" ? (roleFilter as "admin" | "user" | "superadmin") : undefined,
+        role: roleFilter !== "all" ? (roleFilter as AdminUserRole) : undefined,
         banned: bannedFilter !== "all" ? bannedFilter === "banned" : undefined,
       }),
     placeholderData: (previousData) => previousData,

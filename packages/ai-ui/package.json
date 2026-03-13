@@ -1,0 +1,26 @@
+{
+  "name": "@raypx/ai-ui",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./components/ai-provider-form-dialog": "./src/ai-provider-form-dialog.tsx"
+  },
+  "scripts": {
+    "clean": "rimraf dist .turbo",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@raypx/design-system": "workspace:*",
+    "@raypx/shared": "workspace:*",
+    "@tanstack/react-form": "^1.28.5",
+    "react": "catalog:react19",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@raypx/tsconfig": "workspace:*",
+    "@types/react": "catalog:react19",
+    "typescript": "catalog:"
+  }
+}

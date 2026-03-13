@@ -1,4 +1,6 @@
-export type AdminUserRole = "admin" | "user" | "superadmin";
+import type { UserRole } from "@raypx/shared";
+
+export type AdminUserRole = UserRole;
 
 export type AdminUser = {
   id: string;
