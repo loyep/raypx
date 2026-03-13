@@ -39,7 +39,7 @@ logs
 .DS_Store
 
 # Fumadocs
-# .source
+.source
 
 # Turbo
 .turbo
