@@ -1,5 +1,6 @@
 import {
   adminClient,
+  emailOTPClient,
   jwtClient,
   lastLoginMethodClient,
   multiSessionClient,
@@ -15,6 +16,7 @@ import { createAuthClient as createClient } from "better-auth/react";
 export const authClient = createClient({
   baseURL: getBaseURL(),
   plugins: [
+    emailOTPClient(),
     organizationClient(),
     adminClient(),
     usernameClient(),

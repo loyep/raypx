@@ -8,7 +8,7 @@ import { runPrepare } from "./prepare";
  */
 export async function runSetup(options: RunOptions = {}): Promise<void> {
   logger.info("Running project setup...");
-  await runDbOperation("migrate", options);
+  await runDbOperation("push", options);
   await runPrepare({ ...options, silent: true });
   logger.success("Project setup completed");
 }

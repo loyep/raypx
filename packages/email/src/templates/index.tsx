@@ -215,6 +215,43 @@ export function PasswordResetEmail({
 }
 
 /**
+ * Email verification link template (for Better Auth / sign-up verification)
+ */
+interface EmailVerificationLinkProps {
+  name: string;
+  verificationUrl: string;
+  companyName?: string;
+  logoUrl?: string;
+}
+
+export function EmailVerificationLink({
+  name,
+  verificationUrl,
+  companyName = "Raypx",
+  logoUrl,
+}: EmailVerificationLinkProps): ReactElement {
+  return (
+    <BaseEmail preview="Verify your email address">
+      <EmailHeader companyName={companyName} logoUrl={logoUrl} />
+      <Heading className="font-semibold text-gray-900 text-xl">Verify your email</Heading>
+      <Text className="mt-4 text-gray-600">Hi {name},</Text>
+      <Text className="text-gray-600">
+        Thanks for signing up! Please click the button below to verify your email address:
+      </Text>
+      <Section className="my-6 text-center">
+        <Button className="rounded-lg bg-blue-600 px-6 py-3 text-white" href={verificationUrl}>
+          Verify Email
+        </Button>
+      </Section>
+      <Text className="text-gray-500 text-sm">
+        If you didn't create an account, you can safely ignore this email.
+      </Text>
+      <EmailFooter companyName={companyName} />
+    </BaseEmail>
+  );
+}
+
+/**
  * Delete account verification email template
  */
 interface DeleteAccountEmailProps {
@@ -261,6 +298,7 @@ export function DeleteAccountEmail({
 export const emailTemplates = {
   welcome: WelcomeEmail,
   verification: VerificationEmail,
+  verificationLink: EmailVerificationLink,
   passwordReset: PasswordResetEmail,
   deleteAccount: DeleteAccountEmail,
 };

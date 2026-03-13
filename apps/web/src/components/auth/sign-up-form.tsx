@@ -15,7 +15,7 @@ import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { z } from "zod";
 import { FormErrorAlert } from "@/components/form/error-alert";
-import { signUp } from "@/lib/auth";
+import { authClient, signIn, signUp } from "@/lib/auth";
 
 type SignUpValues = {
   name: string;
@@ -71,6 +71,13 @@ export function EmailSignUpForm({
   submittingLabel = "Creating account...",
 }: EmailSignUpFormProps) {
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [pendingVerification, setPendingVerification] = useState<{
+    email: string;
+    password: string;
+  } | null>(null);
+  const [otp, setOtp] = useState("");
+  const [otpError, setOtpError] = useState<string | null>(null);
+  const [isVerifying, setIsVerifying] = useState(false);
 
   const form = useForm({
     defaultValues,
@@ -92,12 +99,104 @@ export function EmailSignUpForm({
           return;
         }
 
-        await onSuccess?.();
+        setPendingVerification({ email: value.email, password: value.password });
       } catch {
         setSubmitError("An unexpected error occurred. Please try again.");
       }
     },
   });
+
+  const handleVerifyOtp = async () => {
+    if (!pendingVerification || !otp.trim()) return;
+    setOtpError(null);
+    setIsVerifying(true);
+
+    try {
+      const result = await authClient.emailOtp.verifyEmail({
+        email: pendingVerification.email,
+        otp: otp.trim(),
+      });
+
+      if (result.error) {
+        setOtpError(result.error.message || "Invalid verification code");
+        return;
+      }
+
+      const signInResult = await signIn.email({
+        email: pendingVerification.email,
+        password: pendingVerification.password,
+      });
+
+      if (signInResult.error) {
+        setOtpError(signInResult.error.message || "Failed to sign in");
+        return;
+      }
+
+      await onSuccess?.();
+    } catch {
+      setOtpError("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsVerifying(false);
+    }
+  };
+
+  if (pendingVerification) {
+    return (
+      <div className="space-y-4">
+        <p className="text-center text-muted-foreground text-sm">
+          We sent a 6-digit code to <strong>{pendingVerification.email}</strong>. Enter it below to
+          verify your email.
+        </p>
+        <FormErrorAlert message={otpError} />
+        <div className="space-y-2">
+          <label className="font-medium text-sm" htmlFor={`${formId}-otp`}>
+            Verification code
+          </label>
+          <input
+            autoComplete="one-time-code"
+            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-center text-lg tracking-[0.5em] ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            id={`${formId}-otp`}
+            maxLength={6}
+            onChange={(e) => {
+              setOtp(e.target.value.replace(/\D/g, "").slice(0, 6));
+              setOtpError(null);
+            }}
+            placeholder="000000"
+            type="text"
+            value={otp}
+          />
+        </div>
+        <div className="flex gap-2">
+          <Button
+            className="flex-1"
+            disabled={otp.length !== 6 || isVerifying}
+            onClick={handleVerifyOtp}
+            type="button"
+          >
+            {isVerifying ? (
+              <>
+                <Spinner className="mr-2" />
+                Verifying...
+              </>
+            ) : (
+              "Verify & sign in"
+            )}
+          </Button>
+          <Button
+            onClick={() => {
+              setPendingVerification(null);
+              setOtp("");
+              setOtpError(null);
+            }}
+            type="button"
+            variant="outline"
+          >
+            Back
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <form

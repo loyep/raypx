@@ -9,7 +9,7 @@
       "cache": true,
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env", "vite.config.*", "tsconfig.json"],
-      "outputs": ["dist/**", ".tanstack/**", ".output/**", ".nitro/**", ".netlify/**", ".next/**"],
+      "outputs": ["dist/**", ".tanstack/**", ".output/**", ".nitro/**", ".netlify/**"],
       "outputLogs": "new-only"
     },
     "web#build": {
@@ -23,7 +23,7 @@
       "cache": true,
       "dependsOn": ["build", "^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env", "vite.config.*", "tsconfig.json"],
-      "outputs": ["dist/**", ".tanstack/**", ".output/**", ".nitro/**", ".netlify/**", ".next/**"]
+      "outputs": ["dist/**", ".tanstack/**", ".output/**", ".nitro/**", ".netlify/**"]
     },
     "typecheck": {
       "cache": true,

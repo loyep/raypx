@@ -25,7 +25,9 @@ export type {
   AuthErrorType,
   AuthSession,
   AuthUser,
+  ExtendedUser,
   OAuthProvider,
   SessionContext,
+  SessionWithExtendedUser,
 } from "./types";
 export { AuthError } from "./types";

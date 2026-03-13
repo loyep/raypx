@@ -6,6 +6,28 @@ import type { Session, User } from "better-auth/types";
 export type AuthUser = User;
 
 /**
+ * Extended user with admin/username plugin fields.
+ * Use when session.user includes role, banned, username, etc.
+ */
+export type ExtendedUser = AuthUser & {
+  role?: string | null;
+  banned?: boolean | null;
+  banReason?: string | null;
+  banExpires?: Date | null;
+  username?: string | null;
+  displayUsername?: string | null;
+};
+
+/**
+ * Session with extended user (for admin/username plugins).
+ * Matches getSession return: { session, user }
+ */
+export type SessionWithExtendedUser = {
+  session: Session;
+  user: ExtendedUser;
+};
+
+/**
  * Auth session type from Better Auth
  */
 export type AuthSession = Session;
@@ -63,6 +85,12 @@ export interface AuthConfig {
    * Enable two-factor authentication
    */
   enable2FA?: boolean;
+
+  /**
+   * Require email verification after sign-up (default: true).
+   * Requires RESEND_API_KEY or SMTP_URL to be configured.
+   */
+  requireEmailVerification?: boolean;
 
   /**
    * Session expiration in seconds (default: 7 days)

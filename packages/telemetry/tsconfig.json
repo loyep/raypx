@@ -1,8 +1,0 @@
-{
-  "extends": "@raypx/tsconfig/node.json",
-  "compilerOptions": {
-    "baseUrl": "."
-  },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules"]
-}

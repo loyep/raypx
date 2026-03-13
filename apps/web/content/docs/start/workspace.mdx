@@ -47,7 +47,6 @@ All packages use the `@raypx/*` namespace and are consumed as TypeScript source 
 | **@raypx/email** | Email service | Resend, Nodemailer, React Email templates |
 | **@raypx/storage** | File storage | S3, R2, local filesystem, Sharp image processing |
 | **@raypx/core** | Core runtime utilities | Logger, core contracts, base utilities |
-| **@raypx/observability** | Observability tools | Sentry error tracking, OpenTelemetry tracing |
 
 ### UI & Frontend
 
@@ -72,7 +71,6 @@ Packages can depend on each other, but follow these rules:
 - **@raypx/rpc** depends on auth, database for protected procedures
 - **@raypx/email** depends on config, logger
 - **@raypx/storage** depends on config, logger
-- **@raypx/observability** depends on config
 
 ## Tooling & Configuration
 

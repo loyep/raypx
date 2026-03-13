@@ -71,20 +71,20 @@ function detectIsServer(): boolean {
 
 /**
  * Create a new environment variable schema with configurable client prefix (defaults to VITE_).
+ * Vite exposes only env vars prefixed with VITE_ to the client.
  *
  * @example
  * ```typescript
- * // Using default VITE_ prefix
+ * // Vite project (default)
  * const env = createEnv({
  *   server: { DATABASE_URL: z.string().url() },
  *   client: { VITE_APP_URL: z.string().url() },
  * });
  *
- * // Using custom prefix
+ * // With extends (shared configs)
  * const env = createEnv({
- *   clientPrefix: "NEXT_PUBLIC_",
- *   server: { DATABASE_URL: z.string().url() },
- *   client: { NEXT_PUBLIC_APP_URL: z.string().url() },
+ *   extends: [authEnv, emailEnv],
+ *   server: { PORT: z.coerce.number().default(3000) },
  * });
  * ```
  */

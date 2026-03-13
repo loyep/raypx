@@ -11,10 +11,6 @@ function shouldSkipHookInstall(): string | null {
     return "LEFTHOOK=0";
   }
 
-  if (process.env.CI) {
-    return "CI is set";
-  }
-
   return null;
 }
 

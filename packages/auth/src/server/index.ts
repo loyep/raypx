@@ -1,10 +1,12 @@
 import { db, uuidv7 } from "@raypx/database";
 import * as schema from "@raypx/database/schemas";
+import { isEmailConfigured, sendEmail } from "@raypx/email";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import {
   admin,
   bearer,
+  emailOTP,
   jwt,
   lastLoginMethod,
   multiSession,
@@ -54,6 +56,7 @@ export function createAuth(config: AuthConfig = {}) {
     enableCredentials = true,
     enablePasskeys = false,
     enable2FA = false,
+    requireEmailVerification = true,
     sessionExpiresIn = DEFAULT_SESSION_EXPIRES_IN,
   } = config;
 
@@ -115,7 +118,7 @@ export function createAuth(config: AuthConfig = {}) {
     },
     emailAndPassword: {
       enabled: enableCredentials,
-      requireEmailVerification: false,
+      requireEmailVerification: Boolean(requireEmailVerification && isEmailConfigured()),
     },
     passkey: {
       enabled: enablePasskeys,
@@ -127,6 +130,24 @@ export function createAuth(config: AuthConfig = {}) {
       deleteUser: { enabled: true },
     },
     plugins: [
+      ...(requireEmailVerification && isEmailConfigured()
+        ? [
+            emailOTP({
+              overrideDefaultEmailVerification: true,
+              sendVerificationOnSignUp: true,
+              otpLength: 6,
+              expiresIn: 300, // 5 minutes
+              async sendVerificationOTP({ email, otp, type }) {
+                if (type !== "email-verification") return;
+                void sendEmail({
+                  to: { email },
+                  subject: "Verify your email address",
+                  text: `Your verification code is: ${otp}. It expires in 5 minutes.`,
+                });
+              },
+            }),
+          ]
+        : []),
       organization(),
       admin({
         defaultRole: "user",

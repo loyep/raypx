@@ -1,6 +1,6 @@
+import babel from "@rolldown/plugin-babel";
 import react, { reactCompilerPreset } from "@vitejs/plugin-react";
 import { defineConfig } from "vitest/config";
-import babel from "@rolldown/plugin-babel";
 
 export default defineConfig({
   resolve: {

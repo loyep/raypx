@@ -1,8 +1,8 @@
-import { aiEnv, authEnv, createEnv, stripeEnv } from "@raypx/config";
+import { aiEnv, authEnv, createEnv, emailEnv, stripeEnv } from "@raypx/config";
 import { z } from "zod";
 
 const env = createEnv({
-  extends: [authEnv, stripeEnv, aiEnv],
+  extends: [authEnv, stripeEnv, aiEnv, emailEnv],
   shared: {
     NODE_ENV: z.enum(["development", "production"]).default("development"),
   },

@@ -8,7 +8,7 @@ Thank you for your interest in contributing to Raypx! This guide will help you g
 
 - **Node.js** >= 22
 - **pnpm** >= 10.26.0
-- **PostgreSQL** (for local development)
+- **PostgreSQL** 15+ with **pgvector** extension (see [packages/database/README.md](packages/database/README.md))
 
 ### Initial Setup
 
@@ -34,10 +34,13 @@ Thank you for your interest in contributing to Raypx! This guide will help you g
 
 4. **Set up the database**
 
+   Ensure pgvector is installed (see `packages/database/README.md`), then:
+
    ```bash
-   cd packages/database
-   pnpm run push
-   pnpm run seed  # Optional: seed with test data
+   pnpm setup
+   # Or manually:
+   # forge db migrate
+   # forge db seed  # Optional: seed with test data
    ```
 
 5. **Start the development server**
@@ -55,7 +58,6 @@ raypx/
 ├── packages/
 │   ├── config/       # Environment validation
 │   ├── core/         # Base runtime contracts and logger entrypoint
-│   ├── observability/# Structured logging, metrics, tracing helpers
 │   ├── shared/       # Shared utilities
 │   ├── database/     # Database schema (Drizzle)
 │   ├── email/        # Email service
@@ -84,8 +86,6 @@ References:
 Platform boundary notes:
 
 - Use `@raypx/core/logger` for shared logging.
-- Use `@raypx/observability` only when you need structured logging, metrics, or Sentry-style integrations.
-- Keep `@raypx/telemetry` focused on tracing/exporter setup rather than general logging concerns.
 
 ## Development Workflow
 

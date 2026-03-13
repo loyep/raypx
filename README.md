@@ -17,8 +17,6 @@ Raypx is an open-source SaaS template monorepo. It is built for fast product shi
 - AI is provider-pluggable through database-managed provider records and encrypted credentials.
 - Package boundaries are enforced by dependency layers.
 - `@raypx/core/logger` is the shared logger entrypoint.
-- `@raypx/observability` adds structured logging, metrics, and Sentry-style integrations on top of core primitives.
-- `@raypx/telemetry` is reserved for trace/exporter setup, not a second logger layer.
 
 See [ROADMAP.md](./ROADMAP.md) for the execution plan.
 
@@ -49,7 +47,6 @@ raypx/
 │   ├── core/            # Base runtime contracts and logger entrypoint
 │   ├── database/        # Drizzle schemas + adapters
 │   ├── design-system/   # Shared UI
-│   ├── observability/   # Structured logging, metrics, Sentry helpers
 │   ├── rpc/             # oRPC transport layer
 │   ├── shared/          # Cross-end pure types/constants
 │   └── ...

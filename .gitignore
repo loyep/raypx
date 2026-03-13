@@ -64,7 +64,5 @@ logs
 # pnpm
 .pnpm-store/
 # apps/**/routeTree.gen.ts
-**/.next/
-**/next-env.d.ts
 
 apps/web/stats.html
