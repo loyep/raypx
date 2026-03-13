@@ -2,13 +2,13 @@ import { fileURLToPath } from "node:url";
 import tailwindcss from "@tailwindcss/vite";
 import { devtools } from "@tanstack/devtools-vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
-import viteReact from "@vitejs/plugin-react";
+import viteReact, { reactCompilerPreset } from "@vitejs/plugin-react";
+import babel from "@rolldown/plugin-babel";
 import mdx from "fumadocs-mdx/vite";
 import { createJiti } from "jiti";
 import { nitro } from "nitro/vite";
 import { visualizer } from "rollup-plugin-visualizer";
 import { defineConfig, type UserConfig } from "vite";
-import tsConfigPaths from "vite-tsconfig-paths";
 import * as MdxConfig from "./source.config";
 
 const jiti = createJiti(fileURLToPath(import.meta.url));
@@ -24,6 +24,9 @@ export default defineConfig(async ({ command, isSsrBuild }) => {
   }
 
   return {
+    resolve: {
+      tsconfigPaths: true,
+    },
     ssr: {
       noExternal: isBuild ? true : undefined,
     },
@@ -62,22 +65,16 @@ export default defineConfig(async ({ command, isSsrBuild }) => {
         injectSource: { enabled: false },
         removeDevtoolsOnBuild: true,
       }),
-      tsConfigPaths(),
       tanstackStart(),
-      viteReact({
-        ...(isBuild && {
-          babel: {
-            plugins: [
-              [
-                "babel-plugin-react-compiler",
-                {
-                  target: "19",
-                },
-              ],
-            ],
-          },
-        }),
-      }),
+      viteReact(),
+      ...(isBuild
+        ? [
+            babel({
+              parserOpts: { plugins: ["typescript", "jsx"] },
+              presets: [reactCompilerPreset({ target: "19" })],
+            } as Parameters<typeof babel>[0]),
+          ]
+        : []),
       tailwindcss(),
       nitro(),
     ],

@@ -53,7 +53,7 @@
     "tailwindcss": "catalog:tailwindv4",
     "type-fest": "catalog:",
     "typescript": "catalog:",
-    "vite": "^8.0.0",
+    "vite": "catalog:",
     "vitest": "catalog:"
   }
 }

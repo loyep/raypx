@@ -1,25 +1,17 @@
-import { createRequire } from "node:module";
-import react from "@vitejs/plugin-react";
-import tsconfigPaths from "vite-tsconfig-paths";
+import react, { reactCompilerPreset } from "@vitejs/plugin-react";
+import babel from "@rolldown/plugin-babel";
 import { defineConfig } from "vitest/config";
 
-const require = createRequire(import.meta.url);
-
 export default defineConfig({
+  resolve: {
+    tsconfigPaths: true,
+  },
   plugins: [
-    tsconfigPaths(),
-    react({
-      babel: {
-        plugins: [
-          [
-            require.resolve("babel-plugin-react-compiler"),
-            {
-              target: "19",
-            },
-          ],
-        ],
-      },
-    }),
+    react(),
+    babel({
+      parserOpts: { plugins: ["typescript", "jsx"] },
+      presets: [reactCompilerPreset({ target: "19" })],
+    } as Parameters<typeof babel>[0]),
   ],
   test: {
     globals: true,

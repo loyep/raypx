@@ -14,11 +14,11 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@orpc/client": "^1.13.6",
-    "@orpc/openapi": "^1.13.6",
-    "@orpc/server": "^1.13.6",
-    "@orpc/tanstack-query": "^1.13.6",
-    "@orpc/zod": "^1.13.6",
+    "@orpc/client": "^1.13.7",
+    "@orpc/openapi": "^1.13.7",
+    "@orpc/server": "^1.13.7",
+    "@orpc/tanstack-query": "^1.13.7",
+    "@orpc/zod": "^1.13.7",
     "@raypx/admin": "workspace:*",
     "@raypx/ai": "workspace:*",
     "@raypx/auth": "workspace:*",

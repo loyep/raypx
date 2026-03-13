@@ -54,6 +54,7 @@ overrides:
 peerDependencyRules:
   allowedVersions:
     '@react-email/body': 0.3.0
+    '@rolldown/plugin-babel': ^0.2.0
   ignoreMissing:
     - mssql
     - "@types/mssql"
