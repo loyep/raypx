@@ -3,6 +3,7 @@
 Main web application for Raypx.
 
 This app contains:
+
 - App area routes (dashboard, chat, settings, admin pages)
 - Public/docs routes
 - API route handlers mounted under `src/routes/api/*`

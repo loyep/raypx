@@ -1,4 +1,4 @@
-import type { LoggerContext } from "./logger";
+import type { LoggerContext } from "./logger-types";
 
 export interface RequestTraceContext {
   requestId: string;

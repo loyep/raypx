@@ -34,8 +34,8 @@ npx @better-auth/cli generate  # Generate schema for Drizzle/Prisma
 
 ```typescript
 // packages/auth/src/index.ts
-import { betterAuth } from "better-auth"
-import { drizzleAdapter } from "better-auth/adapters/drizzle"
+import { betterAuth } from "better-auth";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -53,21 +53,14 @@ export const auth = betterAuth({
   plugins: [
     // Add plugins here
   ],
-})
+});
 ```
 
 ## Client Setup
 
 ```typescript
 // apps/web/src/lib/auth.ts
-export {
-  authClient,
-  getSession,
-  signIn,
-  signOut,
-  signUp,
-  useSession,
-} from "@raypx/auth";
+export { authClient, getSession, signIn, signOut, signUp, useSession } from "@raypx/auth";
 ```
 
 ## Usage Examples
@@ -79,7 +72,7 @@ await authClient.signUp.email({
   email: "user@example.com",
   password: "password123",
   name: "User Name",
-})
+});
 ```
 
 ### Sign In
@@ -88,7 +81,7 @@ await authClient.signUp.email({
 await authClient.signIn.email({
   email: "user@example.com",
   password: "password123",
-})
+});
 ```
 
 ### OAuth
@@ -97,30 +90,32 @@ await authClient.signIn.email({
 await authClient.signIn.social({
   provider: "google",
   callbackURL: "/dashboard",
-})
+});
 ```
 
 ### Sign Out
 
 ```typescript
-await authClient.signOut()
+await authClient.signOut();
 ```
 
 ### Get Session
 
 ```typescript
-const { data: session } = authClient.useSession()
+const { data: session } = authClient.useSession();
 // or
-const session = await authClient.getSession()
+const session = await authClient.getSession();
 ```
 
 ## Session Management
 
 **Storage priority:**
+
 1. If `secondaryStorage` defined → sessions go there (Redis/KV)
 2. Set `session.storeSessionInDatabase: true` to also persist to DB
 
 **Key options:**
+
 - `session.expiresIn` - Default 7 days
 - `session.updateAge` - Refresh interval
 - `session.cookieCache.maxAge` - Cookie cache duration
@@ -139,7 +134,7 @@ export const auth = betterAuth({
       },
     ],
   },
-})
+});
 ```
 
 ## Database Hooks
@@ -151,33 +146,33 @@ export const auth = betterAuth({
       create: {
         before: async (user) => {
           // Modify user before creation
-          return { ...user, role: "user" }
+          return { ...user, role: "user" };
         },
       },
     },
   },
-})
+});
 ```
 
 ## Popular Plugins
 
 ```typescript
-import { twoFactor } from "better-auth/plugins/two-factor"
-import { organization } from "better-auth/plugins/organization"
-import { passkey } from "better-auth/plugins/passkey"
-import { magicLink } from "better-auth/plugins/magic-link"
+import { twoFactor } from "better-auth/plugins/two-factor";
+import { organization } from "better-auth/plugins/organization";
+import { passkey } from "better-auth/plugins/passkey";
+import { magicLink } from "better-auth/plugins/magic-link";
 ```
 
 ## Type Safety
 
 ```typescript
 // Infer session type
-type Session = typeof auth.$Infer.Session
+type Session = typeof auth.$Infer.Session;
 
 // For client with server types
 export const authClient = createAuthClient<typeof auth>({
   baseURL: "...",
-})
+});
 ```
 
 ## Common Gotchas

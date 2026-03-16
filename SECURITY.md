@@ -4,9 +4,9 @@
 
 We actively support the following versions with security updates:
 
-| Version | Supported          |
-| ------- | ------------------ |
-| Latest  | :white_check_mark: |
+| Version  | Supported          |
+| -------- | ------------------ |
+| Latest   | :white_check_mark: |
 | < Latest | :x:                |
 
 ## Reporting a Vulnerability
@@ -20,6 +20,7 @@ Instead, please report them via one of the following methods:
 Email us at: **security@raypx.com**
 
 Please include the following information:
+
 - Type of vulnerability
 - Full paths of source file(s) related to the vulnerability
 - Location of the affected code (tag, branch, or commit)
@@ -85,6 +86,7 @@ Raypx includes several built-in security features:
 ### Environment Variables
 
 Never expose these in client-side code:
+
 - `BETTER_AUTH_SECRET`
 - `DATABASE_URL`
 - `STRIPE_SECRET_KEY`
@@ -107,11 +109,13 @@ Never expose these in client-side code:
 ## Security Updates
 
 Security updates are released as:
+
 - **Patch versions** (x.x.1) for critical security fixes
 - **Minor versions** (x.1.0) for security enhancements
 - **Major versions** (1.0.0) for breaking security changes
 
 Subscribe to security advisories:
+
 - Watch this repository for security releases
 - Check [GitHub Security Advisories](https://github.com/raypx/raypx/security/advisories)
 
@@ -147,10 +151,10 @@ Before submitting code, ensure:
 ## Contact
 
 For security-related questions or concerns:
+
 - **Email**: security@raypx.com
 - **GitHub Security Advisories**: [Create an advisory](https://github.com/raypx/raypx/security/advisories/new)
 
 ---
 
 **Thank you for helping keep Raypx secure!** 🔒
-

@@ -1,10 +1,10 @@
 import { env } from "./env";
 import { ResendEmailClient } from "./resend";
-import { SMTPEmailClient } from "./smtp";
 import type { EmailOptions, EmailResult } from "./types";
 import { EmailError } from "./types";
 
-let _defaultClient: ResendEmailClient | SMTPEmailClient | null = null;
+type EmailClient = ResendEmailClient | Awaited<typeof import("./smtp")>["SMTPEmailClient"];
+let _defaultClient: EmailClient | null = null;
 
 /**
  * Check if email is configured (Resend or SMTP)
@@ -13,7 +13,7 @@ export function isEmailConfigured(): boolean {
   return Boolean(env.RESEND_API_KEY || env.SMTP_URL);
 }
 
-function getDefaultClient(): ResendEmailClient | SMTPEmailClient {
+async function getDefaultClient(): Promise<EmailClient> {
   if (_defaultClient) return _defaultClient;
   if (env.RESEND_API_KEY) {
     _defaultClient = new ResendEmailClient({
@@ -22,6 +22,7 @@ function getDefaultClient(): ResendEmailClient | SMTPEmailClient {
       fromName: env.EMAIL_FROM_NAME,
     });
   } else if (env.SMTP_URL) {
+    const { SMTPEmailClient } = await import("./smtp");
     _defaultClient = new SMTPEmailClient({
       url: env.SMTP_URL,
       fromEmail: env.EMAIL_FROM || "noreply@example.com",
@@ -38,7 +39,7 @@ function getDefaultClient(): ResendEmailClient | SMTPEmailClient {
  * Use void sendEmail(...) to avoid awaiting (e.g. in auth callbacks) and prevent timing attacks.
  */
 export async function sendEmail(options: EmailOptions): Promise<EmailResult> {
-  const client = getDefaultClient();
+  const client = await getDefaultClient();
   return client.send(options);
 }
 
@@ -54,11 +55,11 @@ export function createResendClient(): ResendEmailClient {
   });
 }
 
-export function createSMTPClient(): SMTPEmailClient {
+export async function createSMTPClient() {
   if (!env.SMTP_URL) {
     throw new EmailError("INVALID_CONFIGURATION", "Missing SMTP_URL");
   }
-
+  const { SMTPEmailClient } = await import("./smtp");
   return new SMTPEmailClient({
     url: env.SMTP_URL,
     fromEmail: env.EMAIL_FROM || "noreply@example.com",

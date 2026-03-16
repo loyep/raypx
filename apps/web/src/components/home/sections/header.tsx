@@ -1,4 +1,4 @@
-import { useSession } from "@raypx/auth";
+import { useSession } from "@raypx/auth/client";
 import { ThemeSwitcher } from "@raypx/design-system/components/theme-switcher";
 import { Button } from "@raypx/design-system/components/ui/button";
 import type { SiteConfig } from "@raypx/seo";

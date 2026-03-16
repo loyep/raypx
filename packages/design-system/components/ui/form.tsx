@@ -262,8 +262,8 @@ export {
   FormGroup,
   FormItem,
   FormLabel,
-  FormPasswordField,
-  FormTextField,
   FormMessage,
+  FormPasswordField,
   FormSection,
+  FormTextField,
 };

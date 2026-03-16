@@ -1,13 +1,9 @@
-// R2 Storage
-
+/**
+ * @raypx/storage - Server-only (R2/S3, Sharp)
+ */
 export { createR2Storage } from "./env";
 // Image processing
-export {
-  generateThumbnail,
-  getImageDimensions,
-  isValidImage,
-  processImage,
-} from "./image";
+export { generateThumbnail, getImageDimensions, isValidImage, processImage } from "./image";
 export { R2Storage } from "./r2";
 
 // Types

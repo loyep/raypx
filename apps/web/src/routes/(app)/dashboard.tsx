@@ -1,5 +1,5 @@
-import type { ExtendedUser } from "@raypx/auth";
-import { authClient } from "@raypx/auth";
+import type { ExtendedUser } from "@raypx/auth/client";
+import { authClient } from "@raypx/auth/client";
 import { Button } from "@raypx/design-system/components/ui/button";
 import {
   Card,

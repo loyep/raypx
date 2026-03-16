@@ -1,5 +1,1 @@
-export {
-  AIProviderFormDialog,
-  type AIProviderFormValues,
-  emptyAIProviderForm,
-} from "@raypx/ai-ui";
+export { AIProviderFormDialog, type AIProviderFormValues, emptyAIProviderForm } from "@raypx/ai-ui";

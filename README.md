@@ -57,62 +57,62 @@ raypx/
 
 ## Tech Stack
 
-| Category | Technology |
-| --- | --- |
+| Category      | Technology                             |
+| ------------- | -------------------------------------- |
 | App Framework | TanStack Start + React 19 + TypeScript |
-| API Layer | oRPC |
-| Auth | Better Auth |
-| Database | PostgreSQL + Drizzle ORM |
-| AI | AI SDK + provider adapters |
-| UI | Tailwind CSS v4 + design-system |
-| Monorepo | Turborepo + pnpm workspaces |
-| Tooling | Biome + Vitest + Changesets |
+| API Layer     | oRPC                                   |
+| Auth          | Better Auth                            |
+| Database      | PostgreSQL + Drizzle ORM               |
+| AI            | AI SDK + provider adapters             |
+| UI            | Tailwind CSS v4 + design-system        |
+| Monorepo      | Turborepo + pnpm workspaces            |
+| Tooling       | Biome + Vitest + Changesets            |
 
 ## Commands
 
 ### Development
 
-| Command | Description |
-| --- | --- |
-| `pnpm dev` | Start the default app workflow (`apps/web`) |
-| `pnpm dev:web` | Start `apps/web` |
-| `pnpm dev:full` | Start the same workflow as `dev:web` |
-| `pnpm build` | Build all workspaces |
-| `pnpm build:web` | Build `apps/web` |
-| `pnpm lint` | Run Biome checks |
-| `pnpm lint:fix` | Apply Biome fixes |
-| `pnpm typecheck` | Run TypeScript checks |
-| `pnpm test` | Run test tasks |
-| `pnpm test:watch` | Run Vitest in watch mode |
-| `pnpm test:coverage` | Run coverage locally |
-| `pnpm coverage` | Alias for `pnpm test:coverage` |
-| `pnpm boundaries` | Validate workspace dependency boundaries |
+| Command              | Description                                 |
+| -------------------- | ------------------------------------------- |
+| `pnpm dev`           | Start the default app workflow (`apps/web`) |
+| `pnpm dev:web`       | Start `apps/web`                            |
+| `pnpm dev:full`      | Start the same workflow as `dev:web`        |
+| `pnpm build`         | Build all workspaces                        |
+| `pnpm build:web`     | Build `apps/web`                            |
+| `pnpm lint`          | Run Biome checks                            |
+| `pnpm lint:fix`      | Apply Biome fixes                           |
+| `pnpm typecheck`     | Run TypeScript checks                       |
+| `pnpm test`          | Run test tasks                              |
+| `pnpm test:watch`    | Run Vitest in watch mode                    |
+| `pnpm test:coverage` | Run coverage locally                        |
+| `pnpm coverage`      | Alias for `pnpm test:coverage`              |
+| `pnpm boundaries`    | Validate workspace dependency boundaries    |
 
 ### Platform
 
-| Command | Description |
-| --- | --- |
-| `pnpm setup` | Run initial local setup |
-| `pnpm doctor` | Run workspace health checks |
-| `pnpm db` | Open the database command group |
-| `pnpm db:generate` | Generate Drizzle migrations |
-| `pnpm db:migrate` | Run database migrations |
-| `pnpm db:push` | Push schema changes directly |
-| `pnpm db:pull` | Pull schema from the database |
-| `pnpm db:seed` | Run database seeds |
-| `pnpm db:studio` | Open Drizzle Studio |
+| Command            | Description                     |
+| ------------------ | ------------------------------- |
+| `pnpm setup`       | Run initial local setup         |
+| `pnpm doctor`      | Run workspace health checks     |
+| `pnpm db`          | Open the database command group |
+| `pnpm db:generate` | Generate Drizzle migrations     |
+| `pnpm db:migrate`  | Run database migrations         |
+| `pnpm db:push`     | Push schema changes directly    |
+| `pnpm db:pull`     | Pull schema from the database   |
+| `pnpm db:seed`     | Run database seeds              |
+| `pnpm db:studio`   | Open Drizzle Studio             |
 
 ### Maintenance
 
-| Command | Description |
-| --- | --- |
-| `pnpm clean` | Remove Turbo caches and Vite workspace caches |
-| `pnpm bump-deps` | Update dependency versions with `taze` |
-| `pnpm deps:bump` | Alias for `pnpm bump-deps` |
-| `pnpm bump-ui` | Refresh design-system primitives from `shadcn` |
-| `pnpm ui:bump` | Alias for `pnpm bump-ui` |
-| `pnpm changeset` | Create or manage changesets |
-| `pnpm release` | Apply changeset version updates |
+| Command          | Description                                    |
+| ---------------- | ---------------------------------------------- |
+| `pnpm clean`     | Remove Turbo caches and Vite workspace caches  |
+| `pnpm bump-deps` | Update dependency versions with `taze`         |
+| `pnpm deps:bump` | Alias for `pnpm bump-deps`                     |
+| `pnpm bump-ui`   | Refresh design-system primitives from `shadcn` |
+| `pnpm ui:bump`   | Alias for `pnpm bump-ui`                       |
+| `pnpm changeset` | Create or manage changesets                    |
+| `pnpm release`   | Apply changeset version updates                |
 
 Tooling commands provided by `forge` are also discoverable directly:
 

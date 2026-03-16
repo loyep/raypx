@@ -1,4 +1,5 @@
-import { signOut } from "@raypx/auth";
+import { signOut } from "@raypx/auth/client";
+import { getSession } from "@raypx/auth/tanstack-start";
 import { RouteLoading } from "@raypx/design-system/components/route-loading";
 import { Badge } from "@raypx/design-system/components/ui/badge";
 import { Button } from "@raypx/design-system/components/ui/button";
@@ -14,7 +15,6 @@ import {
 } from "@tabler/icons-react";
 import { createFileRoute, Link, Outlet, redirect, useRouterState } from "@tanstack/react-router";
 import { Logo } from "@/components/logo";
-import { getSession } from "@raypx/auth/tanstack-start";
 
 export const Route = createFileRoute("/(app)")({
   component: AppLayout,

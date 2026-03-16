@@ -1,4 +1,4 @@
-import type { ExtendedUser } from "@raypx/auth";
+import type { ExtendedUser } from "@raypx/auth/client";
 import { generatePageHead } from "@raypx/seo";
 import { createFileRoute, useLoaderData, useNavigate } from "@tanstack/react-router";
 import { siteConfig } from "@/config/site";

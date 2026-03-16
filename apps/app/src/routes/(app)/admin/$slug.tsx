@@ -1,3 +1,4 @@
+import { getSession } from "@raypx/auth/tanstack-start";
 import { Card, CardContent, CardHeader, CardTitle } from "@raypx/design-system/components/ui/card";
 import { client } from "@raypx/rpc/client";
 import { generatePageHead } from "@raypx/seo";
@@ -5,7 +6,6 @@ import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { WorkspacePage } from "@/components/workspace/workspace-primitives";
 import { siteConfig } from "@/config/site";
-import { getSession } from "@raypx/auth/tanstack-start";
 
 const allowedSlugs = [
   "users",

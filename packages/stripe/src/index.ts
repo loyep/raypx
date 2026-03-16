@@ -11,8 +11,7 @@ import { BILLING_PATHS } from "@raypx/shared/config";
 import Stripe from "stripe";
 import { getStripe } from "./env";
 
-export { Stripe };
-export { getStripe };
+export { getStripe, Stripe };
 
 function getDefaultBillingUrl(path: string): string {
   return new URL(path, createEnv(authEnv).SITE_URL).toString();

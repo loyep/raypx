@@ -1,4 +1,4 @@
-import { useSession } from "@raypx/auth";
+import { useSession } from "@raypx/auth/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@raypx/design-system/components/ui/avatar";
 import {
   Card,

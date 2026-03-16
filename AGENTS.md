@@ -44,6 +44,45 @@ A modern fullstack monorepo built with TanStack Start, Better Auth, and oRPC.
 └─────────────────────────────────────────────────────────────────┘
 ```
 
+## Server / Client Package Convention
+
+Packages use a consistent server/client split:
+
+- **Default entry (`index`)** = server-only (Node.js, database, etc.)
+- **`/client` subpath** = client-safe (browser bundle)
+
+| Package                  | Main (`@raypx/pkg`)          | Client (`@raypx/pkg/client`)                                       |
+| ------------------------ | ---------------------------- | ------------------------------------------------------------------ |
+| auth                     | createAuth, getServerSession | authClient, signIn, signOut, useSession, AuthProvider, OAuthButton |
+| rpc                      | appRouter, createContext     | client, orpc                                                       |
+| core                     | logger (pino)                | logger (console stub)                                              |
+| database, email, storage | server-only                  | —                                                                  |
+| design-system            | client-only                  | —                                                                  |
+
+**Rule**: Import `@raypx/auth/client` in React components; import `@raypx/auth` in API routes and server code.
+
+## Package Exports Convention
+
+All packages follow a unified `exports` order and naming (except design-system, which uses path-based exports).
+
+### Export key order
+
+1. `"."` - main entry
+2. `"./client"` - client entry (for packages with server/client split)
+3. `"./server"` - server-only entry
+4. `"./types"` - types-only entry
+5. Other feature subpaths (alphabetically)
+
+### Naming
+
+- **env**: single file uses `/env` (storage, stripe), aggregate uses `/envs` (config)
+- **types**: types-only entry uses `/types`
+- **aliases**: keep for backward compatibility (e.g. auth `/provider`)
+
+### design-system
+
+Uses path-based exports (`./components/*`, `./lib/*`, etc.), no main entry; exempt from the generic convention.
+
 ## Project Structure
 
 ```
@@ -87,20 +126,20 @@ raypx/
 
 Packages must only depend on packages at the same layer or lower layers:
 
-| Layer | Package | Dependencies |
-|-------|---------|--------------|
-| 0 | `@raypx/tsconfig` | - |
-| 1 | `@raypx/config` | - |
-| 2 | `@raypx/core` | - |
-| 2 | `@raypx/shared` | - |
-| 3 | `@raypx/database` | config, shared |
-| 3 | `@raypx/email` | config |
-| 3 | `@raypx/storage` | config |
-| 3 | `@raypx/seo` | - |
-| 4 | `@raypx/auth` | config, database |
-| 5 | `@raypx/rpc` | auth, database |
-| 6 | `@raypx/design-system` | shared |
-| 7 | `apps/*` | any packages |
+| Layer | Package                | Dependencies     |
+| ----- | ---------------------- | ---------------- |
+| 0     | `@raypx/tsconfig`      | -                |
+| 1     | `@raypx/config`        | -                |
+| 2     | `@raypx/core`          | -                |
+| 2     | `@raypx/shared`        | -                |
+| 3     | `@raypx/database`      | config, shared   |
+| 3     | `@raypx/email`         | config           |
+| 3     | `@raypx/storage`       | config           |
+| 3     | `@raypx/seo`           | -                |
+| 4     | `@raypx/auth`          | config, database |
+| 5     | `@raypx/rpc`           | auth, database   |
+| 6     | `@raypx/design-system` | shared           |
+| 7     | `apps/*`               | any packages     |
 
 **Rule**: Never create circular dependencies. Always depend downward.
 
@@ -112,52 +151,48 @@ Packages must only depend on packages at the same layer or lower layers:
 
 ```typescript
 // packages/rpc/src/routers/feature.ts
-import { z } from 'zod'
-import { publicProcedure, protectedProcedure, adminProcedure } from '../middleware'
+import { z } from "zod";
+import { publicProcedure, protectedProcedure, adminProcedure } from "../middleware";
 
 export const featureRouter = {
   // Public endpoint - no auth required
-  getPublic: publicProcedure
-    .input(z.object({ id: z.string() }))
-    .handler(async ({ input }) => {
-      // Implementation
-    }),
+  getPublic: publicProcedure.input(z.object({ id: z.string() })).handler(async ({ input }) => {
+    // Implementation
+  }),
 
   // Protected endpoint - requires authentication
-  getPrivate: protectedProcedure
-    .handler(async ({ context }) => {
-      const userId = context.user.id
-      // ...
-    }),
+  getPrivate: protectedProcedure.handler(async ({ context }) => {
+    const userId = context.user.id;
+    // ...
+  }),
 
   // Admin endpoint - requires admin role
-  adminOnly: adminProcedure
-    .handler(async ({ context }) => {
-      // Only admins can access
-    }),
-}
+  adminOnly: adminProcedure.handler(async ({ context }) => {
+    // Only admins can access
+  }),
+};
 ```
 
 2. **Register the router** in `packages/rpc/src/routers/index.ts`:
 
 ```typescript
-import { featureRouter } from './feature'
+import { featureRouter } from "./feature";
 
 export const appRouter = {
   // ...existing routers
   feature: featureRouter,
-}
+};
 ```
 
 3. **Use in the client**:
 
 ```typescript
-import { client } from '@/utils/orpc'
+import { client } from "@/utils/orpc";
 
 // Type-safe client calls
-const publicData = await client.feature.getPublic({ id: '123' })
-const privateData = await client.feature.getPrivate()
-const adminData = await client.feature.adminOnly()
+const publicData = await client.feature.getPublic({ id: "123" });
+const privateData = await client.feature.getPrivate();
+const adminData = await client.feature.adminOnly();
 ```
 
 ### Adding a New UI Component
@@ -176,13 +211,13 @@ export function MyComponent({ className, ...props }) {
 2. **Export from package** in `packages/design-system/exports`:
 
 ```typescript
-export { MyComponent } from './components/ui/my-component'
+export { MyComponent } from "./components/ui/my-component";
 ```
 
 3. **Use in app**:
 
 ```typescript
-import { MyComponent } from '@raypx/design-system'
+import { MyComponent } from "@raypx/design-system";
 ```
 
 ### Adding a New Package
@@ -239,7 +274,7 @@ mkdir -p packages/my-package/src
 export const envSchema = z.object({
   // ...existing vars
   MY_NEW_VAR: z.string().optional(),
-})
+});
 ```
 
 2. **Add to `.env.example`** in root:
@@ -251,62 +286,62 @@ MY_NEW_VAR=example_value
 3. **Use in code**:
 
 ```typescript
-import { env } from '@raypx/config'
+import { env } from "@raypx/config";
 
-const value = env.MY_NEW_VAR
+const value = env.MY_NEW_VAR;
 ```
 
 ## Available Scripts
 
 ### Development
 
-| Command | Description |
-|---------|-------------|
-| `pnpm dev` | Start web app in development mode |
-| `pnpm dev:web` | Start web app in development mode |
+| Command         | Description                          |
+| --------------- | ------------------------------------ |
+| `pnpm dev`      | Start web app in development mode    |
+| `pnpm dev:web`  | Start web app in development mode    |
 | `pnpm dev:full` | Start the same workflow as `dev:web` |
 
 ### Build & Start
 
-| Command | Description |
-|---------|-------------|
-| `pnpm build` | Build all apps and packages |
-| `pnpm build:web` | Build web app only |
-| `pnpm start` | Start all apps in production mode |
+| Command          | Description                       |
+| ---------------- | --------------------------------- |
+| `pnpm build`     | Build all apps and packages       |
+| `pnpm build:web` | Build web app only                |
+| `pnpm start`     | Start all apps in production mode |
 
 ### Code Quality
 
-| Command | Description |
-|---------|-------------|
-| `pnpm typecheck` | Type check all packages |
-| `pnpm lint` | Lint all packages (Biome) |
-| `pnpm lint:fix` | Lint and fix issues |
-| `pnpm format` | Format code (Biome) |
-| `pnpm test` | Run all tests |
-| `pnpm test:watch` | Run tests in watch mode |
-| `pnpm test:coverage` | Run tests with coverage |
+| Command              | Description               |
+| -------------------- | ------------------------- |
+| `pnpm typecheck`     | Type check all packages   |
+| `pnpm lint`          | Lint all packages (Biome) |
+| `pnpm lint:fix`      | Lint and fix issues       |
+| `pnpm format`        | Format code (Biome)       |
+| `pnpm test`          | Run all tests             |
+| `pnpm test:watch`    | Run tests in watch mode   |
+| `pnpm test:coverage` | Run tests with coverage   |
 
 ### Database Commands
 
-| Command | Description |
-|---------|-------------|
-| `pnpm db` | Interactive database CLI |
-| `pnpm db:push` | Push schema changes to database |
-| `pnpm db:studio` | Open Drizzle Studio |
-| `pnpm db:generate` | Generate migrations |
-| `pnpm db:migrate` | Run migrations |
-| `pnpm db:seed` | Seed the database |
+| Command            | Description                     |
+| ------------------ | ------------------------------- |
+| `pnpm db`          | Interactive database CLI        |
+| `pnpm db:push`     | Push schema changes to database |
+| `pnpm db:studio`   | Open Drizzle Studio             |
+| `pnpm db:generate` | Generate migrations             |
+| `pnpm db:migrate`  | Run migrations                  |
+| `pnpm db:seed`     | Seed the database               |
 
 ### Project Management
 
-| Command | Description |
-|---------|-------------|
-| `pnpm clean` | Clean build artifacts |
-| `pnpm setup` | Setup project dependencies |
-| `pnpm bump-ui` | Update all design-system components |
-| `pnpm deps:bump` | Update all dependencies |
-| `pnpm changeset` | Create a changeset |
-| `pnpm release` | Version packages for release |
+| Command          | Description                         |
+| ---------------- | ----------------------------------- |
+| `pnpm clean`     | Clean build artifacts               |
+| `pnpm setup`     | Setup project dependencies          |
+| `pnpm bump-ui`   | Update all design-system components |
+| `pnpm deps:bump` | Update all dependencies             |
+| `pnpm changeset` | Create a changeset                  |
+| `pnpm release`   | Version packages for release        |
 
 ## Code Standards
 
@@ -319,13 +354,13 @@ const value = env.MY_NEW_VAR
 
 ### Naming Conventions
 
-| Type | Convention | Example |
-|------|------------|---------|
-| Files | kebab-case | `user-profile.tsx` |
-| Components | PascalCase | `UserProfile` |
-| Functions | camelCase | `getUserById` |
-| Constants | SCREAMING_SNAKE | `MAX_RETRIES` |
-| Types | PascalCase | `UserProfile` |
+| Type       | Convention      | Example            |
+| ---------- | --------------- | ------------------ |
+| Files      | kebab-case      | `user-profile.tsx` |
+| Components | PascalCase      | `UserProfile`      |
+| Functions  | camelCase       | `getUserById`      |
+| Constants  | SCREAMING_SNAKE | `MAX_RETRIES`      |
+| Types      | PascalCase      | `UserProfile`      |
 
 ### Import Order
 
@@ -334,27 +369,27 @@ const value = env.MY_NEW_VAR
 3. Local imports (relative)
 
 ```typescript
-import { useState } from 'react'
-import { z } from 'zod'
+import { useState } from "react";
+import { z } from "zod";
 
-import { Button } from '@raypx/design-system'
-import { auth } from '@raypx/auth'
+import { Button } from "@raypx/design-system";
+import { auth } from "@raypx/auth";
 
-import { LocalComponent } from './local-component'
+import { LocalComponent } from "./local-component";
 ```
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|------------|
+| Layer    | Technology                |
+| -------- | ------------------------- |
 | Frontend | React 19, TanStack Router |
-| Backend | TanStack Start (Nitro) |
-| API | oRPC (type-safe RPC) |
-| Auth | Better Auth |
-| Database | PostgreSQL + Drizzle ORM |
-| Styling | Tailwind CSS v4 |
-| Linting | Biome |
-| Monorepo | Turborepo + pnpm |
+| Backend  | TanStack Start (Nitro)    |
+| API      | oRPC (type-safe RPC)      |
+| Auth     | Better Auth               |
+| Database | PostgreSQL + Drizzle ORM  |
+| Styling  | Tailwind CSS v4           |
+| Linting  | Biome                     |
+| Monorepo | Turborepo + pnpm          |
 
 ## FAQ
 
@@ -376,15 +411,14 @@ pnpm dev
 Use the `protectedProcedure` in your oRPC router:
 
 ```typescript
-import { protectedProcedure } from '../middleware'
+import { protectedProcedure } from "../middleware";
 
 export const protectedRouter = {
-  getData: protectedProcedure
-    .handler(async ({ context }) => {
-      const userId = context.user.id
-      // ...
-    }),
-}
+  getData: protectedProcedure.handler(async ({ context }) => {
+    const userId = context.user.id;
+    // ...
+  }),
+};
 ```
 
 ### How do I add an admin-only endpoint?
@@ -392,17 +426,17 @@ export const protectedRouter = {
 Use the `adminProcedure` which requires both authentication and admin role:
 
 ```typescript
-import { adminProcedure } from '../middleware'
+import { adminProcedure } from "../middleware";
 
 export const adminRouter = {
   adminAction: adminProcedure
     .input(z.object({ id: z.string() }))
     .handler(async ({ input, context }) => {
       // Only admins can access this
-      const adminUser = context.user
+      const adminUser = context.user;
       // ...
     }),
-}
+};
 ```
 
 ### How do I debug database queries?
@@ -420,17 +454,20 @@ pnpm run db:studio
 The project includes a complete admin user management system at `/admin/users`.
 
 **Features:**
+
 - User list with pagination, search, and filters
 - Role management (admin/user)
 - User ban/unban with reason
 - User statistics dashboard
 
 **Access Control:**
+
 - Only users with `role: "admin"` can access admin routes
 - Non-admin users are redirected to dashboard
 - Admin navigation link only visible to admins
 
 **Key Files:**
+
 ```
 packages/rpc/src/
 ├── middleware.ts              # adminProcedure definition

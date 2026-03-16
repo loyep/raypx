@@ -10,6 +10,7 @@ This guide covers setting up Redis for caching and session storage with various 
 ## Overview
 
 Raypx uses **Redis** for:
+
 - **Caching**: API response caching, query result caching
 - **Session storage**: Optional session storage (Better Auth uses database by default)
 - **Rate limiting**: API rate limiting (if implemented)
@@ -42,12 +43,14 @@ The project includes a Redis client package (`@raypx/redis`) that works with any
      - `UPSTASH_REDIS_REST_TOKEN`
 
 4. **Configure environment variables**
+
    ```bash
    UPSTASH_REDIS_REST_URL=https://your-db.upstash.io
    UPSTASH_REDIS_REST_TOKEN=your-token
    ```
 
    Or use the REST API format:
+
    ```bash
    REDIS_URL=https://your-db.upstash.io
    REDIS_TOKEN=your-token
@@ -139,6 +142,7 @@ For self-hosted Redis (Docker, VPS, etc.):
 #### Setup Steps
 
 1. **Install Redis**
+
    ```bash
    # Using Docker
    docker run --name redis \
@@ -147,11 +151,13 @@ For self-hosted Redis (Docker, VPS, etc.):
    ```
 
 2. **Configure connection string**
+
    ```bash
    REDIS_URL=redis://localhost:6379
    ```
 
    With password:
+
    ```bash
    REDIS_URL=redis://:password@localhost:6379
    ```
@@ -182,10 +188,12 @@ UPSTASH_REDIS_REST_TOKEN=your-token
 For production deployments:
 
 #### Netlify
+
 - Add `REDIS_URL` in Site Settings → Environment Variables
 - Use production Redis connection details
 
 #### Other Platforms
+
 - Set `REDIS_URL` as an environment variable in your hosting platform
 - Ensure Redis is accessible from your application servers
 
@@ -209,6 +217,7 @@ UPSTASH_REDIS_REST_TOKEN=your-token
 ```
 
 Benefits:
+
 - No persistent connections
 - Works with serverless functions
 - Automatic connection pooling
@@ -274,11 +283,12 @@ Monitor these key metrics:
    - Use cache invalidation for critical updates
 
 2. **Key naming conventions**
+
    ```typescript
    // Good: Namespaced keys
    cache.set("user:123:profile", data);
    cache.set("api:users:list", data);
-   
+
    // Bad: Generic keys
    cache.set("data", data);
    ```
@@ -313,17 +323,20 @@ Monitor these key metrics:
 ### Connection Issues
 
 **Error: Connection refused**
+
 - Check if Redis is running
 - Verify connection string format
 - Check firewall/network settings
 - Verify Redis is accessible from your application
 
 **Error: Authentication failed**
+
 - Verify password is correct
 - Check if password is URL-encoded in connection string
 - Verify Redis ACL configuration
 
 **Error: Timeout**
+
 - Check network connectivity
 - Verify Redis server is responding
 - Check for connection pool exhaustion
@@ -331,12 +344,14 @@ Monitor these key metrics:
 ### Performance Issues
 
 **Slow operations**
+
 - Check Redis server resources (CPU, memory)
 - Monitor command execution times
 - Consider using pipelining for bulk operations
 - Review key sizes (large keys can slow down operations)
 
 **Memory issues**
+
 - Monitor memory usage
 - Review eviction policy
 - Consider key expiration
@@ -345,12 +360,14 @@ Monitor these key metrics:
 ### Cache Issues
 
 **Cache not working**
+
 - Verify Redis connection is established
 - Check TTL settings
 - Review cache key naming
 - Check for cache invalidation logic
 
 **Stale data**
+
 - Review TTL settings
 - Implement cache invalidation
 - Use versioned cache keys
@@ -378,4 +395,3 @@ Before deploying to production:
 - Review [Database Hosting Guide](/docs/operations/database) for PostgreSQL setup
 - Check [Development Workflow](/docs/guides) for Redis usage in code
 - Review `@raypx/redis` package for API documentation
-

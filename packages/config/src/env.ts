@@ -126,7 +126,6 @@ export function createEnv<
   });
 }
 
-export { defineEnvCore };
 export type {
   ClientFormat,
   DefineEnv,
@@ -137,3 +136,4 @@ export type {
   ServerFormat,
   SharedFormat,
 };
+export { defineEnvCore };

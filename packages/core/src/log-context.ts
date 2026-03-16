@@ -1,20 +1,14 @@
-import { AsyncLocalStorage } from "node:async_hooks";
+import type { LoggerContext } from "./logger-types";
 
-import type { LoggerContext } from "./logger";
-
-const logContextStorage = new AsyncLocalStorage<LoggerContext>();
-
-export function runWithLogContext<T>(context: LoggerContext, fn: () => T): T {
-  const parentContext = logContextStorage.getStore() ?? {};
-  return logContextStorage.run(
-    {
-      ...parentContext,
-      ...context,
-    },
-    fn,
-  );
+/**
+ * Simplified log context without node:async_hooks.
+ * Context is not propagated; getLogContext always returns {}.
+ * runWithLogContext exists for API compatibility but does not persist context.
+ */
+export function runWithLogContext<T>(_context: LoggerContext, fn: () => T): T {
+  return fn();
 }
 
 export function getLogContext(): LoggerContext {
-  return logContextStorage.getStore() ?? {};
+  return {};
 }

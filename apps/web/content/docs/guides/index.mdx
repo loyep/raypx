@@ -8,11 +8,13 @@ description: Learn the day-to-day commands, QA expectations, and collaboration p
 ### Initial Setup
 
 1. **Install dependencies**
+
    ```bash
    pnpm install
    ```
 
 2. **Configure environment variables**
+
    ```bash
    cp .env.example .env
    ```
@@ -24,6 +26,7 @@ description: Learn the day-to-day commands, QA expectations, and collaboration p
    - Optional: Redis, OAuth, Analytics, AI services (137+ env vars available)
 
 3. **Setup database**
+
    ```bash
    pnpm --filter @raypx/database migrate
    ```
@@ -47,22 +50,22 @@ The project uses **type-safe environment variables** via `@raypx/config`:
 
 ## Common Scripts
 
-| Command | Description |
-| ------- | ----------- |
-| `pnpm dev` | Start the web app with hot reload |
-| `pnpm dev:web` | Just the TanStack Start web app |
-| `pnpm dev:full` | Start the same workflow as `dev:web` |
-| `pnpm build` | Production build of all apps (validates everything) |
-| `pnpm build:web` | Build web app only |
-| `pnpm typecheck` | TypeScript validation across workspace |
-| `pnpm lint` | Biome linting and formatting check |
-| `pnpm format` | Auto-format all code with Biome |
-| `pnpm test` | Run Vitest unit tests |
-| `pnpm test:coverage` | Generate coverage report |
-| `pnpm clean` | Remove build artifacts and caches |
-| `pnpm db` | Database commands |
-| `pnpm shadcn` | Add shadcn/ui components to @raypx/design-system |
-| `pnpm bump-ui` | Update all UI components |
+| Command              | Description                                         |
+| -------------------- | --------------------------------------------------- |
+| `pnpm dev`           | Start the web app with hot reload                   |
+| `pnpm dev:web`       | Just the TanStack Start web app                     |
+| `pnpm dev:full`      | Start the same workflow as `dev:web`                |
+| `pnpm build`         | Production build of all apps (validates everything) |
+| `pnpm build:web`     | Build web app only                                  |
+| `pnpm typecheck`     | TypeScript validation across workspace              |
+| `pnpm lint`          | Biome linting and formatting check                  |
+| `pnpm format`        | Auto-format all code with Biome                     |
+| `pnpm test`          | Run Vitest unit tests                               |
+| `pnpm test:coverage` | Generate coverage report                            |
+| `pnpm clean`         | Remove build artifacts and caches                   |
+| `pnpm db`            | Database commands                                   |
+| `pnpm shadcn`        | Add shadcn/ui components to @raypx/design-system    |
+| `pnpm bump-ui`       | Update all UI components                            |
 
 ## Coding Standards
 
@@ -102,6 +105,7 @@ Follow **Conventional Commits** format:
 **Types**: `feat`, `fix`, `docs`, `refactor`, `perf`, `test`, `chore`, `ci`
 
 **Examples**:
+
 ```bash
 git commit -m "feat(auth): add OAuth providers"
 git commit -m "fix(ui): resolve button hover state"
@@ -133,6 +137,7 @@ Build time is only 10-15 seconds, so always build before commits.
 ### Current State
 
 ⚠️ **Testing is a critical gap** (15% coverage):
+
 - ✅ Vitest framework configured
 - ✅ CI runs tests automatically
 - ✅ E2E tests with Playwright configured
@@ -143,16 +148,17 @@ Build time is only 10-15 seconds, so always build before commits.
 When adding tests:
 
 1. **Unit tests**: Test business logic and utilities
+
    ```typescript
    // packages/shared/__tests__/utils.test.ts
-   import { describe, it, expect } from 'vitest'
-   import { yourFunction } from '../utils'
+   import { describe, it, expect } from "vitest";
+   import { yourFunction } from "../utils";
 
-   describe('yourFunction', () => {
-     it('should handle valid input', () => {
-       expect(yourFunction('test')).toBe('expected')
-     })
-   })
+   describe("yourFunction", () => {
+     it("should handle valid input", () => {
+       expect(yourFunction("test")).toBe("expected");
+     });
+   });
    ```
 
 2. **Integration tests**: Test API endpoints, database operations

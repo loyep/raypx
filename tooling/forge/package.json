@@ -1,17 +1,17 @@
 {
   "name": "@raypx/forge",
   "private": true,
-  "type": "module",
   "bin": {
     "forge": "./bin/forge.mjs"
   },
+  "type": "module",
   "scripts": {
     "clean": "rimraf dist .turbo",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@dotenvx/dotenvx": "^1.54.1",
+    "@dotenvx/dotenvx": "^1.55.1",
     "citty": "^0.2.1",
     "consola": "^3.4.2",
     "fast-glob": "^3.3.3",

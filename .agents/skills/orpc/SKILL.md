@@ -15,41 +15,41 @@ oRPC is a type-safe RPC framework for TypeScript. It provides end-to-end type sa
 
 ```typescript
 // packages/rpc/src/routers/dashboard.ts
-import { o } from "../orpc"
-import { z } from "zod"
+import { o } from "../orpc";
+import { z } from "zod";
 
 export const dashboardRouter = {
   // Query (read operation)
   getStats: o
     .input(z.object({ range: z.enum(["7d", "30d"]).default("7d") }))
     .handler(async ({ input }) => {
-      return dashboardService.getStats(input)
+      return dashboardService.getStats(input);
     }),
 
   // Mutation (write operation)
   refresh: o
     .input(z.object({ scope: z.enum(["overview", "billing"]) }))
     .handler(async ({ input }) => {
-      return dashboardService.refresh(input)
+      return dashboardService.refresh(input);
     }),
-}
+};
 ```
 
 ### Router Composition
 
 ```typescript
 // packages/rpc/src/routers/index.ts
-import { aiRouter } from "../modules/ai/router"
-import { sessionRouter } from "../modules/session/router"
-import { systemRouter } from "../modules/system/router"
+import { aiRouter } from "../modules/ai/router";
+import { sessionRouter } from "../modules/session/router";
+import { systemRouter } from "../modules/system/router";
 
 export const appRouter = {
   system: systemRouter,
   session: sessionRouter,
   ai: aiRouter,
-}
+};
 
-export type AppRouter = typeof appRouter
+export type AppRouter = typeof appRouter;
 ```
 
 ## Middleware
@@ -58,13 +58,13 @@ export type AppRouter = typeof appRouter
 
 ```typescript
 // packages/rpc/src/middleware/auth.ts
-import { o } from "../orpc"
+import { o } from "../orpc";
 
 export const authMiddleware = o.middleware(async ({ context, next }) => {
-  const session = await getSession(context.request)
+  const session = await getSession(context.request);
 
   if (!session) {
-    throw new Error("Unauthorized")
+    throw new Error("Unauthorized");
   }
 
   return next({
@@ -72,20 +72,18 @@ export const authMiddleware = o.middleware(async ({ context, next }) => {
       ...context,
       session,
     },
-  })
-})
+  });
+});
 ```
 
 ### Using Middleware
 
 ```typescript
 export const protectedRouter = {
-  getProfile: o
-    .use(authMiddleware)
-    .handler(async ({ context }) => {
-      return context.session.user
-    }),
-}
+  getProfile: o.use(authMiddleware).handler(async ({ context }) => {
+    return context.session.user;
+  }),
+};
 ```
 
 ### Chaining Middleware
@@ -97,9 +95,9 @@ export const adminRouter = {
     .use(adminMiddleware)
     .input(z.object({ id: z.string() }))
     .handler(async ({ input }) => {
-      await db.user.delete({ where: { id: input.id } })
+      await db.user.delete({ where: { id: input.id } });
     }),
-}
+};
 ```
 
 ## Error Handling
@@ -109,22 +107,20 @@ export const adminRouter = {
 ```typescript
 class NotFoundError extends Error {
   constructor(message: string) {
-    super(message)
-    this.name = "NotFoundError"
+    super(message);
+    this.name = "NotFoundError";
   }
 }
 
 export const userRouter = {
-  getById: o
-    .input(z.object({ id: z.string() }))
-    .handler(async ({ input }) => {
-      const user = await db.user.findUnique({ where: { id: input.id } })
-      if (!user) {
-        throw new NotFoundError("User not found")
-      }
-      return user
-    }),
-}
+  getById: o.input(z.object({ id: z.string() })).handler(async ({ input }) => {
+    const user = await db.user.findUnique({ where: { id: input.id } });
+    if (!user) {
+      throw new NotFoundError("User not found");
+    }
+    return user;
+  }),
+};
 ```
 
 ### Error Formatting
@@ -134,10 +130,10 @@ export const userRouter = {
 app.use("/api/rpc", (req, res) => {
   return handleRPC(req, res, appRouter, {
     onError: (error) => {
-      console.error("RPC Error:", error)
+      console.error("RPC Error:", error);
     },
-  })
-})
+  });
+});
 ```
 
 ## Client Integration
@@ -146,12 +142,12 @@ app.use("/api/rpc", (req, res) => {
 
 ```typescript
 // apps/web/src/utils/orpc.ts
-import { createORPCClient } from "@orpc/client"
-import type { AppRouter } from "@raypx/rpc"
+import { createORPCClient } from "@orpc/client";
+import type { AppRouter } from "@raypx/rpc";
 
 export const orpc = createORPCClient<AppRouter>({
   baseUrl: "/api/rpc",
-})
+});
 ```
 
 ### Usage in Components
@@ -175,21 +171,21 @@ function UserProfile({ userId }: { userId: string }) {
 ### With TanStack Query
 
 ```typescript
-import { orpc } from "@/utils/orpc"
+import { orpc } from "@/utils/orpc";
 
 // Query
 const { data } = useQuery({
   queryKey: ["users"],
   queryFn: () => orpc.user.list({}),
-})
+});
 
 // Mutation
 const mutation = useMutation({
   mutationFn: orpc.user.create,
   onSuccess: () => {
-    queryClient.invalidateQueries({ queryKey: ["users"] })
+    queryClient.invalidateQueries({ queryKey: ["users"] });
   },
-})
+});
 ```
 
 ## Type Safety
@@ -197,15 +193,15 @@ const mutation = useMutation({
 ### Infer Types
 
 ```typescript
-import type { AppRouter } from "@raypx/rpc"
-import type { inferProcedureInput, inferProcedureOutput } from "@orpc/server"
+import type { AppRouter } from "@raypx/rpc";
+import type { inferProcedureInput, inferProcedureOutput } from "@orpc/server";
 
 // Infer input type
-type CreateUserInput = inferProcedureInput<AppRouter["user"]["create"]>
+type CreateUserInput = inferProcedureInput<AppRouter["user"]["create"]>;
 // { name: string, email: string }
 
 // Infer output type
-type User = inferProcedureOutput<AppRouter["user"]["getById"]>
+type User = inferProcedureOutput<AppRouter["user"]["getById"]>;
 // { id: string, name: string, email: string }
 ```
 
@@ -218,9 +214,9 @@ export const userSchema = z.object({
   name: z.string(),
   email: z.string().email(),
   createdAt: z.date(),
-})
+});
 
-export type User = z.infer<typeof userSchema>
+export type User = z.infer<typeof userSchema>;
 ```
 
 ## Best Practices
@@ -237,39 +233,45 @@ export type User = z.infer<typeof userSchema>
 
 ```typescript
 const listWithPagination = o
-  .input(z.object({
-    page: z.number().int().positive().default(1),
-    limit: z.number().int().positive().max(100).default(20),
-  }))
-  .output(z.object({
-    items: z.array(itemSchema),
-    total: z.number(),
-    hasMore: z.boolean(),
-  }))
+  .input(
+    z.object({
+      page: z.number().int().positive().default(1),
+      limit: z.number().int().positive().max(100).default(20),
+    }),
+  )
+  .output(
+    z.object({
+      items: z.array(itemSchema),
+      total: z.number(),
+      hasMore: z.boolean(),
+    }),
+  )
   .handler(async ({ input }) => {
-    const skip = (input.page - 1) * input.limit
+    const skip = (input.page - 1) * input.limit;
     const [items, total] = await Promise.all([
       db.item.findMany({ skip, take: input.limit }),
       db.item.count(),
-    ])
+    ]);
     return {
       items,
       total,
       hasMore: skip + items.length < total,
-    }
-  })
+    };
+  });
 ```
 
 ### Filtering
 
 ```typescript
 const searchItems = o
-  .input(z.object({
-    query: z.string().optional(),
-    status: z.enum(["active", "inactive"]).optional(),
-    sortBy: z.enum(["name", "createdAt"]).default("createdAt"),
-    sortOrder: z.enum(["asc", "desc"]).default("desc"),
-  }))
+  .input(
+    z.object({
+      query: z.string().optional(),
+      status: z.enum(["active", "inactive"]).optional(),
+      sortBy: z.enum(["name", "createdAt"]).default("createdAt"),
+      sortOrder: z.enum(["asc", "desc"]).default("desc"),
+    }),
+  )
   .handler(async ({ input }) => {
     return db.item.findMany({
       where: {
@@ -277,6 +279,6 @@ const searchItems = o
         ...(input.status && { status: input.status }),
       },
       orderBy: { [input.sortBy]: input.sortOrder },
-    })
-  })
+    });
+  });
 ```

@@ -5,9 +5,9 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
+    "./client": "./src/client/index.ts",
     "./server": "./src/server.ts",
     "./chat": "./src/chat-service.ts",
-    "./client": "./src/client/index.ts",
     "./providers": "./src/providers/index.ts",
     "./types": "./src/types.ts"
   },

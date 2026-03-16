@@ -1,4 +1,4 @@
-import { signOut, useSession } from "@raypx/auth";
+import { signOut, useSession } from "@raypx/auth/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@raypx/design-system/components/ui/avatar";
 import { Button } from "@raypx/design-system/components/ui/button";
 import {

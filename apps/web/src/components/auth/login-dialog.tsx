@@ -1,4 +1,4 @@
-import { OAuthButton, OAuthButtonGroup } from "@raypx/auth";
+import { OAuthButton, OAuthButtonGroup } from "@raypx/auth/client";
 import { Button } from "@raypx/design-system/components/ui/button";
 import {
   Dialog,

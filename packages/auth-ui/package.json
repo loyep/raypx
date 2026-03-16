@@ -5,9 +5,9 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
+    "./components/auth-layout": "./src/auth-layout.tsx",
     "./components/email-sign-in-form": "./src/email-sign-in-form.tsx",
-    "./components/email-sign-up-form": "./src/email-sign-up-form.tsx",
-    "./components/auth-layout": "./src/auth-layout.tsx"
+    "./components/email-sign-up-form": "./src/email-sign-up-form.tsx"
   },
   "scripts": {
     "clean": "rimraf dist .turbo",

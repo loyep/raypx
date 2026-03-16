@@ -187,27 +187,27 @@ pnpm run typecheck
 
 ### Naming Conventions
 
-| Type | Convention | Example |
-|------|------------|---------|
-| Files | kebab-case | `user-profile.tsx` |
-| React Components | PascalCase | `UserProfile` |
-| Functions | camelCase | `getUserById` |
-| Constants | SCREAMING_SNAKE | `MAX_RETRIES` |
-| Types/Interfaces | PascalCase | `UserProfile` |
+| Type             | Convention      | Example            |
+| ---------------- | --------------- | ------------------ |
+| Files            | kebab-case      | `user-profile.tsx` |
+| React Components | PascalCase      | `UserProfile`      |
+| Functions        | camelCase       | `getUserById`      |
+| Constants        | SCREAMING_SNAKE | `MAX_RETRIES`      |
+| Types/Interfaces | PascalCase      | `UserProfile`      |
 
 ### Import Order
 
 ```typescript
 // 1. External packages
-import { useState } from 'react'
-import { z } from 'zod'
+import { useState } from "react";
+import { z } from "zod";
 
 // 2. Internal packages
-import { Button } from '@raypx/design-system'
-import { db } from '@raypx/database'
+import { Button } from "@raypx/design-system";
+import { db } from "@raypx/database";
 
 // 3. Local imports
-import { LocalComponent } from './local-component'
+import { LocalComponent } from "./local-component";
 ```
 
 ## Commit Convention
@@ -226,17 +226,17 @@ We follow [Conventional Commits](https://www.conventionalcommits.org/):
 
 ### Types
 
-| Type | Description |
-|------|-------------|
-| `feat` | New feature |
-| `fix` | Bug fix |
-| `docs` | Documentation only |
-| `style` | Code style (formatting, etc.) |
-| `refactor` | Code refactoring |
-| `perf` | Performance improvement |
-| `test` | Adding/updating tests |
-| `chore` | Maintenance tasks |
-| `ci` | CI/CD changes |
+| Type       | Description                   |
+| ---------- | ----------------------------- |
+| `feat`     | New feature                   |
+| `fix`      | Bug fix                       |
+| `docs`     | Documentation only            |
+| `style`    | Code style (formatting, etc.) |
+| `refactor` | Code refactoring              |
+| `perf`     | Performance improvement       |
+| `test`     | Adding/updating tests         |
+| `chore`    | Maintenance tasks             |
+| `ci`       | CI/CD changes                 |
 
 ### Examples
 
@@ -250,7 +250,6 @@ refactor(rpc): simplify router middleware
 ## Pull Request Process
 
 1. **Ensure all checks pass**
-
    - Type check: `pnpm run typecheck`
    - Lint: `pnpm run lint`
    - Tests: `pnpm run test`

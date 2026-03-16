@@ -8,8 +8,8 @@
     "./ai": "./src/ai/index.ts",
     "./config": "./src/config/index.ts",
     "./config/server": "./src/config/server.ts",
-    "./utils": "./src/utils/index.ts",
-    "./registry": "./src/registry/index.ts"
+    "./registry": "./src/registry/index.ts",
+    "./utils": "./src/utils/index.ts"
   },
   "scripts": {
     "clean": "rimraf dist .turbo",
@@ -19,7 +19,7 @@
   "dependencies": {
     "@raypx/config": "workspace:*",
     "dayjs": "^1.11.20",
-    "nanoid": "^5.1.6",
+    "nanoid": "^5.1.7",
     "ua-parser-js": "^2.0.9",
     "zod": "catalog:"
   },

@@ -54,16 +54,17 @@ export const getUser = publicProcedure
 // packages/rpc/procedures/user.ts
 import { protectedProcedure } from "../trpc";
 
-export const getProfile = protectedProcedure
-  .handler(async ({ context }) => {
-    return context.user;
-  });
+export const getProfile = protectedProcedure.handler(async ({ context }) => {
+  return context.user;
+});
 
 export const updateProfile = protectedProcedure
-  .input(o.object({
-    name: o.string().optional(),
-    email: o.string().email().optional(),
-  }))
+  .input(
+    o.object({
+      name: o.string().optional(),
+      email: o.string().email().optional(),
+    }),
+  )
   .handler(async ({ input, context }) => {
     const updated = await context.db.user.update(context.user.id, input);
     return updated;
@@ -77,12 +78,14 @@ import { o } from "@orpc/server";
 import { protectedProcedure } from "../trpc";
 
 export const createPost = protectedProcedure
-  .input(o.object({
-    title: o.string().min(1).max(200),
-    content: o.string().min(1),
-    tags: o.array(o.string()).optional(),
-    published: o.boolean().default(false),
-  }))
+  .input(
+    o.object({
+      title: o.string().min(1).max(200),
+      content: o.string().min(1),
+      tags: o.array(o.string()).optional(),
+      published: o.boolean().default(false),
+    }),
+  )
   .handler(async ({ input, context }) => {
     const post = await context.db.post.create({
       ...input,
@@ -231,6 +234,7 @@ export const adminProcedure = publicProcedure.use(requireAdminMiddleware);
 ```
 
 Raypx provides three procedure types:
+
 - **publicProcedure** - No authentication required
 - **protectedProcedure** - Requires authenticated user
 - **adminProcedure** - Requires user with admin role
@@ -418,10 +422,12 @@ const IdSchema = o.string().uuid();
 
 // Use in procedures
 export const listPosts = publicProcedure
-  .input(PaginationSchema.extend({
-    authorId: IdSchema.optional(),
-    search: o.string().optional(),
-  }))
+  .input(
+    PaginationSchema.extend({
+      authorId: IdSchema.optional(),
+      search: o.string().optional(),
+    }),
+  )
   .handler(async ({ input }) => {
     // input is fully typed and validated
   });
@@ -457,14 +463,14 @@ export { createClient } from "./client";
 
 ## Comparison with tRPC
 
-| Feature | ORPC | tRPC |
-|---------|------|------|
-| Bundle Size | ~3KB | ~40KB |
-| Learning Curve | Simpler | More features |
-| Server-First | Yes | Yes |
-| React Integration | Hooks | Hooks + SSG |
-| Subscriptions | Limited | Full support |
-| Plugins | Basic | Extensive |
+| Feature           | ORPC    | tRPC          |
+| ----------------- | ------- | ------------- |
+| Bundle Size       | ~3KB    | ~40KB         |
+| Learning Curve    | Simpler | More features |
+| Server-First      | Yes     | Yes           |
+| React Integration | Hooks   | Hooks + SSG   |
+| Subscriptions     | Limited | Full support  |
+| Plugins           | Basic   | Extensive     |
 
 ## Related Documentation
 

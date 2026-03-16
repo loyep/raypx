@@ -137,6 +137,16 @@
           "a11y": "off"
         }
       }
+    },
+    {
+      "includes": ["packages/**/src/logger-browser.ts"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noConsole": "off"
+          }
+        }
+      }
     }
   ]
 }

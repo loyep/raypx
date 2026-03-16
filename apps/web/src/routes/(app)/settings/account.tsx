@@ -1,4 +1,4 @@
-import { authClient, signOut } from "@raypx/auth";
+import { authClient, signOut } from "@raypx/auth/client";
 import { getServerSession } from "@raypx/auth/server";
 import { db, eq } from "@raypx/database";
 import { account } from "@raypx/database/schemas";

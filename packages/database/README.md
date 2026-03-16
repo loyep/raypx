@@ -49,9 +49,9 @@ Then retry `forge setup` or `pnpm db migrate`.
 
 ## Commands
 
-| Command | Description |
-|---------|-------------|
-| `forge db push` | Push schema to DB (dev, no migration files) |
-| `forge db migrate` | Run migrations |
-| `forge db studio` | Open Drizzle Studio |
-| `forge db seed` | Seed with test data |
+| Command            | Description                                 |
+| ------------------ | ------------------------------------------- |
+| `forge db push`    | Push schema to DB (dev, no migration files) |
+| `forge db migrate` | Run migrations                              |
+| `forge db studio`  | Open Drizzle Studio                         |
+| `forge db seed`    | Seed with test data                         |

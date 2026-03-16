@@ -25,46 +25,47 @@ All packages use the `@raypx/*` namespace and are consumed as TypeScript source 
 
 ## Applications
 
-| App | Description | Port | Tech |
-|-----|-------------|------|------|
+| App     | Description                                    | Port | Tech                     |
+| ------- | ---------------------------------------------- | ---- | ------------------------ |
 | **web** | Main TanStack Start app with auth, UI, and API | 3000 | TanStack Start, React 19 |
 
 ## Packages
 
 ### Core Infrastructure
 
-| Package | Description | Key Features |
-| ------- | ----------- | ------------ |
-| **@raypx/auth** | Authentication system powered by Better Auth | OAuth, Magic Link, Email OTP, 2FA ready |
-| **@raypx/database** | Database layer with Drizzle ORM | PostgreSQL, migrations, vector search |
-| **@raypx/rpc** | Type-safe API layer | ORPC, procedures, middleware |
-| **@raypx/config** | Environment variable validation | Zod schemas, type-safe env vars |
+| Package             | Description                                  | Key Features                            |
+| ------------------- | -------------------------------------------- | --------------------------------------- |
+| **@raypx/auth**     | Authentication system powered by Better Auth | OAuth, Magic Link, Email OTP, 2FA ready |
+| **@raypx/database** | Database layer with Drizzle ORM              | PostgreSQL, migrations, vector search   |
+| **@raypx/rpc**      | Type-safe API layer                          | ORPC, procedures, middleware            |
+| **@raypx/config**   | Environment variable validation              | Zod schemas, type-safe env vars         |
 
 ### Services
 
-| Package | Description | Key Features |
-| ------- | ----------- | ------------ |
-| **@raypx/email** | Email service | Resend, Nodemailer, React Email templates |
-| **@raypx/storage** | File storage | S3, R2, local filesystem, Sharp image processing |
-| **@raypx/core** | Core runtime utilities | Logger, core contracts, base utilities |
+| Package            | Description            | Key Features                                     |
+| ------------------ | ---------------------- | ------------------------------------------------ |
+| **@raypx/email**   | Email service          | Resend, Nodemailer, React Email templates        |
+| **@raypx/storage** | File storage           | S3, R2, local filesystem, Sharp image processing |
+| **@raypx/core**    | Core runtime utilities | Logger, core contracts, base utilities           |
 
 ### UI & Frontend
 
-| Package | Description | Key Features |
-| ------- | ----------- | ------------ |
+| Package                  | Description       | Key Features                          |
+| ------------------------ | ----------------- | ------------------------------------- |
 | **@raypx/design-system** | Component library | 60+ shadcn/ui components, Tailwind v4 |
-| **@raypx/seo** | SEO utilities | Meta tags, Open Graph, JSON-LD |
+| **@raypx/seo**           | SEO utilities     | Meta tags, Open Graph, JSON-LD        |
 
 ### Utilities
 
-| Package | Description | Key Features |
-| ------- | ----------- | ------------ |
-| **@raypx/shared** | Shared utilities | Pure functions, constants, types |
-| **@raypx/tsconfig** | TypeScript configs | Shared tsconfig presets |
+| Package             | Description        | Key Features                     |
+| ------------------- | ------------------ | -------------------------------- |
+| **@raypx/shared**   | Shared utilities   | Pure functions, constants, types |
+| **@raypx/tsconfig** | TypeScript configs | Shared tsconfig presets          |
 
 ### Package Dependencies
 
 Packages can depend on each other, but follow these rules:
+
 - **@raypx/shared** has zero dependencies (pure utilities)
 - **@raypx/design-system** only depends on shared (presentation logic only)
 - **@raypx/auth** depends on database, email
@@ -91,6 +92,7 @@ Packages can depend on each other, but follow these rules:
 - ❌ `packages/*` – NO build scripts (consumed as TS source by apps)
 
 This approach:
+
 - Eliminates double-compilation
 - Provides better type errors in development
 - Speeds up development server startup
@@ -147,6 +149,7 @@ catalog:
 ```
 
 Reference in package.json:
+
 ```json
 {
   "dependencies": {

@@ -1,4 +1,4 @@
-import { authClient } from "@raypx/auth";
+import { authClient } from "@raypx/auth/client";
 import {
   DropdownMenu,
   DropdownMenuContent,

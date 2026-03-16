@@ -153,15 +153,11 @@ export function CustomEmail({ name, actionUrl }: CustomEmailProps) {
       <Body style={main}>
         <Container style={container}>
           <Heading style={h1}>Hello {name}!</Heading>
-          <Paragraph style={paragraph}>
-            This is a custom email template.
-          </Paragraph>
+          <Paragraph style={paragraph}>This is a custom email template.</Paragraph>
           <Link href={actionUrl} style={link}>
             Click here
           </Link>
-          <Text style={footer}>
-            © {new Date().getFullYear()} Raypx. All rights reserved.
-          </Text>
+          <Text style={footer}>© {new Date().getFullYear()} Raypx. All rights reserved.</Text>
         </Container>
       </Body>
     </Html>
@@ -218,12 +214,12 @@ export { CustomEmail } from "./custom-email";
 
 ## Available Templates
 
-| Template | Description | Props |
-|----------|-------------|-------|
-| `WelcomeEmail` | Welcome new users | `name`, `loginUrl` |
-| `PasswordResetEmail` | Password reset link | `name`, `resetUrl` |
-| `MagicLinkEmail` | Magic link authentication | `name`, `magicLinkUrl` |
-| `VerificationEmail` | Email verification | `name`, `verificationUrl` |
+| Template             | Description               | Props                     |
+| -------------------- | ------------------------- | ------------------------- |
+| `WelcomeEmail`       | Welcome new users         | `name`, `loginUrl`        |
+| `PasswordResetEmail` | Password reset link       | `name`, `resetUrl`        |
+| `MagicLinkEmail`     | Magic link authentication | `name`, `magicLinkUrl`    |
+| `VerificationEmail`  | Email verification        | `name`, `verificationUrl` |
 
 ## Integration with Auth
 

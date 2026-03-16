@@ -33,33 +33,33 @@ describe("email smtp client", () => {
 
   it("creates an smtp client from SMTP_URL", async () => {
     vi.stubEnv("SMTP_URL", "smtp://mailer:secret@smtp.raypx.com:2525");
-    const { createSMTPClient, SMTPEmailClient } = await loadEmailModule();
+    const { createSMTPClient } = await loadEmailModule();
+    const { SMTPEmailClient } = await import("../src/smtp");
 
-    expect(createSMTPClient()).toBeInstanceOf(SMTPEmailClient);
+    expect(await createSMTPClient()).toBeInstanceOf(SMTPEmailClient);
     expect(createTransportMock).toHaveBeenCalledWith("smtp://mailer:secret@smtp.raypx.com:2525");
   });
 
   it("rejects missing smtp configuration", async () => {
     vi.stubEnv("SMTP_URL", "");
-    const { createSMTPClient, EmailError } = await loadEmailModule();
+    const { createSMTPClient } = await loadEmailModule();
 
-    expect(() => createSMTPClient()).toThrowError(
-      new EmailError("INVALID_CONFIGURATION", "Missing SMTP_URL"),
-    );
+    await expect(createSMTPClient()).rejects.toThrow("Missing SMTP_URL");
   });
 
   it("supports smtps URLs and encoded credentials", async () => {
     vi.stubEnv("SMTP_URL", "smtps://mailer%40raypx.com:sec%2Fret@smtp.raypx.com");
-    const { createSMTPClient, SMTPEmailClient } = await loadEmailModule();
+    const { createSMTPClient } = await loadEmailModule();
+    const { SMTPEmailClient } = await import("../src/smtp");
 
-    expect(createSMTPClient()).toBeInstanceOf(SMTPEmailClient);
+    expect(await createSMTPClient()).toBeInstanceOf(SMTPEmailClient);
     expect(createTransportMock).toHaveBeenCalledWith(
       "smtps://mailer%40raypx.com:sec%2Fret@smtp.raypx.com",
     );
   });
 
   it("formats recipients and returns message ids", async () => {
-    const { SMTPEmailClient } = await loadEmailModule();
+    const { SMTPEmailClient } = await import("../src/smtp");
     sendMailMock.mockResolvedValue({ messageId: "smtp_1" });
 
     const client = new SMTPEmailClient({
@@ -94,7 +94,7 @@ describe("email smtp client", () => {
   });
 
   it("reports verification state from the transporter", async () => {
-    const { SMTPEmailClient } = await loadEmailModule();
+    const { SMTPEmailClient } = await import("../src/smtp");
     verifyMock.mockResolvedValueOnce(true);
     verifyMock.mockRejectedValueOnce(new Error("nope"));
 

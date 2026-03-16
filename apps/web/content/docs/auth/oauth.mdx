@@ -30,6 +30,7 @@ AUTH_GITHUB_SECRET="your_github_client_secret"
 ### 3. Production Setup
 
 For production, create another OAuth App with production URLs:
+
 - **Homepage URL**: `https://yourdomain.com`
 - **Authorization callback URL**: `https://yourdomain.com/api/auth/callback/github`
 
@@ -67,6 +68,7 @@ AUTH_GOOGLE_SECRET="your_google_client_secret"
 ### 3. Production Setup
 
 For production, add your production URLs to the OAuth client:
+
 - **Authorized JavaScript origins**: `https://yourdomain.com`
 - **Authorized redirect URIs**: `https://yourdomain.com/api/auth/callback/google`
 
@@ -97,6 +99,7 @@ AUTH_GOOGLE_SECRET="your_google_client_secret"
 ## Testing Social Login
 
 1. Start the development server:
+
    ```bash
    pnpm dev
    ```
@@ -116,11 +119,13 @@ AUTH_GOOGLE_SECRET="your_google_client_secret"
 ### "Redirect URI mismatch" Error
 
 **GitHub**: Ensure the callback URL in your GitHub OAuth app matches exactly:
+
 ```
 http://localhost:3000/api/auth/callback/github
 ```
 
 **Google**: Verify the redirect URI is added to authorized redirect URIs:
+
 ```
 http://localhost:3000/api/auth/callback/google
 ```

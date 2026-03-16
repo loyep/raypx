@@ -1,3 +1,6 @@
+/**
+ * @raypx/database - Server-only (Node.js, Drizzle, Postgres)
+ */
 export type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 export {
   and,
@@ -23,10 +26,10 @@ export {
 import { createClient, createClientWithConnection } from "./adapters/postgres";
 import { env } from "./envs";
 
-export { createClient, createClientWithConnection };
 export * as schemas from "./schemas/pg";
 export * from "./types";
 export * from "./utils";
+export { createClient, createClientWithConnection };
 
 // Main database connection for long-running services.
 export const db = createClient({

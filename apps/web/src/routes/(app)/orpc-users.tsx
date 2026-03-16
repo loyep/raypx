@@ -1,5 +1,5 @@
 import { listUsers } from "@raypx/admin/api";
-import { type ExtendedUser, isAdmin } from "@raypx/auth";
+import { type ExtendedUser, isAdmin } from "@raypx/auth/client";
 import {
   Card,
   CardContent,

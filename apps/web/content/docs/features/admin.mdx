@@ -103,9 +103,9 @@ import { client } from "@/utils/orpc";
 const result = await client.adminUsers.list({
   page: 1,
   pageSize: 10,
-  search: "john",        // Optional: search by name or email
-  role: "admin",         // Optional: filter by role
-  banned: false,         // Optional: filter by ban status
+  search: "john", // Optional: search by name or email
+  role: "admin", // Optional: filter by role
+  banned: false, // Optional: filter by ban status
 });
 
 // Result structure
@@ -163,17 +163,17 @@ const stats = await client.adminUsers.stats();
 
 The user table includes admin-related fields:
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `id` | `string` | Unique user identifier |
-| `name` | `string` | User display name |
-| `email` | `string` | User email address |
-| `role` | `string` | User role (`"admin"` or `"user"`) |
-| `banned` | `boolean` | Whether user is banned |
-| `banReason` | `string` | Reason for ban (if any) |
-| `banExpires` | `Date` | Ban expiration date (if temporary) |
-| `emailVerified` | `boolean` | Whether email is verified |
-| `createdAt` | `Date` | Account creation date |
+| Field           | Type      | Description                        |
+| --------------- | --------- | ---------------------------------- |
+| `id`            | `string`  | Unique user identifier             |
+| `name`          | `string`  | User display name                  |
+| `email`         | `string`  | User email address                 |
+| `role`          | `string`  | User role (`"admin"` or `"user"`)  |
+| `banned`        | `boolean` | Whether user is banned             |
+| `banReason`     | `string`  | Reason for ban (if any)            |
+| `banExpires`    | `Date`    | Ban expiration date (if temporary) |
+| `emailVerified` | `boolean` | Whether email is verified          |
+| `createdAt`     | `Date`    | Account creation date              |
 
 ## UI Components
 
@@ -219,8 +219,8 @@ export function SidebarNavigation({ onNavigate, userRole }: SidebarNavigationPro
 
 ```typescript
 // apps/web/src/routes/(app)/admin/$slug.tsx
-import { useSession } from "@raypx/auth";
-import type { ExtendedUser } from "@raypx/auth";
+import { useSession } from "@raypx/auth/client";
+import type { ExtendedUser } from "@raypx/auth/client";
 
 function AdminUsersPage() {
   const { data: session, isPending } = useSession();
@@ -256,10 +256,12 @@ export const adminRouter = {
 
   // Admin action with input
   sendNotification: adminProcedure
-    .input(z.object({
-      userId: z.string(),
-      message: z.string(),
-    }))
+    .input(
+      z.object({
+        userId: z.string(),
+        message: z.string(),
+      }),
+    )
     .handler(async ({ input }) => {
       // Send notification to user
     }),
@@ -313,10 +315,13 @@ export const adminRouter = {
   banUser: adminProcedure
     .input(z.object({ id: z.string(), reason: z.string() }))
     .handler(async ({ input, context }) => {
-      await db.update(user).set({
-        banned: true,
-        banReason: input.reason,
-      }).where(eq(user.id, input.id));
+      await db
+        .update(user)
+        .set({
+          banned: true,
+          banReason: input.reason,
+        })
+        .where(eq(user.id, input.id));
 
       // Log admin action
       logger.info("User banned", {

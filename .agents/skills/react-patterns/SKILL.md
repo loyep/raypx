@@ -97,13 +97,13 @@ function Parent() {
 ```typescript
 // Define interface for context
 interface SelectContextValue<T> {
-  value: T | undefined
-  onChange: (value: T) => void
-  options: Option<T>[]
+  value: T | undefined;
+  onChange: (value: T) => void;
+  options: Option<T>[];
 }
 
 // Implementation can change without affecting consumers
-const SelectContext = createContext<SelectContextValue<unknown> | null>(null)
+const SelectContext = createContext<SelectContextValue<unknown> | null>(null);
 ```
 
 ## Implementation Patterns
@@ -164,11 +164,11 @@ function Input({ className, ...props }: InputProps & { ref?: React.Ref<HTMLInput
 
 ```typescript
 // React 18
-const value = useContext(MyContext)
+const value = useContext(MyContext);
 
 // React 19 - use() works with Promises too
-const value = use(MyContext)
-const data = use(fetchDataPromise)
+const value = use(MyContext);
+const data = use(fetchDataPromise);
 ```
 
 ## Performance Patterns
@@ -177,36 +177,33 @@ const data = use(fetchDataPromise)
 
 ```typescript
 // WRONG: Memo on simple expressions
-const label = useMemo(() => `Count: ${count}`, [count])
+const label = useMemo(() => `Count: ${count}`, [count]);
 
 // CORRECT: Memo on expensive computations
-const sortedItems = useMemo(
-  () => [...items].sort((a, b) => a.name.localeCompare(b.name)),
-  [items]
-)
+const sortedItems = useMemo(() => [...items].sort((a, b) => a.name.localeCompare(b.name)), [items]);
 ```
 
 ### Functional setState
 
 ```typescript
 // WRONG: Can cause stale state
-setCount(count + 1)
+setCount(count + 1);
 
 // CORRECT: Always fresh
-setCount((prev) => prev + 1)
+setCount((prev) => prev + 1);
 ```
 
 ### Derive State, Don't Sync
 
 ```typescript
 // WRONG: Syncing derived state
-const [items, setItems] = useState([])
-const [count, setCount] = useState(0)
-useEffect(() => setCount(items.length), [items])
+const [items, setItems] = useState([]);
+const [count, setCount] = useState(0);
+useEffect(() => setCount(items.length), [items]);
 
 // CORRECT: Derive during render
-const [items, setItems] = useState([])
-const count = items.length
+const [items, setItems] = useState([]);
+const count = items.length;
 ```
 
 ## Common Anti-Patterns
@@ -215,10 +212,10 @@ const count = items.length
 
 ```typescript
 // WRONG: Runs on every render
-const [state, setState] = useState(expensiveComputation())
+const [state, setState] = useState(expensiveComputation());
 
 // CORRECT: Runs once
-const [state, setState] = useState(() => expensiveComputation())
+const [state, setState] = useState(() => expensiveComputation());
 ```
 
 ### useEffect for Events
@@ -227,15 +224,15 @@ const [state, setState] = useState(() => expensiveComputation())
 // WRONG: useEffect for user events
 useEffect(() => {
   if (data) {
-    navigate("/dashboard")
+    navigate("/dashboard");
   }
-}, [data])
+}, [data]);
 
 // CORRECT: Handle in event handler
 async function handleSubmit() {
-  const data = await submitForm()
+  const data = await submitForm();
   if (data) {
-    navigate("/dashboard")
+    navigate("/dashboard");
   }
 }
 ```

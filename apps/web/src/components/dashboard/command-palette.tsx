@@ -1,4 +1,4 @@
-import { signOut } from "@raypx/auth";
+import { signOut } from "@raypx/auth/client";
 import {
   Command,
   CommandDialog,

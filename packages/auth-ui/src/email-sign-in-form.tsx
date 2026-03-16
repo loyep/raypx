@@ -1,4 +1,4 @@
-import { signIn } from "@raypx/auth";
+import { signIn } from "@raypx/auth/client";
 import { FormErrorAlert } from "@raypx/design-system/components/form-error-alert";
 import { Button } from "@raypx/design-system/components/ui/button";
 import { Checkbox } from "@raypx/design-system/components/ui/checkbox";

@@ -44,11 +44,11 @@ STORAGE_LOCAL_PATH=./uploads
 
 ### Provider Selection
 
-| Provider | Use Case | Environment |
-|----------|----------|-------------|
-| **S3** | Production, AWS ecosystem | Production |
-| **R2** | Production, cost-effective, no egress fees | Production |
-| **Local** | Development, testing | Development |
+| Provider  | Use Case                                   | Environment |
+| --------- | ------------------------------------------ | ----------- |
+| **S3**    | Production, AWS ecosystem                  | Production  |
+| **R2**    | Production, cost-effective, no egress fees | Production  |
+| **Local** | Development, testing                       | Development |
 
 ## Quick Start
 
@@ -255,6 +255,7 @@ interface ImageProcessOptions {
 2. **Create IAM User**
    - Go to IAM Console → Users → Create user
    - Attach policy:
+
    ```json
    {
      "Version": "2012-10-17",
@@ -267,6 +268,7 @@ interface ImageProcessOptions {
      ]
    }
    ```
+
    - Create access keys and add to `.env`
 
 3. **Configure CORS** (for direct uploads)
@@ -294,6 +296,7 @@ interface ImageProcessOptions {
    - Copy Access Key ID and Secret Access Key
 
 3. **Configure Environment**
+
    ```bash
    STORAGE_PROVIDER=r2
    R2_ACCOUNT_ID=your-account-id

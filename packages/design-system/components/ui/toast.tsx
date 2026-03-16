@@ -78,14 +78,14 @@ const toastHelpers = {
 };
 
 export {
-  toast,
-  useSonner,
-  useSonner as useToast,
   closeAllToasts,
   closeToast,
   closeToasts,
   getToastCount,
   hasActiveToasts,
-  toastHelpers,
   type ToasterProps,
+  toast,
+  toastHelpers,
+  useSonner,
+  useSonner as useToast,
 };

@@ -1,7 +1,9 @@
-// Email clients
+/**
+ * @raypx/email - Server-only (Resend, Nodemailer)
+ * SMTP/nodemailer is loaded dynamically, not from main export.
+ */
 export { createResendClient, createSMTPClient, isEmailConfigured, sendEmail } from "./client";
 export { ResendEmailClient } from "./resend";
-export { SMTPEmailClient } from "./smtp";
 
 // Types
 export type {

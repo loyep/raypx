@@ -1,14 +1,13 @@
 import { createEnv, databaseEnv, z } from "@raypx/config";
 
 const databaseRuntimeEnv = {
-  ...databaseEnv,
-  server: {
-    ...databaseEnv.server,
+  extends: [databaseEnv],
+  shared: {
+    DB_LOG_PARAMS: z.enum(["off", "masked", "full"]).optional().default("masked"),
     DB_LOG_SQL: z
       .enum(["true", "false"])
       .optional()
       .transform((value) => value !== "false"),
-    DB_LOG_PARAMS: z.enum(["off", "masked", "full"]).optional().default("masked"),
   },
 } as const;
 

@@ -9,8 +9,8 @@
     "./rpc": "./src/rpc.ts",
     "./server": "./src/server/index.ts",
     "./tanstack-start": "./src/tanstack-start.ts",
-    "./provider": "./src/provider.tsx",
-    "./types": "./src/types.ts"
+    "./types": "./src/types.ts",
+    "./provider": "./src/client/index.ts"
   },
   "scripts": {
     "clean": "rimraf dist .turbo",
@@ -19,10 +19,10 @@
   },
   "dependencies": {
     "@better-auth/drizzle-adapter": "^1.5.5",
-    "@tanstack/react-start": "catalog:",
     "@raypx/config": "workspace:*",
     "@raypx/database": "workspace:*",
     "@raypx/email": "workspace:*",
+    "@tanstack/react-start": "catalog:",
     "better-auth": "^1.5.5"
   },
   "devDependencies": {
