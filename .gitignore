@@ -65,4 +65,8 @@ logs
 .pnpm-store/
 # apps/**/routeTree.gen.ts
 
-apps/web/stats.html
+**/stats.html
+
+**/playwright-report/
+
+**/test-results/
