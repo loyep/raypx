@@ -1,4 +1,4 @@
-import type { Context } from "../src/context";
+import type { Context } from "../src/server/context";
 
 /**
  * Create a mock user for testing

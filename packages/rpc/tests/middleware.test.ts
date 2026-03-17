@@ -1,7 +1,7 @@
 import { call, ORPCError } from "@orpc/server";
 import type { AuthSession as Session, AuthUser as User } from "@raypx/auth/types";
 import { describe, expect, it } from "vitest";
-import type { Context } from "../src/context";
+import type { Context } from "../src/server/context";
 import {
   publicProcedure as o,
   optionalAuthMiddleware,
@@ -10,7 +10,7 @@ import {
   requireAuthMiddleware,
   requirePermission,
   requireRole,
-} from "../src/middleware";
+} from "../src/server/middleware";
 
 // Mock user and session data with all required fields
 const mockUser: User = {

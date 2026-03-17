@@ -4,9 +4,8 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts",
-    "./client": "./src/client.ts",
-    "./orpc": "./src/orpc.ts"
+    ".": "./src/server.ts",
+    "./client": "./src/client.ts"
   },
   "scripts": {
     "clean": "rimraf dist .turbo",

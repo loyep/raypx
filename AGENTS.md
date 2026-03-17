@@ -147,10 +147,10 @@ Packages must only depend on packages at the same layer or lower layers:
 
 ### Adding a New API Endpoint
 
-1. **Create the router file** in `packages/rpc/src/routers/`:
+1. **Create the router file** in `packages/rpc/src/server/routers/`:
 
 ```typescript
-// packages/rpc/src/routers/feature.ts
+// packages/rpc/src/server/routers/feature.ts
 import { z } from "zod";
 import { publicProcedure, protectedProcedure, adminProcedure } from "../middleware";
 
@@ -173,7 +173,7 @@ export const featureRouter = {
 };
 ```
 
-2. **Register the router** in `packages/rpc/src/routers/index.ts`:
+2. **Register the router** in `packages/rpc/src/server/routers/index.ts`:
 
 ```typescript
 import { featureRouter } from "./feature";
@@ -469,9 +469,9 @@ The project includes a complete admin user management system at `/admin/users`.
 **Key Files:**
 
 ```
-packages/rpc/src/
-├── middleware.ts              # adminProcedure definition
-└── routers/user.ts            # User management API
+packages/rpc/src/server/
+├── transport/middleware.ts    # adminProcedure definition
+└── modules/admin/router.ts   # Admin API
 
 apps/web/src/
 ├── routes/(app)/admin/

@@ -1,4 +1,4 @@
-import { createHandler } from "@raypx/rpc/orpc";
+import { createHandler } from "@raypx/rpc";
 import { createFileRoute } from "@tanstack/react-router";
 
 const handler = createHandler({ prefix: "/api/rpc" });

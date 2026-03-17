@@ -1,7 +1,7 @@
 import { call } from "@orpc/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { Context } from "../src/context";
-import { dashboardRouter } from "../src/routers/dashboard";
+import type { Context } from "../src/server/context";
+import { dashboardRouter } from "../src/server/routers/dashboard";
 
 // Mock the database module
 const mockSelect = vi.fn();

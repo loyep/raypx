@@ -3,11 +3,24 @@ import { generatePageHead } from "@raypx/seo";
 import { createFileRoute, useLoaderData, useNavigate } from "@tanstack/react-router";
 import { siteConfig } from "@/config/site";
 import { AdminUsersPage } from "@/features/admin/pages/users-page";
+import { adminUsersListQueryOptions } from "@/features/admin/queries";
 import { getAdminPageComponent, resolveAdminRoute } from "@/plugins/admin-route-resolver";
 
 export const Route = createFileRoute("/(app)/admin/$slug")({
   component: AdminWildcardPage,
   head: () => generatePageHead({ ...siteConfig, title: "Admin - Raypx" }),
+  loader: async ({ context, params }) => {
+    const { slug } = params;
+    if (slug === "users") {
+      try {
+        await context.queryClient.ensureQueryData(
+          adminUsersListQueryOptions({ page: 1, pageSize: 20 }),
+        );
+      } catch {
+        // Non-admin or API error - component will handle redirect/error
+      }
+    }
+  },
 });
 
 function AdminWildcardPage() {

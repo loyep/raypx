@@ -126,8 +126,7 @@ export type AppRouter = typeof appRouter;
 ```typescript
 // apps/web/src/routes/api/rpc/[...catchall].ts
 import { createAPIFileRoute } from "@tanstack/react-start";
-import { appRouter } from "@raypx/rpc";
-import { createContext } from "@raypx/rpc/context";
+import { appRouter, createContext } from "@raypx/rpc";
 
 export const APIRoute = createAPIFileRoute("/api/rpc/$")({
   POST: async ({ request, params }) => {
@@ -205,7 +204,7 @@ function EditProfile() {
 
 ```typescript
 // In server components or server functions
-import { serverClient } from "@raypx/rpc/server";
+import { serverClient } from "@raypx/rpc";
 
 async function getUserServer(id: string) {
   const user = await serverClient.user.get({ id });
@@ -218,7 +217,7 @@ async function getUserServer(id: string) {
 ### Built-in Middleware
 
 ```typescript
-// packages/rpc/src/middleware.ts
+// packages/rpc/src/server/transport/middleware.ts
 import { ORPCError, os } from "@orpc/server";
 
 const o = os.$context<Context>();
