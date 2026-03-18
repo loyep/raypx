@@ -15,7 +15,6 @@ async function VisualizerPlugin(enable: boolean): Promise<Plugin[]> {
 
 export default defineConfig(async ({ command, isSsrBuild }) => {
   const isBuild = command === "build";
-  const isServeMode = command === "serve"; // dev or preview
   const enableBundleAnalyze = process.env.BUNDLE_ANALYZE === "true" && !isSsrBuild;
   const enableTanstackDevtools = process.env.TANSTACK_DEVTOOLS === "true";
 
@@ -26,28 +25,10 @@ export default defineConfig(async ({ command, isSsrBuild }) => {
     ssr: {
       noExternal: isBuild ? true : undefined,
     },
-    optimizeDeps: {
-      include: ["@tanstack/react-query", "@tanstack/react-router", "@tabler/icons-react"],
-      exclude: ["@tanstack/react-start"],
-    },
     build: {
       cssCodeSplit: true,
       ssrEmitAssets: true,
     },
-    ...(isServeMode
-      ? {
-          server: {
-            warmup: {
-              clientFiles: [
-                "./src/router.tsx",
-                "./src/routes/__root.tsx",
-                "./src/styles/globals.css",
-              ],
-              ssrFiles: ["./src/routes/__root.tsx"],
-            },
-          },
-        }
-      : {}),
     plugins: [
       VisualizerPlugin(enableBundleAnalyze),
       ...(enableTanstackDevtools

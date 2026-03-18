@@ -3,7 +3,9 @@ import { ResendEmailClient } from "./resend";
 import type { EmailOptions, EmailResult } from "./types";
 import { EmailError } from "./types";
 
-type EmailClient = ResendEmailClient | Awaited<typeof import("./smtp")>["SMTPEmailClient"];
+type EmailClient = {
+  send(options: EmailOptions): Promise<EmailResult>;
+};
 let _defaultClient: EmailClient | null = null;
 
 /**

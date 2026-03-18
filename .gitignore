@@ -63,7 +63,7 @@ logs
 
 # pnpm
 .pnpm-store/
-# apps/**/routeTree.gen.ts
+apps/**/src/routeTree.gen.ts
 
 **/stats.html
 
