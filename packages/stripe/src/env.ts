@@ -1,14 +1,17 @@
-import { createEnv, stripeEnv } from "@raypx/config";
-import Stripe from "stripe";
+import { createEnv, z } from "@raypx/config";
 
-export function getStripe(): Stripe {
-  const env = createEnv(stripeEnv);
+export const stripeEnv = {
+  id: "stripe",
+  shared: {
+    VITE_BILLING_PROVIDER: z.string().optional(),
+    VITE_PAY_SUCCESS_URL: z.url().optional(),
+    VITE_PAY_CANCEL_URL: z.url().optional(),
+  },
+  server: {
+    STRIPE_PUBLIC_KEY: z.string().min(1).optional(),
+    STRIPE_PRIVATE_KEY: z.string().min(1).optional(),
+    STRIPE_WEBHOOK_SECRET: z.string().min(1).optional(),
+  },
+} as const;
 
-  if (!env.STRIPE_PRIVATE_KEY) {
-    throw new Error("STRIPE_PRIVATE_KEY is not configured");
-  }
-
-  return new Stripe(env.STRIPE_PRIVATE_KEY, {
-    apiVersion: "2026-02-25.clover",
-  });
-}
+export const envs = () => createEnv(stripeEnv);

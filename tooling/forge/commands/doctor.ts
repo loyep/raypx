@@ -725,12 +725,16 @@ async function runArchDoctor(): Promise<DoctorSection> {
   );
 
   const forbiddenImports = new Set([
+    "@raypx/admin/api",
+    "@raypx/auth/provider",
+    "@raypx/config",
     "@raypx/database",
     "@raypx/database/schemas",
-    "@raypx/auth/server",
-    "@raypx/admin/server",
+    "@raypx/core",
+    "@raypx/core/server",
     "@raypx/storage",
     "@raypx/stripe",
+    "@raypx/stripe/server",
   ]);
 
   const violations: string[] = [];
@@ -771,10 +775,10 @@ async function runArchDoctor(): Promise<DoctorSection> {
       ok: violations.length === 0,
       detail:
         violations.length === 0
-          ? "browser-facing web modules avoid direct server/data package imports"
-          : `${violations.length} direct backend imports found in browser-facing modules (${violations[0]})`,
+          ? "browser-facing web modules avoid direct server/data package imports and legacy entrypoints"
+          : `${violations.length} forbidden imports found in browser-facing modules (${violations[0]})`,
       fixHint:
-        "Move the access behind @raypx/rpc or a client-safe wrapper instead of importing server/data packages directly.",
+        "Use @raypx/*/client, @/utils/orpc, or an app-local adapter instead of importing server/data packages or legacy entrypoints directly.",
     },
     {
       name: "logger-entrypoints",

@@ -1,22 +1,16 @@
-import { createEnv, storageEnv } from "@raypx/config";
-import { R2Storage } from "./r2";
-import { StorageError } from "./types";
+import { createEnv, z } from "@raypx/config";
 
-export function createR2Storage(): R2Storage {
-  const env = createEnv({
-    ...storageEnv,
-    skip: true,
-  });
+export const storageEnv = {
+  id: "storage",
+  server: {
+    R2_ACCOUNT_ID: z.string().min(1),
+    R2_ACCESS_KEY_ID: z.string().min(1),
+    R2_SECRET_ACCESS_KEY: z.string().min(1),
+    R2_BUCKET: z.string().min(1),
+  },
+  shared: {
+    R2_PUBLIC_URL: z.url().optional(),
+  },
+} as const;
 
-  if (!env.R2_ACCOUNT_ID || !env.R2_ACCESS_KEY_ID || !env.R2_SECRET_ACCESS_KEY || !env.R2_BUCKET) {
-    throw new StorageError("INVALID_CONFIGURATION", "Missing R2 configuration");
-  }
-
-  return new R2Storage({
-    accountId: env.R2_ACCOUNT_ID,
-    accessKeyId: env.R2_ACCESS_KEY_ID,
-    secretAccessKey: env.R2_SECRET_ACCESS_KEY,
-    bucket: env.R2_BUCKET,
-    publicUrl: env.R2_PUBLIC_URL,
-  });
-}
+export const envs = () => createEnv(storageEnv);

@@ -36,7 +36,7 @@
   "devDependencies": {
     "@raypx/forge": "workspace:*",
     "@raypx/tsconfig": "workspace:*",
-    "@rolldown/plugin-babel": "^0.2.1",
+    "@rolldown/plugin-babel": "^0.2.2",
     "@tailwindcss/vite": "catalog:tailwindv4",
     "@tanstack/devtools-vite": "catalog:",
     "@types/node": "catalog:",

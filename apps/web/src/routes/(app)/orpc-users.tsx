@@ -1,4 +1,4 @@
-import { listUsers } from "@raypx/admin/api";
+import { type AdminUser } from "@raypx/admin";
 import { type ExtendedUser, isAdmin } from "@raypx/auth/client";
 import {
   Card,
@@ -33,22 +33,24 @@ function ORPCUsersPage() {
 
   const usersQuery = useQuery({
     queryKey: ["orpc", "adminUsers", "list"],
-    queryFn: () =>
-      listUsers(client, {
-        page: 1,
-        pageSize: 20,
-      }),
+    queryFn: async () =>
+      (
+        await client.admin.users.list({
+          page: 1,
+          pageSize: 20,
+        })
+      ).data,
     enabled: userIsAdmin,
   });
 
-  const users = usersQuery.data?.users ?? [];
+  const users = (usersQuery.data?.users as AdminUser[] | undefined) ?? [];
 
   return (
     <div className="mx-auto max-w-5xl space-y-6">
       <div>
         <h1 className="font-bold text-2xl tracking-tight">oRPC Users Test</h1>
         <p className="text-muted-foreground">
-          This page calls <code>client.adminUsers.list()</code> from oRPC.
+          This page calls <code>client.admin.users.list()</code> from oRPC.
         </p>
       </div>
 
@@ -67,7 +69,7 @@ function ORPCUsersPage() {
           <CardHeader>
             <CardTitle>User List</CardTitle>
             <CardDescription>
-              Loaded from oRPC procedure: <code>adminUsers.list</code>
+              Loaded from oRPC procedure: <code>admin.users.list</code>
             </CardDescription>
           </CardHeader>
           <CardContent>

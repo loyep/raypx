@@ -3,7 +3,7 @@ import {
   resolveRequestTrace,
   runWithLogContext,
   withTraceHeaders,
-} from "@raypx/core";
+} from "@raypx/core/server";
 import { createStartHandler, defaultStreamHandler } from "@tanstack/react-start/server";
 import { createServerEntry } from "@tanstack/react-start/server-entry";
 

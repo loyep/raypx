@@ -24,8 +24,8 @@
     "@raypx/auth-ui": "workspace:*",
     "@raypx/config": "workspace:*",
     "@raypx/core": "workspace:*",
-    "@raypx/database": "workspace:*",
     "@raypx/design-system": "workspace:*",
+    "@raypx/email": "workspace:*",
     "@raypx/rpc": "workspace:*",
     "@raypx/seo": "workspace:*",
     "@raypx/shared": "workspace:*",
@@ -48,7 +48,7 @@
   "devDependencies": {
     "@raypx/forge": "workspace:*",
     "@raypx/tsconfig": "workspace:*",
-    "@rolldown/plugin-babel": "^0.2.1",
+    "@rolldown/plugin-babel": "^0.2.2",
     "@tailwindcss/vite": "catalog:tailwindv4",
     "@tanstack/devtools-vite": "catalog:",
     "@tanstack/react-devtools": "catalog:",

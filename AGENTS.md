@@ -56,7 +56,7 @@ Packages use a consistent server/client split:
 | auth                     | createAuth, getServerSession | authClient, signIn, signOut, useSession, AuthProvider, OAuthButton |
 | rpc                      | appRouter, createContext     | client, orpc                                                       |
 | core                     | logger (pino)                | logger (console stub)                                              |
-| database, email, storage | server-only                  | —                                                                  |
+| database, email, storage, stripe | server-only          | —                                                                  |
 | design-system            | client-only                  | —                                                                  |
 
 **Rule**: Import `@raypx/auth/client` in React components; import `@raypx/auth` in API routes and server code.
@@ -69,15 +69,29 @@ All packages follow a unified `exports` order and naming (except design-system, 
 
 1. `"."` - main entry
 2. `"./client"` - client entry (for packages with server/client split)
-3. `"./server"` - server-only entry
+3. `"./server"` - explicit server entry for packages with a real client/server split
 4. `"./types"` - types-only entry
 5. Other feature subpaths (alphabetically)
 
 ### Naming
 
-- **env**: single file uses `/env` (storage, stripe), aggregate uses `/envs` (config)
+- **env**: package-local env definitions use `/env`; aggregated config package exports use `/envs`
 - **types**: types-only entry uses `/types`
-- **aliases**: keep for backward compatibility (e.g. auth `/provider`)
+- **apps**: each app owns its runtime env aggregation in `src/env.ts`
+- **aliases**: avoid adding compatibility aliases unless they are truly needed for a migration
+
+### Server-only Packages
+
+For server-only packages, the main export `"."` is the canonical server entry.
+
+- Do not add a redundant `"./server"` alias for packages that have no client-safe surface.
+- Use explicit `./server` entries only for packages that also expose `./client` or otherwise need a separate public server path.
+
+### Env Conventions
+
+- Keep env schema ownership close to the package that uses it: for example `@raypx/email/env`, `@raypx/storage/env`, `@raypx/stripe/env`, `@raypx/ai/env`.
+- Prefer exporting `envs()` from package env modules instead of exporting a shared `env` singleton by default.
+- App code should import runtime env from local `@/env`, not directly from `@raypx/config`.
 
 ### design-system
 

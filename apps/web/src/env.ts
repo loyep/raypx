@@ -1,4 +1,7 @@
-import { aiEnv, authEnv, createEnv, emailEnv, stripeEnv } from "@raypx/config";
+import { aiEnv } from "@raypx/ai/env";
+import { authEnv, createEnv } from "@raypx/config";
+import { emailEnv } from "@raypx/email/env";
+import { stripeEnv } from "@raypx/stripe/env";
 import { z } from "zod";
 
 const env = createEnv({

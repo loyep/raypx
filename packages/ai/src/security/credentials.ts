@@ -1,8 +1,8 @@
 import { createCipheriv, createDecipheriv, createHash, randomBytes } from "node:crypto";
-import { aiEnv, createEnv } from "@raypx/config/envs";
+import { envs } from "../env";
 
-const env = createEnv(aiEnv);
 const ALGO = "aes-256-gcm";
+const env = envs();
 
 function getSecretKey(): Buffer {
   const secret = env.APP_KEY?.trim() || env.AI_CREDENTIALS_SECRET?.trim();

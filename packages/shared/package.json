@@ -17,7 +17,6 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@raypx/config": "workspace:*",
     "dayjs": "^1.11.20",
     "nanoid": "^5.1.7",
     "ua-parser-js": "^2.0.9",

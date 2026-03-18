@@ -1,5 +1,4 @@
-import { adminConfigPlugin } from "@raypx/admin/plugin/config";
-import { adminWebPlugin } from "@raypx/admin/plugin/web";
+import { adminConfigPlugin, adminWebPlugin } from "@raypx/admin/plugin";
 import {
   type AppWebNavItem,
   type AppWebPlugin,

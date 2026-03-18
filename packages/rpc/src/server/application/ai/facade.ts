@@ -1,10 +1,5 @@
 import { ORPCError } from "@orpc/server";
-import {
-  type AIServiceContext,
-  AIServiceError,
-  chatService,
-  toAIServiceError,
-} from "@raypx/ai/server";
+import { type AIServiceContext, AIServiceError, chatService, toAIServiceError } from "@raypx/ai";
 import type { AIErrorCode } from "@raypx/shared/ai";
 
 function toORPCStatus(code: AIErrorCode) {

@@ -6,6 +6,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./client": "./src/client.ts",
+    "./env": "./src/env.ts",
     "./smtp": "./src/smtp.ts",
     "./templates": "./src/templates/index.tsx",
     "./types": "./src/types.ts"
@@ -19,7 +20,7 @@
     "@raypx/config": "workspace:*",
     "@react-email/components": "^1.0.10",
     "@react-email/render": "^2.0.4",
-    "nodemailer": "^8.0.2",
+    "nodemailer": "^8.0.3",
     "react": "catalog:react19",
     "resend": "^6.9.4"
   },

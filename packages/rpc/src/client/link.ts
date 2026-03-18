@@ -1,5 +1,5 @@
 import { RPCLink } from "@orpc/client/fetch";
-import { getRpcBaseUrl } from "../env";
+import { getRpcBaseUrl } from "./runtime";
 
 function getRpcUrl(): string {
   return `${getRpcBaseUrl()}/api/rpc`;

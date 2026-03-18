@@ -245,7 +245,7 @@ See [Admin Features](/docs/features/admin) for more details on admin procedures.
 ```typescript
 // packages/rpc/middleware/auth.ts
 import { middleware } from "@orpc/server";
-import { getServerSession } from "@raypx/auth/server";
+import { getServerSession } from "@raypx/auth";
 
 export const authMiddleware = middleware(async ({ context, next }) => {
   const session = await getServerSession();
@@ -330,7 +330,7 @@ export interface RequestContext {
 
 ```typescript
 // packages/rpc/context.ts
-import { getServerSession } from "@raypx/auth/server";
+import { getServerSession } from "@raypx/auth";
 import { db } from "@raypx/database";
 
 export async function createContext(request: Request): Promise<RequestContext> {

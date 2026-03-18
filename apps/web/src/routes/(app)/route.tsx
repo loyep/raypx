@@ -1,4 +1,4 @@
-import { getDashboardNavigationItems } from "@raypx/admin/server";
+import { getDashboardNavigationItems } from "@raypx/admin";
 import { signOut } from "@raypx/auth/client";
 import { getSession } from "@raypx/auth/tanstack-start";
 import { RouteLoading } from "@raypx/design-system/components/route-loading";

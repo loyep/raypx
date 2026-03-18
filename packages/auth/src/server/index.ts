@@ -1,4 +1,4 @@
-import { db, uuidv7 } from "@raypx/database";
+import { db, eq, uuidv7 } from "@raypx/database";
 import * as schema from "@raypx/database/schemas";
 import { isEmailConfigured, sendEmail } from "@raypx/email";
 import { betterAuth } from "better-auth";
@@ -255,6 +255,18 @@ export const getServerSession = defaultServerAuthHelpers.getSession;
 
 export const hasServerSession = defaultServerAuthHelpers.hasSession;
 
+export async function hasCredentialPasswordAccount(headers: Headers): Promise<boolean> {
+  const session = await getServerSession(headers);
+  if (!session?.user?.id) return false;
+
+  const accounts = await db
+    .select({ providerId: schema.account.providerId })
+    .from(schema.account)
+    .where(eq(schema.account.userId, session.user.id));
+
+  return accounts.some((item) => item.providerId === "credential");
+}
+
 /**
  * Get session from request headers
  */
@@ -282,7 +294,7 @@ export type Auth = ReturnType<typeof createAuth>;
  *
  * @example
  * ```ts
- * import { createAuthRouteHandlers } from "@raypx/auth/server";
+ * import { createAuthRouteHandlers } from "@raypx/auth";
  * import { createFileRoute } from "@tanstack/react-router";
  *
  * export const Route = createFileRoute("/api/auth/$")({

@@ -5,13 +5,8 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./api": "./src/api/index.ts",
-    "./server": "./src/server/index.ts",
-    "./plugin": "./src/plugin/index.ts",
-    "./plugin/config": "./src/plugin/config.ts",
-    "./plugin/rpc": "./src/plugin/rpc.ts",
-    "./plugin/web": "./src/plugin/web.ts",
-    "./types": "./src/types/index.ts"
+    "./types": "./src/types/index.ts",
+    "./plugin": "./src/plugin/index.ts"
   },
   "scripts": {
     "clean": "rimraf dist .turbo",

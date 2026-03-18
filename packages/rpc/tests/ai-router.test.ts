@@ -1,5 +1,5 @@
 import { call } from "@orpc/server";
-import { AIServiceError, chatService } from "@raypx/ai/server";
+import { AIServiceError, chatService } from "@raypx/ai";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { aiRouter } from "../src/server/routers/ai";
 import { createMockContext } from "./test-utils";

@@ -1,6 +1,6 @@
-import { aiEnv, createEnv } from "@raypx/config/envs";
 import type { AIChatStreamEvent } from "@raypx/shared/ai";
 import { generateText, streamText } from "ai";
+import { envs } from "./env";
 import { createAIServiceError, toAIServiceError } from "./errors";
 import {
   appendMessage,
@@ -69,7 +69,7 @@ import type {
   AIUserProviderSummary,
 } from "./types";
 
-const env = createEnv(aiEnv);
+const env = envs();
 
 function normalizeModelCatalog(input: unknown): string[] {
   if (!Array.isArray(input)) return [];

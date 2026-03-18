@@ -1,7 +1,5 @@
+import { hasCredentialPasswordAccount } from "@raypx/auth";
 import { authClient, signOut } from "@raypx/auth/client";
-import { getServerSession } from "@raypx/auth/server";
-import { db, eq } from "@raypx/database";
-import { account } from "@raypx/database/schemas";
 import { FormErrorAlert } from "@raypx/design-system/components/form-error-alert";
 import {
   AlertDialog,
@@ -32,13 +30,7 @@ import { siteConfig } from "@/config/site";
 
 const checkHasPassword = createServerFn({ method: "GET" }).handler(async () => {
   const headers = getRequestHeaders();
-  const session = await getServerSession(headers);
-  if (!session?.user?.id) return false;
-  const accounts = await db
-    .select({ providerId: account.providerId })
-    .from(account)
-    .where(eq(account.userId, session.user.id));
-  return accounts.some((a) => a.providerId === "credential");
+  return hasCredentialPasswordAccount(headers);
 });
 
 export const Route = createFileRoute("/(app)/settings/account")({

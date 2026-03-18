@@ -1,4 +1,4 @@
-import { adminRpcPlugin } from "@raypx/admin/plugin/rpc";
+import { adminRpcPlugin } from "@raypx/admin/plugin";
 import { requirePermission } from "../../transport/middleware";
 
 export const adminRouter = adminRpcPlugin.createRouter({

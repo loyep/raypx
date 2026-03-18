@@ -14,7 +14,7 @@ See also: `ROADMAP.md`.
 
 - [ ] M1.1 包边界收敛
   - [ ] 清理 `@raypx/rpc` 内遗留领域逻辑（保持 transport-only）
-  - [ ] 补齐 `@raypx/ai/server` 入口文档和使用示例
+  - [ ] 补齐 `@raypx/ai` 入口文档和使用示例
   - [ ] 审核 `@raypx/shared` 仅保留纯类型/常量（无运行时依赖）
 - [ ] M1.2 错误与日志标准化
   - [x] 统一 AI 错误归一化（`toAIServiceError`）

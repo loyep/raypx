@@ -1,5 +1,4 @@
 import { type AdminUser, UserEditDialog, UsersTable } from "@raypx/admin";
-import { updateUser } from "@raypx/admin/api";
 import {
   Card,
   CardContent,
@@ -31,7 +30,8 @@ export function AdminUsersPage() {
   const usersQuery = useQuery(adminUsersListQueryOptions({ page, pageSize: PAGE_SIZE }));
 
   const updateUserMutation = useMutation({
-    mutationFn: updateUser.bind(null, client),
+    mutationFn: async (input: Parameters<typeof client.admin.users.update>[0]) =>
+      (await client.admin.users.update(input)).data,
     onSuccess: async () => {
       toast.success("User updated");
       await queryClient.invalidateQueries({ queryKey: ["adminUsers"] });

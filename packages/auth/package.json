@@ -6,11 +6,9 @@
   "exports": {
     ".": "./src/index.ts",
     "./client": "./src/client/index.ts",
-    "./rpc": "./src/rpc.ts",
-    "./server": "./src/server/index.ts",
-    "./tanstack-start": "./src/tanstack-start.ts",
     "./types": "./src/types.ts",
-    "./provider": "./src/client/index.ts"
+    "./rpc": "./src/rpc.ts",
+    "./tanstack-start": "./src/tanstack-start.ts"
   },
   "scripts": {
     "clean": "rimraf dist .turbo",

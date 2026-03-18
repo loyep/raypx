@@ -1,4 +1,5 @@
-import { aiEnv, authEnv, createEnv } from "@raypx/config";
+import { aiEnv } from "@raypx/ai/env";
+import { authEnv, createEnv } from "@raypx/config";
 import { z } from "zod";
 
 const env = createEnv({

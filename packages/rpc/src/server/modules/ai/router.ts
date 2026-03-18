@@ -1,5 +1,5 @@
 import { eventIterator, streamToEventIterator } from "@orpc/server";
-import { AIServiceError } from "@raypx/ai/server";
+import { AIServiceError } from "@raypx/ai";
 import { AI_EVENT_VERSION, AI_PROVIDER_DRIVERS } from "@raypx/shared/ai";
 import { aiFacade } from "../../application/ai/facade";
 import {
